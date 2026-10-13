@@ -88,6 +88,7 @@ end
 local function payload(a, call)
     local s = cfg.services[a.service]
     return {
+        callId = call.id,
         service = a.service,
         coords = call.coords,
         vehicle = s.vehicle,
@@ -128,20 +129,25 @@ end
 ---------------------------------------------------------------------------
 --- True if Config.AiUnits.trigger keeps AI away because players of `service` are on duty.
 function Ai.PlayersOnDuty(service)
-    return cfg.trigger ~= 'no_available' and #Units.OnDutyIn(service) > 0
+    return cfg.trigger == 'no_on_duty' and #Units.OnDutyIn(service) > 0
 end
 
 --- Returns the AI id, or nil and a reason
 --- ('closed'|'no_coords'|'no_service'|'players_on_duty'|'busy'|'limit').
+local function refuse(callId, why)
+    Utils.Debug(('AI unit NOT sent to call #%s: %s'):format(tostring(callId), why))
+    return nil, why
+end
+
 function Ai.Send(callId)
     local call = Calls.Get(callId)
-    if not call or call.status == 'closed' then return nil, 'closed' end
-    if not call.coords then return nil, 'no_coords' end
+    if not call or call.status == 'closed' then return refuse(callId, 'closed') end
+    if not call.coords then return refuse(callId, 'no_coords') end
     local service = Ai.ServiceFor(call)
-    if not service then return nil, 'no_service' end
-    if Ai.PlayersOnDuty(service) then return nil, 'players_on_duty' end
-    if Ai.OnCall(call.id) then return nil, 'busy' end
-    if Ai.Count() >= cfg.maxActive then return nil, 'limit' end
+    if not service then return refuse(callId, 'no_service (service disabled in Config.AiUnits or services.lua)') end
+    if Ai.PlayersOnDuty(service) then return refuse(callId, 'players_on_duty (' .. service .. ' units on duty, trigger = no_on_duty)') end
+    if Ai.OnCall(call.id) then return refuse(callId, 'busy') end
+    if Ai.Count() >= cfg.maxActive then return refuse(callId, 'limit') end
 
     local a = {
         id = Ai.nextId, callId = call.id, service = service, status = 'enroute',
@@ -161,8 +167,10 @@ function Ai.Send(callId)
     end
 
     if a.host then
+        Utils.Debug(('AI %s unit %d sent to call #%d, driven by player %d'):format(service, a.id, call.id, a.host))
         TriggerClientEvent(Ev('client:aiSpawn'), a.host, a.id, payload(a, call))
     else
+        Utils.Debug(('AI %s unit %d sent to call #%d, virtual (no player within %dm)'):format(service, a.id, call.id, math.floor(cfg.hostRange)))
         startVirtualTravel(a)
     end
     startSafetyNet(a)
@@ -202,6 +210,7 @@ local actions = {
 function Ai.Arrived(id)
     local a = Ai.active[id]
     if not a or a.status ~= 'enroute' then return end
+    Utils.Debug(('AI unit %d on scene (call #%d)'):format(a.id, a.callId))
     setStatus(a, 'onscene')
     note(a, 'ai.note_arrived')
     local s = cfg.services[a.service]
@@ -227,8 +236,25 @@ function Ai.Finish(id, opts)
     setStatus(a, opts.failed and 'failed' or 'done')
     if not opts.silent then note(a, opts.failed and 'ai.note_failed' or 'ai.note_done') end
 
+    Utils.Debug(('AI unit %d leaving call #%d'):format(a.id, a.callId))
     if a.host and GetPlayerName(a.host) then
         TriggerClientEvent(Ev('client:aiLeave'), a.host, a.id)
+        -- Safety net: if the host could not drive them away (ownership moved to another
+        -- player, ped stuck…), remove the vehicle and crew from the server.
+        local s = cfg.services[a.service]
+        local ids, models = a.netIds or {}, {}
+        for _, list in ipairs({ s.vehicle, s.ped }) do
+            for _, m in ipairs(type(list) == 'table' and list or { list }) do models[joaat(m)] = true end
+        end
+        SetTimeout(75000, function()
+            for _, netId in ipairs(ids) do
+                local ent = NetworkGetEntityFromNetworkId(netId)
+                -- model check: a net id can be reused by another entity
+                if ent and ent ~= 0 and DoesEntityExist(ent) and models[GetEntityModel(ent)] then
+                    DeleteEntity(ent)
+                end
+            end
+        end)
     else
         deleteEntities(a)
     end
@@ -258,7 +284,9 @@ end
 ---------------------------------------------------------------------------
 RegisterNetEvent(Ev('server:aiSpawned'), function(id, netIds)
     local a = Ai.active[tonumber(id)]
-    if not a or a.host ~= source or type(netIds) ~= 'table' then return end
+    -- The unit finished while the client was still spawning it: send it straight home.
+    if not a then return TriggerClientEvent(Ev('client:aiLeave'), source, tonumber(id)) end
+    if a.host ~= source or type(netIds) ~= 'table' then return end
     a.netIds = {}
     for _, n in ipairs(netIds) do
         if tonumber(n) then a.netIds[#a.netIds + 1] = tonumber(n) end
@@ -352,12 +380,18 @@ end)
 --- if the call is still unattended.
 function Ai.Schedule(callId)
     if not cfg.enabled or not cfg.auto then return end
+    Utils.Debug(('call #%d: AI unit in %d s if still unattended'):format(callId, cfg.waitSeconds))
     SetTimeout(cfg.waitSeconds * 1000, function()
         local call = Calls.Get(callId)
         if not call or call.status == 'closed' or call.status == 'active' then return end
         if Calls.UnitCount(call) > 0 or Ai.OnCall(call.id) then return end
         if Dispatch.HasDispatcher() and not cfg.autoWithDispatcher then return end
         if not Ai.ServiceFor(call) then return end
-        Ai.Send(call.id)
+        local ok, why = Ai.Send(call.id)
+        if not ok and why ~= 'busy' and why ~= 'closed' then
+            local key = why:find('^players_on_duty') and 'ai.note_not_sent_players'
+                or why == 'limit' and 'ai.note_not_sent_limit' or 'ai.note_not_sent'
+            Calls.AddNote(call.id, key, nil, 'sys')
+        end
     end)
 end

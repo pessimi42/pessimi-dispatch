@@ -1,6 +1,6 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.4.2-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.5.0-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
@@ -73,6 +73,7 @@ breakdowns and more, at locations around the map, from callers with names and nu
 - About a quarter arrive as texts. When the dispatcher texts an AI caller, the caller
   answers. Nothing is sent to real phones.
 - AI calls are marked **AI** on the panel (`showBadge = false` hides it).
+- **Create one now:** `/aicall [police|ems|fire|mechanic]` (same permission as the switch).
 
 Everything is configurable in `Config.AiCalls`: timings, services and their weights, call
 types and priorities, caller names and locations. Caller messages are in the locale files
@@ -110,9 +111,12 @@ fire truck or tow truck drives to the scene with sirens and does its job.
 
 - **Players come first:** AI is only used when nobody of that service is on duty. As soon
   as a police officer or medic clocks in, their service gets no more AI units. (Set
-  `trigger = 'no_available'` to also use AI when units are on duty but all busy.)
+  `trigger = 'no_available'` to also use AI when units are on duty but all busy, or
+  `trigger = 'always'` to send AI to any call left without a unit.)
 - **Automatic** when no dispatcher is on duty: a call that still has no unit after
-  `waitSeconds` (default 45 s) gets an AI unit.
+  `waitSeconds` (default 45 s) gets an AI unit. With a dispatcher on duty this only
+  happens if `autoWithDispatcher = true`. If no AI unit can be sent, the reason is added
+  to the call's notes.
 - **Dispatchers** can send one with **Send AI unit** in the call details – the button only
   appears when nobody of that service is on duty.
 - The caller (or the nearest player) controls the NPCs. If nobody is near the call, the
@@ -125,6 +129,18 @@ fire truck or tow truck drives to the scene with sirens and does its job.
   other medical scripts set `Config.AiUnits.reviveEvent`.
 
 Everything is configurable in `Config.AiUnits` (vehicles, peds, timings, limits, per service).
+
+**Vehicle and ped models** can be lists – the first model that spawns and stays is used.
+Many Qbox/QBCore servers blacklist `s_m_y_cop_01` and `firetruk` (smallresources) and
+delete them on spawn; the defaults already fall back to allowed models, but if an AI unit
+never appears, check that its models aren't blacklisted on your server.
+
+## Testing
+
+Set `Config.TestMode = true` (top of `config/config.lua`) to try everything quickly: an AI
+call every 30–60 seconds even with nobody on duty, AI units after 10 seconds (also when
+players of the service are on duty) and debug prints in the server console and F8. Turn it
+off again on a live server.
 
 ## Phone & SMS (lb-phone)
 

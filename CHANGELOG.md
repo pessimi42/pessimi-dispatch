@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.5.0-beta – AI units & scenes fixes, test mode (2026-10-13)
+
+Fixes for AI units and NPC scenes found in testing, plus a test mode for trying things
+quickly. Still a beta – please report problems in
+[Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### Fixed
+
+- **AI police never showed up** – many Qbox/QBCore servers blacklist the `s_m_y_cop_01` ped
+  (and `firetruk`) and delete them the moment they spawn, so the unit failed silently.
+  AI units now take a list of vehicle and ped models and use the first one that spawns
+  and stays (police: `csb_cop` first). Failures are printed with debug on.
+- **No patient at EMS calls** – scene NPCs were placed using the ground height before the
+  ground had loaded, so on slopes they ended up under the terrain or inside buildings. They
+  now wait for collision and stand on a walkable spot (pavement) near the call.
+- **AI medics walked to the call marker instead of the patient** – the patient usually
+  spawns after the unit is sent; the crew now looks the patient up when it arrives.
+- **AI units stayed at the scene** – a kneeling medic ignored the "get back in" order, and a
+  unit that finished while it was still spawning was never removed. The crew now stops
+  its animation, gets in (or is put in if stuck) and drives off; the server removes the
+  vehicle and crew after 75 s if the player's game didn't.
+- `Config.AiUnits.autoWithDispatcher = true` had no effect – AI units were only scheduled
+  when no dispatcher was on duty.
+
+### New
+
+- **Test mode** (`Config.TestMode`, off by default) – an AI call every 30–60 seconds even
+  with nobody on duty, AI units after 10 s, AI units also when players of the service are
+  on duty, and debug prints in the server and F8 consoles.
+- **`/aicall [police|ems|fire|mechanic]`** – create an AI call right away (admins and
+  on-duty dispatchers).
+- `Config.AiUnits.trigger = 'always'` and `Config.AiCalls.requireResponders`.
+- A call note when an AI unit could not be sent automatically, with the reason.
+
+### Upgrading from 0.4.2-beta
+
+Replace the resource folder. If you changed `config/config.lua`, copy into your version:
+`Config.TestMode` (top), `testCommand` and `requireResponders` in `Config.AiCalls`, the
+model lists for `vehicle` / `ped` in `Config.AiUnits.services` and the "Test mode" block at
+the end of the file. Locale files have new keys (`aicalls.generated`,
+`aicalls.not_generated`, `ai.note_not_sent*`) – merge them if you translated your own.
+
 ## v0.4.2-beta – NPC scenes & caller location (2026-10-13)
 
 AI calls now have people and things at the scene, the call's location follows the caller,

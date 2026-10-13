@@ -83,6 +83,7 @@ function Scenes.Watch()
                 }
                 local host = nearestPlayer(call.coords, cfg.spawnRange)
                 if host then
+                    Utils.Debug(('spawning %s scene for call #%d on player %d'):format(kind, call.id, host))
                     Scenes.active[call.id] = scene
                     spawn(scene, call, host)
                 end
@@ -101,9 +102,13 @@ CreateThread(function()
     end
 end)
 
-RegisterNetEvent(Ev('server:sceneSpawned'), function(callId, pedNetId, netIds)
+RegisterNetEvent(Ev('server:sceneSpawned'), function(callId, pedNetId, netIds, at)
     local scene = Scenes.active[tonumber(callId)]
     if not scene or scene.host ~= source or type(netIds) ~= 'table' then return end
+    -- The host moved the NPC to a walkable spot; use where it really is (E-prompt range check)
+    at = Utils.Coords(at)
+    if at and scene.coords and Utils.Distance2D(at, scene.coords) < 40.0 then scene.coords = at end
+    Utils.Debug(('scene %s spawned for call #%d by player %d'):format(scene.kind, scene.callId, source))
     scene.netIds = {}
     for _, n in ipairs(netIds) do
         if tonumber(n) then scene.netIds[#scene.netIds + 1] = tonumber(n) end
@@ -114,7 +119,10 @@ end)
 
 RegisterNetEvent(Ev('server:sceneSpawnFailed'), function(callId)
     local scene = Scenes.active[tonumber(callId)]
-    if scene and scene.host == source then Scenes.active[scene.callId] = nil end
+    if scene and scene.host == source then
+        Utils.Debug(('scene for call #%d failed to spawn on player %d, will retry'):format(scene.callId, source))
+        Scenes.active[scene.callId] = nil
+    end
 end)
 
 ---------------------------------------------------------------------------

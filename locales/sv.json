@@ -213,7 +213,10 @@
     "note_extinguish": "AI-brandmän släckte branden.",
     "note_secure": "AI-patrull säkrade platsen.",
     "note_done": "AI-enheten lämnade platsen.",
-    "note_failed": "AI-enheten kom inte fram."
+    "note_failed": "AI-enheten kom inte fram.",
+    "note_not_sent_players": "Ingen AI-enhet larmad: enheter inom tjänsten är i tjänst.",
+    "note_not_sent_limit": "Ingen AI-enhet larmad: alla AI-enheter är upptagna.",
+    "note_not_sent": "Ingen AI-enhet kunde larmas till samtalet."
   },
   "aicall": {
     "robbery": {
@@ -308,7 +311,9 @@
   },
   "aicalls": {
     "on": "AI-samtal är på.",
-    "off": "AI-samtal är av."
+    "off": "AI-samtal är av.",
+    "generated": "Testsamtal #{id} skapat.",
+    "not_generated": "Kunde inte skapa ett samtal: ingen kan svara på det."
   },
   "loc": {
     "note_located": "Anmälaren lokaliserad."

@@ -213,7 +213,10 @@
     "note_extinguish": "AI-palomiehet sammuttivat palon.",
     "note_secure": "AI-partio varmisti kohteen.",
     "note_done": "AI-yksikkö poistui kohteesta.",
-    "note_failed": "AI-yksikkö ei päässyt kohteeseen."
+    "note_failed": "AI-yksikkö ei päässyt kohteeseen.",
+    "note_not_sent_players": "AI-yksikköä ei hälytetty: palvelun yksiköitä on vuorossa.",
+    "note_not_sent_limit": "AI-yksikköä ei hälytetty: kaikki AI-yksiköt ovat varattuja.",
+    "note_not_sent": "Tehtävälle ei voitu hälyttää AI-yksikköä."
   },
   "aicall": {
     "robbery": {
@@ -308,7 +311,9 @@
   },
   "aicalls": {
     "on": "AI-ilmoitukset ovat päällä.",
-    "off": "AI-ilmoitukset ovat pois päältä."
+    "off": "AI-ilmoitukset ovat pois päältä.",
+    "generated": "Testi-ilmoitus #{id} luotu.",
+    "not_generated": "Ilmoitusta ei voitu luoda: kukaan ei voi vastata siihen."
   },
   "loc": {
     "note_located": "Ilmoittaja paikannettu."

@@ -114,6 +114,8 @@ function Calls.Create(data, opts)
 
     if not opts.skipFallback and not Dispatch.HasDispatcher() then
         Calls.AutoDispatch(id)
+    elseif not opts.skipFallback and Config.AiUnits.autoWithDispatcher then
+        Ai.Schedule(id)   -- dispatcher on duty: AI only if they leave the call unattended
     end
     return id
 end

@@ -43,7 +43,7 @@ local function pickService()
     local pool, total = {}, 0
     for service, weight in pairs(cfg.weights) do
         if Utils.ServiceEnabled(service) and cfg.types[service] and weight > 0
-            and (hasDispatcher or #Units.OnDutyIn(service) > 0) then
+            and (cfg.requireResponders == false or hasDispatcher or #Units.OnDutyIn(service) > 0) then
             pool[#pool + 1] = { service = service, weight = weight }
             total = total + weight
         end
@@ -63,6 +63,7 @@ end
 
 --- Create one AI call now. Returns the call id, or nil and a reason.
 function AiCalls.Generate(service)
+    if service and not (Utils.ServiceEnabled(service) and cfg.types[service]) then return nil, 'bad_service' end
     service = service or pickService()
     if not service then return nil, 'no_responders' end
     local t = pick(cfg.types[service])
@@ -79,6 +80,7 @@ function AiCalls.Generate(service)
         caller = { name = pick(cfg.names), phone = randomPhone() },
         origin = asSms and 'sms' or '112',
     }, { ai = true })
+    Utils.Debug(('AI call #%d generated (%s / %s)'):format(id, service, t.type))
     return id
 end
 
@@ -100,12 +102,21 @@ end
 CreateThread(function()
     AiCalls.lastPlayerCall = os.time()
     while true do
-        local minM, maxM = cfg.interval[1], cfg.interval[2]
-        Wait(math.random(minM * 60, maxM * 60) * 1000)
-        if AiCalls.Enabled()
-            and os.time() - AiCalls.lastPlayerCall >= cfg.quietMinutes * 60
-            and openCount() < cfg.maxOpen then
-            AiCalls.Generate()
+        local minS = math.max(10, math.floor(cfg.interval[1] * 60))
+        local maxS = math.max(minS, math.floor(cfg.interval[2] * 60))
+        local wait = math.random(minS, maxS)
+        Utils.Debug(('next AI call check in %d s'):format(wait))
+        Wait(wait * 1000)
+        local quietLeft = cfg.quietMinutes * 60 - (os.time() - AiCalls.lastPlayerCall)
+        if not AiCalls.Enabled() then
+            Utils.Debug('AI call skipped: AI calls are off')
+        elseif quietLeft > 0 then
+            Utils.Debug(('AI call skipped: a player called recently (%d s of quiet left)'):format(quietLeft))
+        elseif openCount() >= cfg.maxOpen then
+            Utils.Debug(('AI call skipped: %d AI calls already open (maxOpen)'):format(openCount()))
+        else
+            local id, why = AiCalls.Generate()
+            if not id then Utils.Debug('AI call skipped:', why, '(no dispatcher or units on duty)') end
         end
     end
 end)
@@ -139,3 +150,21 @@ RegisterCommand(cfg.command, function(src, args) toggle(src, args[1] and args[1]
 RegisterNetEvent(Ev('server:aiCallsToggle'), function(state)
     toggle(source, state == true and 'on' or state == false and 'off' or nil)
 end)
+
+--- /aicall [service] – create one AI call right now (testing). Same permission as the switch.
+if cfg.testCommand and cfg.testCommand ~= '' then
+    RegisterCommand(cfg.testCommand, function(src, args)
+        if not AiCalls.CanToggle(src) then
+            if src ~= 0 then Notify(src, 'error.no_permission', nil, 'error') end
+            return
+        end
+        local id, why = AiCalls.Generate(args[1] and args[1]:lower() or nil)
+        if src == 0 then
+            print(('[%s] %s'):format(Utils.Resource, id and ('AI call #' .. id .. ' created') or ('no call: ' .. tostring(why))))
+        elseif id then
+            Notify(src, 'aicalls.generated', { id = id }, 'success')
+        else
+            Notify(src, 'aicalls.not_generated', nil, 'error')
+        end
+    end, false)
+end

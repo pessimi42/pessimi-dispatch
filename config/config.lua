@@ -4,6 +4,11 @@ Config = {}
 Config.Framework = 'auto'
 Config.Debug = false
 
+-- Test mode: frequent AI calls, fast AI units and debug prints. See the
+-- "Test mode" block at the end of this file for exactly what it changes.
+-- Turn OFF on a live server.
+Config.TestMode = false
+
 ---------------------------------------------------------------------------
 -- Language
 ---------------------------------------------------------------------------
@@ -90,6 +95,7 @@ Config.AiUnits = {
     waitSeconds = 45,
     -- 'no_on_duty'   = AI only when nobody of that service is on duty (players always come first)
     -- 'no_available' = AI also when units are on duty but all busy
+    -- 'always'       = AI whenever a call has no unit after waitSeconds (testing)
     -- Applies to automatic dispatch and to the dispatcher's "Send AI unit" button.
     trigger = 'no_on_duty',
     autoWithDispatcher = false,  -- true: also send automatically while a dispatcher is on duty
@@ -114,27 +120,30 @@ Config.AiUnits = {
     -- Set a client event name here if you use another medical script.
     reviveEvent = nil,
 
+    -- vehicle / ped: one model or a list. The first one that spawns and stays is used.
+    -- Many Qbox/QBCore servers blacklist s_m_y_cop_01 and firetruk (smallresources) and
+    -- delete them as soon as they spawn, so put an allowed model first.
     -- action: 'revive' (treat the caller) | 'repair' (fix the nearest vehicle)
     --         'extinguish' (put out fires) | 'secure' (presence only)
     services = {
         police = {
             enabled = true, action = 'secure',
-            vehicle = 'police', ped = 's_m_y_cop_01',
+            vehicle = { 'police', 'police2', 'police3' }, ped = { 'csb_cop', 's_m_y_cop_01', 's_m_m_security_01' },
             scenario = 'WORLD_HUMAN_COP_IDLES', actSeconds = 20, onSceneSeconds = 150,
         },
         ems = {
             enabled = true, action = 'revive',
-            vehicle = 'ambulance', ped = 's_m_m_paramedic_01',
+            vehicle = { 'ambulance' }, ped = { 's_m_m_paramedic_01' },
             scenario = 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', actSeconds = 15, onSceneSeconds = 60,
         },
         fire = {
             enabled = true, action = 'extinguish',
-            vehicle = 'firetruk', ped = 's_m_y_fireman_01',
+            vehicle = { 'firetruk', 'ambulance' }, ped = { 's_m_y_fireman_01' },
             scenario = 'WORLD_HUMAN_STAND_IMPATIENT', actSeconds = 15, onSceneSeconds = 90,
         },
         mechanic = {
             enabled = true, action = 'repair',
-            vehicle = 'towtruck', ped = 's_m_m_trucker_01',
+            vehicle = { 'towtruck', 'towtruck2' }, ped = { 's_m_m_trucker_01' },
             scenario = 'WORLD_HUMAN_VEHICLE_MECHANIC', actSeconds = 20, onSceneSeconds = 60,
         },
     },
@@ -146,6 +155,7 @@ Config.AiUnits = {
 Config.AiCalls = {
     enabled = true,              -- default state; the in-game switch overrides it and is remembered
     command = 'aicalls',         -- /aicalls [on|off] – no argument toggles
+    testCommand = 'aicall',      -- /aicall [police|ems|fire|mechanic] – create one call right now
     -- Who may use the switch: ACE 'pessimi42_dispatch.admin' (add_ace group.admin pessimi42_dispatch.admin allow)
     allowDispatchers = true,     -- on-duty dispatchers may switch it too (also from the panel)
 
@@ -158,6 +168,7 @@ Config.AiCalls = {
     -- Calls are only generated when someone can take them: a dispatcher on duty or units
     -- of the chosen service. Weights decide how often each service gets a call.
     weights = { police = 5, ems = 3, fire = 1, mechanic = 1 },
+    requireResponders = true,    -- false: generate even when nobody is on duty (AI units take them)
 
     -- Call types per service (texts in locales: aicall.<type>.1 / .2) and their priority
     types = {
@@ -314,3 +325,20 @@ Config.UnknownBlip = { sprite = 280, color = 0 }
 -- add_ace group.dispatch pessimi42_dispatch.dispatcher allow
 -- add_ace group.police   pessimi42_dispatch.service.police allow
 Config.StandaloneAce = 'pessimi42_dispatch'
+
+---------------------------------------------------------------------------
+-- Test mode (Config.TestMode = true at the top)
+---------------------------------------------------------------------------
+if Config.TestMode then
+    Config.Debug = true
+    -- An AI call every 30-60 s, right away, even with nobody on duty
+    Config.AiCalls.quietMinutes = 0
+    Config.AiCalls.interval = { 0.5, 1 }
+    Config.AiCalls.maxOpen = 4
+    Config.AiCalls.requireResponders = false
+    -- AI units leave sooner and come even when players of the service are on duty
+    Config.AiUnits.waitSeconds = 10
+    Config.AiUnits.virtualTravelSeconds = 15
+    Config.AiUnits.trigger = 'always'
+    Config.AiUnits.services.police.onSceneSeconds = 60
+end
