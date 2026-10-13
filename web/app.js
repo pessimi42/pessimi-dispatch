@@ -32,6 +32,8 @@ const S = {
   quickReplies: [],
   aiServices: [],
   aiOnlyWhenNoneOnDuty: true,
+  aiCalls: false,
+  canToggleAiCalls: false,
   fallbackService: 'police',
 };
 
@@ -88,6 +90,11 @@ function renderFilters() {
     btn('none', t('ui.unspecified'));
   $('#historyToggle').classList.toggle('on', S.showClosed);
 
+  const ai = $('#aiCallsBtn');
+  ai.classList.toggle('hidden', !S.canToggleAiCalls);
+  ai.classList.toggle('on', S.aiCalls);
+  ai.textContent = `${t('ui.ai_calls')}: ${t(S.aiCalls ? 'ui.on' : 'ui.off')}`;
+
   const sel = $('#langSelect');
   sel.classList.toggle('hidden', S.languages.length < 2);
   sel.innerHTML = options(S.languages.map((l) => [l.code, l.name]), S.lang);
@@ -116,7 +123,7 @@ function renderCalls() {
       <div>
         <div class="top">
           <span class="title">#${c.id} ${esc(t(`calltype.${c.type}`))}</span>
-          <span class="tag">${esc(t(`call_status.${c.status}`))}</span>
+          <span class="tag">${c.aiCall ? `${esc(t('ui.ai_badge'))} · ` : ''}${esc(t(`call_status.${c.status}`))}</span>
         </div>
         <div class="sub">${esc(c.street || t('ui.unknown_location'))}</div>
         <div class="sub">${esc(svcName(c.service))} · ${esc(ago(c.createdAt))}${c.units.length ? ' · ' + esc(t('ui.units_count', { n: c.units.length })) : ''}</div>
@@ -326,6 +333,7 @@ document.addEventListener('click', (e) => {
 
   switch (el.dataset.act || el.id) {
     case 'closeBtn': return closeAll();
+    case 'aiCallsBtn': return post('toggleAiCalls', { state: !S.aiCalls });
     case 'historyToggle': S.showClosed = !S.showClosed; renderFilters(); renderCalls(); return;
     case 'newCallBtn': return openNewCall();
     case 'waypoint': return c && action('waypoint', c.coords);
@@ -406,12 +414,14 @@ const handlers = {
     S.calls = new Map(st.calls.map((c) => [c.id, c]));
     S.units = new Map(st.units.map((u) => [u.src, u]));
     S.sms = !!st.sms;
+    S.aiCalls = !!st.aiCalls; S.canToggleAiCalls = !!st.canToggleAiCalls;
     if (!S.calls.has(S.selected)) S.selected = null;
     renderPanel();
   },
   callChanged({ call }) { S.calls.set(call.id, call); renderCalls(); renderUnits(); if (call.id === S.selected) renderDetail(); },
   unitChanged(u) { S.units.set(u.src, u); renderUnits(); if (S.selected) renderDetail(); },
   unitRemoved(src) { S.units.delete(src); renderUnits(); },
+  aiCallsState(state) { S.aiCalls = !!state; renderFilters(); },
   myCall(c) { S.myCall = c; renderHud(); },
   myStatus(d) { S.myStatus = d.status; S.myCallsign = d.callsign; renderHud(); },
   toast,

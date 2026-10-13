@@ -124,6 +124,68 @@ Config.AiUnits = {
     },
 }
 
+---------------------------------------------------------------------------
+-- AI calls (generated 112 calls and texts when players are not calling)
+---------------------------------------------------------------------------
+Config.AiCalls = {
+    enabled = true,              -- default state; the in-game switch overrides it and is remembered
+    command = 'aicalls',         -- /aicalls [on|off] – no argument toggles
+    -- Who may use the switch: ACE 'pessimi42_dispatch.admin' (add_ace group.admin pessimi42_dispatch.admin allow)
+    allowDispatchers = true,     -- on-duty dispatchers may switch it too (also from the panel)
+
+    quietMinutes = 5,            -- generate only when no player has called or texted 112 for this long
+    interval = { 3, 8 },         -- minutes between generated calls (random in range)
+    maxOpen = 3,                 -- open AI calls at the same time
+    smsChance = 0.25,            -- share of AI calls that arrive as a text instead of a phone call
+    replyToSms = true,           -- the "caller" answers the dispatcher's texts
+    showBadge = true,            -- mark AI calls with an "AI" tag on the panel
+    -- Calls are only generated when someone can take them: a dispatcher on duty or units
+    -- of the chosen service. Weights decide how often each service gets a call.
+    weights = { police = 5, ems = 3, fire = 1, mechanic = 1 },
+
+    -- Call types per service (texts in locales: aicall.<type>.1 / .2) and their priority
+    types = {
+        police = {
+            { type = 'robbery', priority = 'B' }, { type = 'shooting', priority = 'A' },
+            { type = 'assault', priority = 'B' }, { type = 'theft', priority = 'C' },
+            { type = 'traffic', priority = 'C' }, { type = 'domestic', priority = 'B' },
+            { type = 'suspicious', priority = 'C' },
+        },
+        ems = {
+            { type = 'injury', priority = 'B' }, { type = 'unconscious', priority = 'A' },
+            { type = 'breathing', priority = 'A' }, { type = 'chest_pain', priority = 'A' },
+            { type = 'traffic_accident', priority = 'B' }, { type = 'overdose', priority = 'B' },
+        },
+        fire = {
+            { type = 'building_fire', priority = 'A' }, { type = 'vehicle_fire', priority = 'B' },
+            { type = 'wildfire', priority = 'B' }, { type = 'rescue', priority = 'B' },
+            { type = 'hazmat', priority = 'B' },
+        },
+        mechanic = {
+            { type = 'breakdown', priority = 'D' }, { type = 'tow', priority = 'D' },
+            { type = 'flat_tyre', priority = 'D' },
+        },
+    },
+
+    names = {
+        'Matti Virtanen', 'Anna Korhonen', 'Jukka Nieminen', 'Laura Mäkinen', 'Mikko Hämäläinen',
+        'Sanna Laine', 'Erik Lindqvist', 'Sofia Nyström', 'Johan Holmberg', 'Emma Sjöberg',
+        'James Miller', 'Sarah Johnson', 'Carlos Ramirez', 'Lisa Chen', 'Tom Walker',
+    },
+
+    -- Where AI calls happen (street names are filled in automatically)
+    locations = {
+        vector3(215.8, -810.1, 30.7),    vector3(-47.0, -1757.5, 29.4),  vector3(373.9, 326.4, 103.6),
+        vector3(1135.7, -982.3, 46.4),   vector3(-1222.5, -907.1, 12.3), vector3(-707.3, -914.6, 19.2),
+        vector3(25.7, -1347.3, 29.5),    vector3(-1487.6, -380.0, 40.2), vector3(1163.4, -323.8, 69.2),
+        vector3(-3038.9, 585.9, 7.9),    vector3(1698.4, 4924.4, 42.1),  vector3(1961.2, 3740.0, 32.3),
+        vector3(-1820.5, 792.4, 138.1),  vector3(-321.8, -1545.6, 27.6), vector3(146.9, -1037.4, 29.4),
+        vector3(-1050.0, -2731.9, 13.8), vector3(813.7, -1290.1, 26.3),  vector3(-556.0, 286.7, 82.2),
+        vector3(1197.7, 2705.6, 38.2),   vector3(-158.6, 6327.2, 31.6),  vector3(2557.3, 382.1, 108.6),
+        vector3(-2072.6, -312.7, 13.3),  vector3(287.8, -585.1, 43.2),   vector3(-622.5, -232.9, 38.1),
+    },
+}
+
 -- Automatic alerts sent by other client scripts through exports.pessimi42_dispatch:CreateAlert()
 Config.ClientAlerts = {
     enabled = true,

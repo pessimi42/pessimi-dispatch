@@ -24,6 +24,7 @@ server_scripts {
     'server/phones/*.lua',
     'server/sms.lua',
     'server/ai.lua',
+    'server/aicalls.lua',
     'server/integrations/*.lua',
     'server/main.lua',
     'server/api.lua',

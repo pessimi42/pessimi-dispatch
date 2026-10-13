@@ -54,7 +54,11 @@
     "sms_out": "SMS sent",
     "sms_in": "SMS received",
     "send_ai": "Send AI unit",
-    "ai_unit": "AI unit"
+    "ai_unit": "AI unit",
+    "ai_calls": "AI calls",
+    "ai_badge": "AI",
+    "on": "On",
+    "off": "Off"
   },
   "caller": {
     "title": "Emergency number 112",
@@ -140,7 +144,8 @@
     "lang_unknown": "Unknown language. Options: {list}",
     "sms_failed": "The text message could not be sent.",
     "ai_unavailable": "No AI unit available for this call.",
-    "ai_players_on_duty": "Units of this service are on duty – AI units are only used when nobody is."
+    "ai_players_on_duty": "Units of this service are on duty – AI units are only used when nobody is.",
+    "no_permission": "You are not allowed to do that."
   },
   "duty": {
     "on": "You are on duty as a dispatcher.",
@@ -204,5 +209,100 @@
     "note_secure": "AI patrol secured the scene.",
     "note_done": "AI unit left the scene.",
     "note_failed": "AI unit could not reach the scene."
+  },
+  "aicall": {
+    "robbery": {
+      "1": "Someone just robbed the store with a knife and ran off on foot!",
+      "2": "Two masked men took my bag and drove off in a dark car."
+    },
+    "shooting": {
+      "1": "I heard several gunshots outside, people are running!",
+      "2": "Someone is shooting from a car, I'm hiding behind a wall."
+    },
+    "assault": {
+      "1": "A man is beating someone up in the street, please hurry.",
+      "2": "My friend was punched and kicked by a group, he's bleeding."
+    },
+    "theft": {
+      "1": "My car was stolen from the parking lot a moment ago.",
+      "2": "Someone stole my bike, I can still see him riding away."
+    },
+    "traffic": {
+      "1": "A car is driving very fast and swerving between lanes.",
+      "2": "A vehicle is parked across the road and blocking traffic."
+    },
+    "domestic": {
+      "1": "The neighbours are screaming and something just broke loudly.",
+      "2": "My partner is threatening me, I'm locked in the bathroom."
+    },
+    "suspicious": {
+      "1": "A man has been trying the door handles of parked cars.",
+      "2": "Someone is lurking around the houses with a flashlight."
+    },
+    "injury": {
+      "1": "I fell from a ladder and I think my leg is broken.",
+      "2": "A worker cut his hand badly, there's a lot of blood."
+    },
+    "unconscious": {
+      "1": "A man collapsed on the sidewalk and isn't responding.",
+      "2": "My father fainted and I can't wake him up."
+    },
+    "breathing": {
+      "1": "My son can't breathe properly, his lips look blue.",
+      "2": "An elderly woman is gasping for air and can't speak."
+    },
+    "chest_pain": {
+      "1": "I have strong pain in my chest and my left arm feels numb.",
+      "2": "My husband suddenly got chest pain and is sweating a lot."
+    },
+    "traffic_accident": {
+      "1": "Two cars crashed at the intersection, one driver is stuck.",
+      "2": "A car hit a pedestrian, the person is lying on the road."
+    },
+    "overdose": {
+      "1": "My friend took something and now he's barely breathing.",
+      "2": "Someone is lying in the park, there are pills next to him."
+    },
+    "building_fire": {
+      "1": "There's smoke coming out of the apartment building, I see flames!",
+      "2": "Our kitchen caught fire and it's spreading fast."
+    },
+    "vehicle_fire": {
+      "1": "A car is on fire at the side of the road.",
+      "2": "Smoke and flames are coming from under the hood of a truck."
+    },
+    "wildfire": {
+      "1": "Grass is burning on the hill and the fire is growing.",
+      "2": "I can see a forest fire spreading towards the houses."
+    },
+    "rescue": {
+      "1": "Someone is stuck in an elevator between floors.",
+      "2": "A person fell into the water and can't get out."
+    },
+    "hazmat": {
+      "1": "A truck leaked some liquid and there's a strong chemical smell.",
+      "2": "There's a gas smell in the building and people feel dizzy."
+    },
+    "breakdown": {
+      "1": "My car died in the middle of the road and won't start.",
+      "2": "The engine is smoking and the car stopped, I need help."
+    },
+    "tow": {
+      "1": "My car slid into the ditch, can someone tow it out?",
+      "2": "A car is broken down and blocking the entrance, it needs towing."
+    },
+    "flat_tyre": {
+      "1": "I got a flat tyre and I don't have a spare.",
+      "2": "Both tyres burst on the same side, I can't drive further."
+    },
+    "reply": {
+      "1": "Yes, I'm still here. Please hurry!",
+      "2": "Okay. It's still going on, I can see it from here.",
+      "3": "Thank you, I'll wait here."
+    }
+  },
+  "aicalls": {
+    "on": "AI calls are on.",
+    "off": "AI calls are off."
   }
 }

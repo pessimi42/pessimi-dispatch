@@ -16,7 +16,7 @@ function Calls.Public(call)
     local units = {}
     for src in pairs(call._units) do units[#units + 1] = src end
     out.units = units
-    out.canSms = call.status ~= 'closed' and Sms.CallerNumber(call) ~= nil and Sms.Available()
+    out.canSms = call.status ~= 'closed' and Sms.CallerNumber(call) ~= nil and (call._ai or Sms.Available())
     return out
 end
 
@@ -68,6 +68,7 @@ end
   opts:
     skipFallback  don't auto-dispatch when no dispatcher is on duty
     smsReceived   text the caller "your call has been received" (if a phone is running)
+    ai            generated AI call (no real caller; texts are not sent to a phone)
 ]]
 function Calls.Create(data, opts)
     opts = opts or {}
@@ -99,10 +100,13 @@ function Calls.Create(data, opts)
         meta = type(data.meta) == 'table' and data.meta or nil,
         _units = {},
         _callerSrc = data.callerSrc,
+        _ai = opts.ai == true,
+        aiCall = (opts.ai == true and Config.AiCalls.showBadge) or nil,
     }
 
     Calls.list[id] = call
     changed(call, 'created')
+    if not call._ai and (call.origin == '112' or call.origin == 'sms') then AiCalls.NotePlayerCall() end
 
     if opts.smsReceived then Sms.AutoCaller(call, 'received') end
 

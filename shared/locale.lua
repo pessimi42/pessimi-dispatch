@@ -45,7 +45,9 @@ end
 
 function Locale.T(key, vars, code)
     local str
-    for _, c in ipairs({ code or Locale.active, Config.Locale, 'en' }) do
+    -- `false` instead of nil: ipairs stops at the first nil, which skipped the whole chain
+    -- on the server (no active language there).
+    for _, c in ipairs({ code or Locale.active or false, Config.Locale or false, 'en' }) do
         local d = c and Locale.Load(c)
         if d and d[key] then str = d[key] break end
     end

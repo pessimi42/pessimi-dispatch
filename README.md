@@ -47,6 +47,31 @@ notifications if it is running, otherwise the framework's own.
   auto-dispatched the same way.
 - `mode = 'broadcast'` or `'none'` if you prefer that.
 
+## AI calls
+
+When players aren't calling 112, the server generates realistic emergency calls and texts so
+on-duty units and dispatchers have something to do: robberies, collapses, car fires,
+breakdowns and more, at locations around the map, from callers with names and numbers.
+
+- **On/off switch:** `/aicalls` toggles, `/aicalls on` / `/aicalls off` sets it. On-duty
+  dispatchers can also use the **AI calls** button in the panel header. Admins need the
+  ACE permission `pessimi42_dispatch.admin`:
+  ```
+  add_ace group.admin pessimi42_dispatch.admin allow
+  ```
+  The choice is remembered across restarts.
+- **Only when it's quiet:** a call is generated every 3–8 minutes, and only if no player
+  has called or texted 112 for 5 minutes (`quietMinutes`). At most 3 AI calls are open at
+  once.
+- **Only when someone can respond:** a dispatcher on duty, or units of the call's service.
+- About a quarter arrive as texts. When the dispatcher texts an AI caller, the caller
+  answers. Nothing is sent to real phones.
+- AI calls are marked **AI** on the panel (`showBadge = false` hides it).
+
+Everything is configurable in `Config.AiCalls`: timings, services and their weights, call
+types and priorities, caller names and locations. Caller messages are in the locale files
+(`aicall.*`), written in the server's default language.
+
 ## AI units
 
 When no player unit can take a call, an NPC unit responds instead: a patrol car, ambulance,
@@ -129,7 +154,7 @@ exports.pessimi42_dispatch:CreateAlert({ service = 'police', type = 'robbery', p
 Server exports: `CreateCall, GetCall, GetCalls, UpdateCall, AddNote, AssignUnit, UnassignUnit,
 BroadcastCall, AutoDispatch, CloseCall, GetUnit, GetUnits, SetUnitStatus, FindNearestUnit,
 IsDispatcherOnDuty, IsDispatcher, RegisterAdapter, RegisterService, RegisterPhone, SmsCaller,
-IncomingSms, SendAiUnit, GetAiUnits`.
+IncomingSms, SendAiUnit, GetAiUnits, GenerateAiCall, SetAiCalls, AreAiCallsEnabled`.
 
 Server events (`AddEventHandler`): `pessimi42_dispatch:onCallCreated / onCallUpdated / onCallClosed /
 onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved / onAiSent`.

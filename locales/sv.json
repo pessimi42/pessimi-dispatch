@@ -54,7 +54,11 @@
     "sms_out": "Sms skickat",
     "sms_in": "Sms mottaget",
     "send_ai": "Skicka AI-enhet",
-    "ai_unit": "AI-enhet"
+    "ai_unit": "AI-enhet",
+    "ai_calls": "AI-samtal",
+    "ai_badge": "AI",
+    "on": "På",
+    "off": "Av"
   },
   "caller": {
     "title": "Nödnummer 112",
@@ -140,7 +144,8 @@
     "lang_unknown": "Okänt språk. Alternativ: {list}",
     "sms_failed": "Sms:et kunde inte skickas.",
     "ai_unavailable": "Ingen AI-enhet tillgänglig för detta uppdrag.",
-    "ai_players_on_duty": "Enheter från myndigheten är i tjänst – AI-enheter används bara när ingen är det."
+    "ai_players_on_duty": "Enheter från myndigheten är i tjänst – AI-enheter används bara när ingen är det.",
+    "no_permission": "Du har inte behörighet till det."
   },
   "duty": {
     "on": "Du är i tjänst som operatör.",
@@ -204,5 +209,100 @@
     "note_secure": "AI-patrull säkrade platsen.",
     "note_done": "AI-enheten lämnade platsen.",
     "note_failed": "AI-enheten kom inte fram."
+  },
+  "aicall": {
+    "robbery": {
+      "1": "Någon rånade just butiken med en kniv och sprang iväg!",
+      "2": "Två maskerade män tog min väska och körde iväg i en mörk bil."
+    },
+    "shooting": {
+      "1": "Jag hörde flera skott utanför, folk springer!",
+      "2": "Någon skjuter från en bil, jag gömmer mig bakom en mur."
+    },
+    "assault": {
+      "1": "En man misshandlar någon på gatan, skynda er.",
+      "2": "Ett gäng slog och sparkade min kompis, han blöder."
+    },
+    "theft": {
+      "1": "Min bil stals från parkeringen för en stund sedan.",
+      "2": "Någon stal min cykel, jag ser honom fortfarande cykla iväg."
+    },
+    "traffic": {
+      "1": "En bil kör väldigt fort och svänger mellan filerna.",
+      "2": "Ett fordon står parkerat tvärs över vägen och blockerar trafiken."
+    },
+    "domestic": {
+      "1": "Grannarna skriker och något gick just sönder med en smäll.",
+      "2": "Min partner hotar mig, jag har låst in mig i badrummet."
+    },
+    "suspicious": {
+      "1": "En man har känt på dörrhandtagen på parkerade bilar.",
+      "2": "Någon smyger runt husen med en ficklampa."
+    },
+    "injury": {
+      "1": "Jag föll från en stege och tror att benet är brutet.",
+      "2": "En arbetare skar sig illa i handen, det blöder mycket."
+    },
+    "unconscious": {
+      "1": "En man föll ihop på trottoaren och reagerar inte.",
+      "2": "Min pappa svimmade och jag får inte liv i honom."
+    },
+    "breathing": {
+      "1": "Min son kan inte andas ordentligt, läpparna ser blå ut.",
+      "2": "En äldre kvinna kippar efter luft och kan inte prata."
+    },
+    "chest_pain": {
+      "1": "Jag har kraftig bröstsmärta och vänster arm känns bedövad.",
+      "2": "Min man fick plötsligt ont i bröstet och svettas mycket."
+    },
+    "traffic_accident": {
+      "1": "Två bilar krockade i korsningen, en förare sitter fast.",
+      "2": "En bil körde på en fotgängare, personen ligger på vägen."
+    },
+    "overdose": {
+      "1": "Min kompis tog något och nu andas han knappt.",
+      "2": "Någon ligger i parken, det ligger tabletter bredvid honom."
+    },
+    "building_fire": {
+      "1": "Det kommer rök ur flerfamiljshuset, jag ser lågor!",
+      "2": "Det började brinna i vårt kök och elden sprider sig snabbt."
+    },
+    "vehicle_fire": {
+      "1": "En bil brinner vid vägkanten.",
+      "2": "Det kommer rök och lågor under motorhuven på en lastbil."
+    },
+    "wildfire": {
+      "1": "Gräset brinner i backen och elden växer.",
+      "2": "Jag ser en skogsbrand som sprider sig mot husen."
+    },
+    "rescue": {
+      "1": "Någon sitter fast i en hiss mellan våningarna.",
+      "2": "En person föll i vattnet och kommer inte upp."
+    },
+    "hazmat": {
+      "1": "En lastbil läcker vätska och det luktar starkt av kemikalier.",
+      "2": "Det luktar gas i byggnaden och folk känner sig yra."
+    },
+    "breakdown": {
+      "1": "Min bil dog mitt på vägen och startar inte.",
+      "2": "Motorn ryker och bilen stannade, jag behöver hjälp."
+    },
+    "tow": {
+      "1": "Min bil gled ner i diket, kan någon bärga den?",
+      "2": "En trasig bil blockerar infarten och måste bärgas."
+    },
+    "flat_tyre": {
+      "1": "Jag fick punktering och har inget reservhjul.",
+      "2": "Båda däcken på samma sida sprack, jag kan inte köra vidare."
+    },
+    "reply": {
+      "1": "Ja, jag är kvar här. Skynda er!",
+      "2": "Okej. Det pågår fortfarande, jag ser det härifrån.",
+      "3": "Tack, jag väntar här."
+    }
+  },
+  "aicalls": {
+    "on": "AI-samtal är på.",
+    "off": "AI-samtal är av."
   }
 }

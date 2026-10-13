@@ -54,7 +54,11 @@
     "sms_out": "Viesti lähetetty",
     "sms_in": "Viesti vastaanotettu",
     "send_ai": "Lähetä AI-yksikkö",
-    "ai_unit": "AI-yksikkö"
+    "ai_unit": "AI-yksikkö",
+    "ai_calls": "AI-ilmoitukset",
+    "ai_badge": "AI",
+    "on": "Päällä",
+    "off": "Pois"
   },
   "caller": {
     "title": "Hätänumero 112",
@@ -140,7 +144,8 @@
     "lang_unknown": "Tuntematon kieli. Vaihtoehdot: {list}",
     "sms_failed": "Tekstiviestiä ei voitu lähettää.",
     "ai_unavailable": "Tälle tehtävälle ei ole AI-yksikköä saatavilla.",
-    "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – AI-yksiköitä käytetään vain, kun ketään ei ole."
+    "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – AI-yksiköitä käytetään vain, kun ketään ei ole.",
+    "no_permission": "Sinulla ei ole oikeutta tähän."
   },
   "duty": {
     "on": "Olet vuorossa päivystäjänä.",
@@ -204,5 +209,100 @@
     "note_secure": "AI-partio varmisti kohteen.",
     "note_done": "AI-yksikkö poistui kohteesta.",
     "note_failed": "AI-yksikkö ei päässyt kohteeseen."
+  },
+  "aicall": {
+    "robbery": {
+      "1": "Joku ryösti juuri kaupan veitsen kanssa ja juoksi pois!",
+      "2": "Kaksi naamioitunutta miestä vei laukkuni ja ajoi pois tummalla autolla."
+    },
+    "shooting": {
+      "1": "Kuulin useita laukauksia ulkoa, ihmiset juoksevat!",
+      "2": "Joku ampuu autosta, olen piilossa seinän takana."
+    },
+    "assault": {
+      "1": "Mies hakkaa jotakuta kadulla, tulkaa nopeasti.",
+      "2": "Porukka löi ja potki ystävääni, hän vuotaa verta."
+    },
+    "theft": {
+      "1": "Autoni varastettiin parkkipaikalta hetki sitten.",
+      "2": "Joku varasti pyöräni, näen vielä kun hän ajaa pois."
+    },
+    "traffic": {
+      "1": "Auto ajaa todella kovaa ja kaahailee kaistalta toiselle.",
+      "2": "Ajoneuvo on pysäköity tien poikki ja tukkii liikenteen."
+    },
+    "domestic": {
+      "1": "Naapurit huutavat ja jotain hajosi juuri kovalla äänellä.",
+      "2": "Kumppanini uhkailee minua, olen lukittautunut kylpyhuoneeseen."
+    },
+    "suspicious": {
+      "1": "Mies on kokeillut pysäköityjen autojen ovenkahvoja.",
+      "2": "Joku hiippailee talojen ympärillä taskulampun kanssa."
+    },
+    "injury": {
+      "1": "Putosin tikkailta ja luulen että jalkani on murtunut.",
+      "2": "Työntekijä viilsi kätensä pahasti, verta tulee paljon."
+    },
+    "unconscious": {
+      "1": "Mies kaatui jalkakäytävälle eikä reagoi.",
+      "2": "Isäni pyörtyi enkä saa häntä hereille."
+    },
+    "breathing": {
+      "1": "Poikani ei pysty hengittämään kunnolla, huulet näyttävät sinisiltä.",
+      "2": "Iäkäs nainen haukkoo henkeä eikä pysty puhumaan."
+    },
+    "chest_pain": {
+      "1": "Minulla on kova rintakipu ja vasen käsi tuntuu tunnottomalta.",
+      "2": "Miehelleni tuli äkkiä rintakipua ja hän hikoilee paljon."
+    },
+    "traffic_accident": {
+      "1": "Kaksi autoa kolaroi risteyksessä, toinen kuljettaja on jumissa.",
+      "2": "Auto törmäsi jalankulkijaan, hän makaa tiellä."
+    },
+    "overdose": {
+      "1": "Kaverini otti jotain ja nyt hän tuskin hengittää.",
+      "2": "Puistossa makaa joku, vieressä on pillereitä."
+    },
+    "building_fire": {
+      "1": "Kerrostalosta tulee savua, näen liekkejä!",
+      "2": "Keittiömme syttyi palamaan ja palo leviää nopeasti."
+    },
+    "vehicle_fire": {
+      "1": "Auto palaa tien vieressä.",
+      "2": "Kuorma-auton konepellin alta tulee savua ja liekkejä."
+    },
+    "wildfire": {
+      "1": "Rinteellä palaa heinikko ja palo kasvaa.",
+      "2": "Näen metsäpalon, joka leviää kohti taloja."
+    },
+    "rescue": {
+      "1": "Joku on jumissa hississä kerrosten välissä.",
+      "2": "Ihminen putosi veteen eikä pääse ylös."
+    },
+    "hazmat": {
+      "1": "Kuorma-autosta vuotaa nestettä ja haisee voimakkaasti kemikaalilta.",
+      "2": "Rakennuksessa haisee kaasu ja ihmisiä huimaa."
+    },
+    "breakdown": {
+      "1": "Autoni sammui keskelle tietä eikä käynnisty.",
+      "2": "Moottori savuaa ja auto pysähtyi, tarvitsen apua."
+    },
+    "tow": {
+      "1": "Autoni liukui ojaan, voisiko joku hinata sen pois?",
+      "2": "Rikkoutunut auto tukkii sisäänajon, se pitää hinata."
+    },
+    "flat_tyre": {
+      "1": "Rengas puhkesi eikä minulla ole vararengasta.",
+      "2": "Molemmat renkaat samalta puolelta puhkesivat, en pääse eteenpäin."
+    },
+    "reply": {
+      "1": "Kyllä, olen vielä täällä. Tulkaa nopeasti!",
+      "2": "Selvä. Tilanne jatkuu yhä, näen sen täältä.",
+      "3": "Kiitos, odotan täällä."
+    }
+  },
+  "aicalls": {
+    "on": "AI-ilmoitukset ovat päällä.",
+    "off": "AI-ilmoitukset ovat pois päältä."
   }
 }

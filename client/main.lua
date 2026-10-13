@@ -193,6 +193,12 @@ RegisterNetEvent(Ev('client:callChanged'), function(call, kind)
 end)
 
 RegisterNetEvent(Ev('client:unitChanged'), function(unit) NUI.Send('unitChanged', unit) end)
+RegisterNetEvent(Ev('client:aiCallsState'), function(state) NUI.Send('aiCallsState', state) end)
+
+RegisterNUICallback('toggleAiCalls', function(data, cb)
+    TriggerServerEvent(Ev('server:aiCallsToggle'), data and data.state)
+    cb(1)
+end)
 RegisterNetEvent(Ev('client:unitRemoved'), function(src) NUI.Send('unitRemoved', src) end)
 
 RegisterNUICallback('action', function(data, cb)

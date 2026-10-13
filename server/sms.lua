@@ -17,6 +17,9 @@ function Sms.CallerNumber(call)
     return call and call.caller and call.caller.phone or nil
 end
 
+--- AI calls have no real phone: texts are only logged, and the "caller" may reply.
+local function isAi(call) return call and call._ai end
+
 local function caller(call)
     local src = call._callerSrc
     if src and not GetPlayerName(src) then src = nil end
@@ -27,11 +30,16 @@ end
 --- Returns the text that was sent, or nil.
 function Sms.ToCaller(call, text, key, vars, author)
     local number = Sms.CallerNumber(call)
-    if not Sms.Available() or not number then return nil end
+    if not number or (not isAi(call) and not Sms.Available()) then return nil end
     text = text or Locale.T(key, vars, langOf(caller(call)))
     text = Utils.Sanitize(text, Config.Sms.maxLength)
     if not text then return nil end
-    Phone.SendSms(number, text)
+    if isAi(call) then
+        -- only dispatcher messages get an answer, not automatic ones
+        if author and author ~= Config.Phone.number then AiCalls.OnDispatcherSms(call) end
+    else
+        Phone.SendSms(number, text)
+    end
     Calls.AddNote(call.id, text, author or Config.Phone.number, 'sms_out')
     return text
 end

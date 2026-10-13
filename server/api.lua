@@ -68,6 +68,11 @@ exports('GetAiUnits', function()
     return out
 end)
 
+--- AI calls
+exports('GenerateAiCall', function(service) return AiCalls.Generate(service) end)
+exports('SetAiCalls', function(state) AiCalls.Set(state == true) end)
+exports('AreAiCallsEnabled', function() return AiCalls.Enabled() end)
+
 --- Phone support for another phone script. See server/phones/_template.lua.
 exports('RegisterPhone', function(name, impl) return Phone.Register(name, impl) end)
 --- Text a call's caller from the dispatch number. Returns the sent text or nil.

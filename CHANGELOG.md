@@ -1,12 +1,25 @@
 # Changelog
 
-## v0.3.0-beta – AI units (2026-10-13)
+## v0.3.0-beta – AI calls & AI units (2026-10-13)
 
-NPC responders for calls that no player unit can take. Still a beta – please report
+Generated emergency calls for quiet moments, and NPC responders when nobody of a service is
+on duty. Still a beta – please report
 problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 ### New
 
+- **AI calls** – when players aren't calling 112, realistic calls and texts are generated
+  (robberies, collapses, car fires, breakdowns…) at locations around the map, so units and
+  dispatchers have something to do.
+  - Switch on/off in game with `/aicalls` or the **AI calls** button in the panel
+    (admins with ACE `pessimi42_dispatch.admin`, and on-duty dispatchers). Remembered
+    across restarts.
+  - Only when it's quiet (no player call or text for 5 minutes), only when someone can
+    respond, at most 3 open at once.
+  - About a quarter arrive as texts, and the caller answers the dispatcher's texts.
+  - Marked **AI** on the panel. Caller messages in English, Finnish and Swedish.
+  - Configurable in `Config.AiCalls`; exports `GenerateAiCall`, `SetAiCalls`,
+    `AreAiCallsEnabled`.
 - **AI units** – an NPC patrol car, ambulance, fire truck or tow truck drives to the call
   with sirens when nobody of that service is on duty. Players always come first: as soon
   as someone of that service clocks in, no more AI units are sent for it.
@@ -27,6 +40,11 @@ problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
   units are on duty but all busy.
 - `SendAiUnit` and `GetAiUnits` exports and an `onAiSent` server event.
 
+### Fixed
+
+- Texts translated on the server without a player's language (for example call-type labels
+  sent to ps-dispatch) showed the translation key instead of the text.
+
 ### Changed
 
 - A call with an AI unit on it counts as active: it isn't closed automatically while the
@@ -40,8 +58,8 @@ problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 ### Upgrading from 0.2.0-beta
 
 Replace the resource folder. If you changed `config/config.lua`, copy the new
-`Config.AiUnits` section into your version. To turn AI units off, set
-`Config.AiUnits.enabled = false`.
+`Config.AiCalls` and `Config.AiUnits` sections into your version. AI calls can be switched
+off in game with `/aicalls off`; AI units with `Config.AiUnits.enabled = false`.
 
 ## v0.2.0-beta – SMS & lb-phone (2026-10-13)
 
