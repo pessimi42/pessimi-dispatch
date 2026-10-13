@@ -155,8 +155,8 @@ function renderDetail() {
 
   const notes = (c.notes || []).map((n) => {
     const label = n.kind === 'sms_out' ? `${t('ui.sms_out')} · ` : n.kind === 'sms_in' ? `${t('ui.sms_in')} · ` : '';
-    const text = n.kind === 'ai' ? t(n.text) : n.text;
-    const author = n.kind === 'ai' ? t('ui.ai_unit') : (n.author || '');
+    const text = (n.kind === 'ai' || n.kind === 'sys') ? t(n.text) : n.text;
+    const author = n.kind === 'ai' ? t('ui.ai_unit') : n.kind === 'sys' ? t('ui.system') : (n.author || '');
     return `<div class="note ${esc(n.kind || '')}">${esc(text)}<small>${esc(label)}${esc(author)} · ${clock(n.at)}</small></div>`;
   }).join('');
 
@@ -189,7 +189,9 @@ function renderDetail() {
     <div class="d-msg">${esc(c.message || '—')}</div>
 
     <dl class="d-meta">
-      <dt>${esc(t('ui.location'))}</dt><dd>${esc(c.street || t('ui.unknown_location'))}</dd>
+      <dt>${esc(t('ui.location'))}</dt><dd>${esc(c.street || t('ui.unknown_location'))}${
+        c.tracking ? ` <span class="tag live">${esc(t('ui.tracking'))}</span>` : ''}${
+        c.locatedAt ? ` <span class="hint">· ${esc(t('ui.located', { ago: ago(c.locatedAt) }))}</span>` : ''}</dd>
       <dt>${esc(t('ui.caller'))}</dt><dd>${esc(c.caller?.name || t('ui.unknown'))}${c.caller?.phone ? ' · ' + esc(c.caller.phone) : ''}</dd>
       <dt>${esc(t('ui.origin'))}</dt><dd>${esc(t(`origin.${c.origin}`) === `origin.${c.origin}` ? c.origin : t(`origin.${c.origin}`))}</dd>
       <dt>${esc(t('ui.received'))}</dt><dd>${clock(c.createdAt)} (${esc(ago(c.createdAt))})</dd>
@@ -209,6 +211,7 @@ function renderDetail() {
 
     <div class="d-actions">
       ${c.coords ? `<button data-act="waypoint">${esc(t('ui.waypoint'))}</button>` : ''}
+      ${c.canLocate ? `<button data-act="locate">${esc(t('ui.locate'))}</button>` : ''}
       ${canAi ? `<button data-act="sendAi">${esc(t('ui.send_ai'))}</button>` : ''}
       ${closed ? '' : `<button data-act="broadcast">${esc(t('ui.broadcast'))}</button>
       <button data-act="close" class="${S.closeArmed === c.id ? 'danger' : 'warn'}">
@@ -339,6 +342,7 @@ document.addEventListener('click', (e) => {
     case 'waypoint': return c && action('waypoint', c.coords);
     case 'broadcast': return c && action('broadcast', { callId: c.id });
     case 'sendAi': return c && action('sendAi', { callId: c.id });
+    case 'locate': return c && action('locate', { callId: c.id });
     case 'close':
       if (!c) return;
       if (S.closeArmed === c.id) { S.closeArmed = null; action('close', { callId: c.id }); }

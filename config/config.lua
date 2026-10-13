@@ -69,6 +69,18 @@ Config.Sms = {
 }
 
 ---------------------------------------------------------------------------
+-- Caller location
+---------------------------------------------------------------------------
+Config.Location = {
+    track = true,                -- the call's location follows the caller while the call is open
+    interval = 10,               -- seconds between checks
+    minMove = 25.0,              -- metres the caller must move before the location is updated
+    maxMinutes = 30,             -- stop tracking a call after this long
+    locateButton = true,         -- "Locate caller" button for dispatchers
+    requirePhone = false,        -- with a phone script running: only callers with an equipped phone can be located
+}
+
+---------------------------------------------------------------------------
 -- AI units (NPC responders when no player unit can take a call)
 ---------------------------------------------------------------------------
 Config.AiUnits = {

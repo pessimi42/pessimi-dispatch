@@ -58,7 +58,11 @@
     "ai_calls": "AI calls",
     "ai_badge": "AI",
     "on": "On",
-    "off": "Off"
+    "off": "Off",
+    "locate": "Locate caller",
+    "tracking": "Tracking caller",
+    "located": "located {ago}",
+    "system": "System"
   },
   "caller": {
     "title": "Emergency number 112",
@@ -145,7 +149,8 @@
     "sms_failed": "The text message could not be sent.",
     "ai_unavailable": "No AI unit available for this call.",
     "ai_players_on_duty": "Units of this service are on duty – AI units are only used when nobody is.",
-    "no_permission": "You are not allowed to do that."
+    "no_permission": "You are not allowed to do that.",
+    "locate_unavailable": "The caller cannot be located (offline or no phone)."
   },
   "duty": {
     "on": "You are on duty as a dispatcher.",
@@ -304,5 +309,8 @@
   "aicalls": {
     "on": "AI calls are on.",
     "off": "AI calls are off."
+  },
+  "loc": {
+    "note_located": "Caller located."
   }
 }

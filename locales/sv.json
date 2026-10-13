@@ -58,7 +58,11 @@
     "ai_calls": "AI-samtal",
     "ai_badge": "AI",
     "on": "På",
-    "off": "Av"
+    "off": "Av",
+    "locate": "Lokalisera anmälaren",
+    "tracking": "Spårning på",
+    "located": "lokaliserad {ago}",
+    "system": "System"
   },
   "caller": {
     "title": "Nödnummer 112",
@@ -145,7 +149,8 @@
     "sms_failed": "Sms:et kunde inte skickas.",
     "ai_unavailable": "Ingen AI-enhet tillgänglig för detta uppdrag.",
     "ai_players_on_duty": "Enheter från myndigheten är i tjänst – AI-enheter används bara när ingen är det.",
-    "no_permission": "Du har inte behörighet till det."
+    "no_permission": "Du har inte behörighet till det.",
+    "locate_unavailable": "Anmälaren kan inte lokaliseras (offline eller ingen telefon)."
   },
   "duty": {
     "on": "Du är i tjänst som operatör.",
@@ -304,5 +309,8 @@
   "aicalls": {
     "on": "AI-samtal är på.",
     "off": "AI-samtal är av."
+  },
+  "loc": {
+    "note_located": "Anmälaren lokaliserad."
   }
 }

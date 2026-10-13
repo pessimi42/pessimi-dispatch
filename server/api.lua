@@ -60,6 +60,9 @@ end)
 exports('IsDispatcherOnDuty', function() return Dispatch.HasDispatcher() end)
 exports('IsDispatcher', function(src) return Dispatch.list[tonumber(src)] ~= nil end)
 
+--- Caller location
+exports('LocateCaller', function(id) return Location.Locate(id) end)
+
 --- AI units
 exports('SendAiUnit', function(id) return Ai.Send(id) end)
 exports('GetAiUnits', function()

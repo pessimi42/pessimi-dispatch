@@ -227,10 +227,16 @@ end)
 ---------------------------------------------------------------------------
 -- Units
 ---------------------------------------------------------------------------
+local function moved(a, b)
+    if not a or not b or not a.coords or not b.coords then return a ~= b end
+    return math.abs(a.coords.x - b.coords.x) > 1.0 or math.abs(a.coords.y - b.coords.y) > 1.0
+end
+
 RegisterNetEvent(Ev('client:myCall'), function(call)
     local changedCall = (call and call.id) ~= (MyCall and MyCall.id)
+    local relocated = not changedCall and moved(call, MyCall)
     MyCall = fillStreet(call)
-    if changedCall then Blips.SetMine(MyCall) end
+    if changedCall or relocated then Blips.SetMine(MyCall) end
     NUI.Send('myCall', MyCall)
 end)
 

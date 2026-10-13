@@ -58,7 +58,11 @@
     "ai_calls": "AI-ilmoitukset",
     "ai_badge": "AI",
     "on": "Päällä",
-    "off": "Pois"
+    "off": "Pois",
+    "locate": "Paikanna ilmoittaja",
+    "tracking": "Seuranta päällä",
+    "located": "paikannettu {ago}",
+    "system": "Järjestelmä"
   },
   "caller": {
     "title": "Hätänumero 112",
@@ -145,7 +149,8 @@
     "sms_failed": "Tekstiviestiä ei voitu lähettää.",
     "ai_unavailable": "Tälle tehtävälle ei ole AI-yksikköä saatavilla.",
     "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – AI-yksiköitä käytetään vain, kun ketään ei ole.",
-    "no_permission": "Sinulla ei ole oikeutta tähän."
+    "no_permission": "Sinulla ei ole oikeutta tähän.",
+    "locate_unavailable": "Ilmoittajaa ei voida paikantaa (ei paikalla tai ei puhelinta)."
   },
   "duty": {
     "on": "Olet vuorossa päivystäjänä.",
@@ -304,5 +309,8 @@
   "aicalls": {
     "on": "AI-ilmoitukset ovat päällä.",
     "off": "AI-ilmoitukset ovat pois päältä."
+  },
+  "loc": {
+    "note_located": "Ilmoittaja paikannettu."
   }
 }

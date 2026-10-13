@@ -1,13 +1,19 @@
 # Changelog
 
-## v0.3.0-beta – AI calls & AI units (2026-10-13)
+## v0.3.0-beta – AI calls, AI units & caller location (2026-10-13)
 
-Generated emergency calls for quiet moments, and NPC responders when nobody of a service is
-on duty. Still a beta – please report
+Generated emergency calls for quiet moments, NPC responders when nobody of a service is
+on duty, and automatic caller location. Still a beta – please report
 problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 ### New
 
+- **Caller location follows the caller** – while a call is open, its location moves with
+  the caller (e.g. a victim running away or someone driving to hospital). The dispatcher's
+  map, the units' GPS route and the street name update automatically. Shown as
+  "Tracking caller" in the call details. Settings in `Config.Location`.
+- **"Locate caller" button** – dispatchers can refresh the caller's position at any time,
+  like positioning a phone. Logged in the call's notes. `LocateCaller` export.
 - **AI calls** – when players aren't calling 112, realistic calls and texts are generated
   (robberies, collapses, car fires, breakdowns…) at locations around the map, so units and
   dispatchers have something to do.
@@ -58,7 +64,7 @@ problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 ### Upgrading from 0.2.0-beta
 
 Replace the resource folder. If you changed `config/config.lua`, copy the new
-`Config.AiCalls` and `Config.AiUnits` sections into your version. AI calls can be switched
+`Config.Location`, `Config.AiCalls` and `Config.AiUnits` sections into your version. AI calls can be switched
 off in game with `/aicalls off`; AI units with `Config.AiUnits.enabled = false`.
 
 ## v0.2.0-beta – SMS & lb-phone (2026-10-13)

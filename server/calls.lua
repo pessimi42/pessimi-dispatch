@@ -17,6 +17,8 @@ function Calls.Public(call)
     for src in pairs(call._units) do units[#units + 1] = src end
     out.units = units
     out.canSms = call.status ~= 'closed' and Sms.CallerNumber(call) ~= nil and (call._ai or Sms.Available())
+    out.tracking = Location.Tracking(call)
+    out.canLocate = Config.Location.locateButton and Location.CanLocate(call)
     return out
 end
 

@@ -32,6 +32,12 @@ notifications if it is running, otherwise the framework's own.
 | Dispatcher | `F6` / `/dispatch` opens the panel: queue sorted by priority A–D, call details, reclassify service/type/priority, notes, assign units, request units (broadcast), close. `/dispatchduty` toggles duty. New calls are created at your map waypoint. |
 | Units | Get a toast + sound and a GPS route when assigned. `/status available\|enroute\|onscene\|busy\|unavailable` (or radio codes like `10-8`), `/callsign P-11`, `/respond [id]` to take a broadcast call. Switches to *on scene* automatically on arrival. Small HUD card shows status and current call. |
 
+**Caller location:** 112 calls and texts are placed at the caller's position. While the call
+is open, the location **follows the caller** automatically (checked every 10 s, updated after
+25 m of movement, for up to 30 min) – the dispatcher's map, the units' GPS route and the street
+name update with it. Dispatchers can also press **Locate caller** to refresh it immediately.
+Settings in `Config.Location`; `requirePhone = true` only locates callers with an equipped phone.
+
 **Call lifecycle:** `pending` → `broadcast` (units requested) → `active` (unit assigned) → `closed`.
 
 ### No dispatcher on duty (`Config.Fallback`)
@@ -154,7 +160,7 @@ exports.pessimi42_dispatch:CreateAlert({ service = 'police', type = 'robbery', p
 Server exports: `CreateCall, GetCall, GetCalls, UpdateCall, AddNote, AssignUnit, UnassignUnit,
 BroadcastCall, AutoDispatch, CloseCall, GetUnit, GetUnits, SetUnitStatus, FindNearestUnit,
 IsDispatcherOnDuty, IsDispatcher, RegisterAdapter, RegisterService, RegisterPhone, SmsCaller,
-IncomingSms, SendAiUnit, GetAiUnits, GenerateAiCall, SetAiCalls, AreAiCallsEnabled`.
+IncomingSms, SendAiUnit, GetAiUnits, GenerateAiCall, SetAiCalls, AreAiCallsEnabled, LocateCaller`.
 
 Server events (`AddEventHandler`): `pessimi42_dispatch:onCallCreated / onCallUpdated / onCallClosed /
 onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved / onAiSent`.
