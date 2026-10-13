@@ -14,7 +14,7 @@ Add the job to your framework with one of the snippets below.
     grades = {
         [0] = { name = 'Harjoittelija', payment = 50 },
         [1] = { name = 'Päivystäjä', payment = 75 },
-        [2] = { name = 'Vuoroesimies', isboss = true, bankAuth = true, payment = 100 },
+        [2] = { name = 'Vuoromestari', isboss = true, bankAuth = true, payment = 100 },
     },
 },
 ```
