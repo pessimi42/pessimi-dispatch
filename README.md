@@ -59,10 +59,13 @@ fire truck or tow truck drives to the scene with sirens and does its job.
 | Fire | puts out fires around the scene |
 | Mechanic | repairs the nearest vehicle |
 
-- **Automatic** when no dispatcher is on duty: a call that still has no player unit after
-  `waitSeconds` (default 45 s) gets an AI unit. If a player responds in the meantime, no AI
-  is sent. With `trigger = 'no_on_duty'` AI only comes when nobody of that service is on duty.
-- **Dispatchers** can always send one with **Send AI unit** in the call details.
+- **Players come first:** AI is only used when nobody of that service is on duty. As soon
+  as a police officer or medic clocks in, their service gets no more AI units. (Set
+  `trigger = 'no_available'` to also use AI when units are on duty but all busy.)
+- **Automatic** when no dispatcher is on duty: a call that still has no unit after
+  `waitSeconds` (default 45 s) gets an AI unit.
+- **Dispatchers** can send one with **Send AI unit** in the call details – the button only
+  appears when nobody of that service is on duty.
 - The caller (or the nearest player) controls the NPCs. If nobody is near the call, the
   unit still arrives after a short delay and does its job, just without visible NPCs.
 - The call is closed when the AI unit leaves, unless players are working it too.

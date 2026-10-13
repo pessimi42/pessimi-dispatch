@@ -139,7 +139,8 @@
     "no_broadcast": "Det finns inget uppdrag att kvittera.",
     "lang_unknown": "Okänt språk. Alternativ: {list}",
     "sms_failed": "Sms:et kunde inte skickas.",
-    "ai_unavailable": "Ingen AI-enhet tillgänglig för detta uppdrag."
+    "ai_unavailable": "Ingen AI-enhet tillgänglig för detta uppdrag.",
+    "ai_players_on_duty": "Enheter från myndigheten är i tjänst – AI-enheter används bara när ingen är det."
   },
   "duty": {
     "on": "Du är i tjänst som operatör.",

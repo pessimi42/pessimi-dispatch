@@ -8,21 +8,23 @@ problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 ### New
 
 - **AI units** – an NPC patrol car, ambulance, fire truck or tow truck drives to the call
-  with sirens when no player unit is available.
+  with sirens when nobody of that service is on duty. Players always come first: as soon
+  as someone of that service clocks in, no more AI units are sent for it.
   - Police secure the scene for a while.
   - EMS revive the caller through your medical script (qbx_medical, qb-ambulancejob and
     esx_ambulancejob supported out of the box; others via `Config.AiUnits.reviveEvent`).
   - Fire puts out fires around the scene.
   - Mechanics repair the nearest vehicle.
-- **Automatic when no dispatcher is on duty** – a call still without a player unit after
-  45 seconds (`waitSeconds`) gets an AI unit. If a player responds first, no AI is sent.
-- **"Send AI unit" button** in the dispatcher panel. AI units and their status (en route,
+- **Automatic when no dispatcher is on duty** – a call still without a unit after
+  45 seconds (`waitSeconds`) gets an AI unit.
+- **"Send AI unit" button** in the dispatcher panel, shown only when nobody of the call's
+  service is on duty. AI units and their status (en route,
   on scene, left) show in the call details, and their actions are logged in the notes.
 - **Works without nearby players** – the caller or the nearest player controls the NPCs.
   If nobody is near the call, the unit still arrives and does its job without visible NPCs.
 - **Configurable** in `Config.AiUnits`: vehicles, peds, timings, per-service on/off, the
-  maximum number of AI units at once and whether AI only comes when nobody of that
-  service is on duty (`trigger = 'no_on_duty'`).
+  maximum number of AI units at once, and `trigger = 'no_available'` to also use AI when
+  units are on duty but all busy.
 - `SendAiUnit` and `GetAiUnits` exports and an `onAiSent` server event.
 
 ### Changed

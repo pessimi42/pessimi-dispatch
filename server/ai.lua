@@ -87,13 +87,20 @@ end
 ---------------------------------------------------------------------------
 -- Send
 ---------------------------------------------------------------------------
---- Returns the AI id, or nil and a reason ('closed'|'no_coords'|'no_service'|'busy'|'limit').
+--- True if Config.AiUnits.trigger keeps AI away because players of `service` are on duty.
+function Ai.PlayersOnDuty(service)
+    return cfg.trigger ~= 'no_available' and #Units.OnDutyIn(service) > 0
+end
+
+--- Returns the AI id, or nil and a reason
+--- ('closed'|'no_coords'|'no_service'|'players_on_duty'|'busy'|'limit').
 function Ai.Send(callId)
     local call = Calls.Get(callId)
     if not call or call.status == 'closed' then return nil, 'closed' end
     if not call.coords then return nil, 'no_coords' end
     local service = Ai.ServiceFor(call)
     if not service then return nil, 'no_service' end
+    if Ai.PlayersOnDuty(service) then return nil, 'players_on_duty' end
     if Ai.OnCall(call.id) then return nil, 'busy' end
     if Ai.Count() >= cfg.maxActive then return nil, 'limit' end
 
@@ -278,9 +285,7 @@ function Ai.Schedule(callId)
         if not call or call.status == 'closed' or call.status == 'active' then return end
         if Calls.UnitCount(call) > 0 or Ai.OnCall(call.id) then return end
         if Dispatch.HasDispatcher() and not cfg.autoWithDispatcher then return end
-        local service = Ai.ServiceFor(call)
-        if not service then return end
-        if cfg.trigger == 'no_on_duty' and #Units.OnDutyIn(service) > 0 then return end
+        if not Ai.ServiceFor(call) then return end
         Ai.Send(call.id)
     end)
 end

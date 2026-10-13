@@ -47,6 +47,7 @@ local function sendInit()
         quickReplies = Config.Sms.quickReplies,
         aiServices = aiServices(),
         fallbackService = Config.Fallback.unspecifiedService,
+        aiOnlyWhenNoneOnDuty = Config.AiUnits.trigger ~= 'no_available',
         role = Role,
     })
     -- Messages sent before the page loaded were dropped; replay unit state.

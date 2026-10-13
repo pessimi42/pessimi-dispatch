@@ -76,11 +76,11 @@ Config.AiUnits = {
     -- Automatic dispatch: a call that still has no unit after `waitSeconds` gets an AI unit.
     auto = true,
     waitSeconds = 45,
-    -- 'no_available' = send AI when no player unit took the call (busy or none on duty)
-    -- 'no_on_duty'   = send AI only when nobody of that service is on duty at all
-    trigger = 'no_available',
+    -- 'no_on_duty'   = AI only when nobody of that service is on duty (players always come first)
+    -- 'no_available' = AI also when units are on duty but all busy
+    -- Applies to automatic dispatch and to the dispatcher's "Send AI unit" button.
+    trigger = 'no_on_duty',
     autoWithDispatcher = false,  -- true: also send automatically while a dispatcher is on duty
-                                 -- (dispatchers can always send one from the panel)
     maxActive = 4,               -- AI units on the map at the same time
     closeWhenDone = true,        -- close the call when the AI unit leaves (if no players are on it)
 

@@ -139,7 +139,8 @@
     "no_broadcast": "Ei tehtävää, johon vastata.",
     "lang_unknown": "Tuntematon kieli. Vaihtoehdot: {list}",
     "sms_failed": "Tekstiviestiä ei voitu lähettää.",
-    "ai_unavailable": "Tälle tehtävälle ei ole AI-yksikköä saatavilla."
+    "ai_unavailable": "Tälle tehtävälle ei ole AI-yksikköä saatavilla.",
+    "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – AI-yksiköitä käytetään vain, kun ketään ei ole."
   },
   "duty": {
     "on": "Olet vuorossa päivystäjänä.",

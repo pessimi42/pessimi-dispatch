@@ -31,6 +31,7 @@ const S = {
   sms: false,
   quickReplies: [],
   aiServices: [],
+  aiOnlyWhenNoneOnDuty: true,
   fallbackService: 'police',
 };
 
@@ -133,7 +134,9 @@ function renderDetail() {
 
   const aiFor = c.service || (S.aiServices.includes(S.fallbackService) ? S.fallbackService : null);
   const aiBusy = (c.ai || []).some((a) => a.status === 'enroute' || a.status === 'onscene');
-  const canAi = !closed && c.coords && aiFor && S.aiServices.includes(aiFor) && !aiBusy;
+  const playersOnDuty = [...S.units.values()].some((u) => u.service === aiFor);
+  const canAi = !closed && c.coords && aiFor && S.aiServices.includes(aiFor) && !aiBusy
+    && !(S.aiOnlyWhenNoneOnDuty && playersOnDuty);
   const aiUnits = (c.ai || []).map((a) =>
     `<span class="u ai">${esc(t('ui.ai_unit'))} · ${esc(svcName(a.service))} · ${esc(t(`ai_status.${a.status}`))}</span>`).join('');
 
@@ -386,6 +389,7 @@ const handlers = {
     S.services = d.services; S.priorities = d.priorities; S.statuses = d.statuses;
     S.hud = d.hud; S.role = d.role || S.role; S.quickReplies = d.quickReplies || [];
     S.aiServices = d.aiServices || []; S.fallbackService = d.fallbackService || S.fallbackService;
+    S.aiOnlyWhenNoneOnDuty = d.aiOnlyWhenNoneOnDuty !== false;
     applyStaticText(); renderPanel(); renderHud();
   },
   locale(d) { S.dict = d.locale; S.lang = d.lang; applyStaticText(); renderPanel(); renderHud(); },

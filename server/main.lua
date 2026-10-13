@@ -92,8 +92,10 @@ local actions = {
     note = function(src, p) Calls.AddNote(tonumber(p.callId), p.text, Dispatch.list[src].name) end,
     close = function(_, p) Calls.Close(tonumber(p.callId)) end,
     sendAi = function(src, p)
-        local ok = Ai.Send(tonumber(p.callId))
-        if not ok then Notify(src, 'error.ai_unavailable', nil, 'error') end
+        local ok, why = Ai.Send(tonumber(p.callId))
+        if not ok then
+            Notify(src, why == 'players_on_duty' and 'error.ai_players_on_duty' or 'error.ai_unavailable', nil, 'error')
+        end
     end,
     sms = function(src, p)
         local call = Calls.Get(tonumber(p.callId))

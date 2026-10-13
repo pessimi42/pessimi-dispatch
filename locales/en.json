@@ -139,7 +139,8 @@
     "no_broadcast": "There is no call to respond to.",
     "lang_unknown": "Unknown language. Options: {list}",
     "sms_failed": "The text message could not be sent.",
-    "ai_unavailable": "No AI unit available for this call."
+    "ai_unavailable": "No AI unit available for this call.",
+    "ai_players_on_duty": "Units of this service are on duty – AI units are only used when nobody is."
   },
   "duty": {
     "on": "You are on duty as a dispatcher.",
