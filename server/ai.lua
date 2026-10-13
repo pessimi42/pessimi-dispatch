@@ -134,8 +134,9 @@ end
 
 --- Returns the AI id, or nil and a reason
 --- ('closed'|'no_coords'|'no_service'|'players_on_duty'|'busy'|'limit').
-local function refuse(callId, why)
-    Utils.Debug(('AI unit NOT sent to call #%s: %s'):format(tostring(callId), why))
+--- Debug print with details; the returned reason stays a plain code callers can compare.
+local function refuse(callId, why, detail)
+    Utils.Debug(('AI unit NOT sent to call #%s: %s%s'):format(tostring(callId), why, detail and (' (' .. detail .. ')') or ''))
     return nil, why
 end
 
@@ -144,8 +145,8 @@ function Ai.Send(callId)
     if not call or call.status == 'closed' then return refuse(callId, 'closed') end
     if not call.coords then return refuse(callId, 'no_coords') end
     local service = Ai.ServiceFor(call)
-    if not service then return refuse(callId, 'no_service (service disabled in Config.AiUnits or services.lua)') end
-    if Ai.PlayersOnDuty(service) then return refuse(callId, 'players_on_duty (' .. service .. ' units on duty, trigger = no_on_duty)') end
+    if not service then return refuse(callId, 'no_service', 'service disabled in Config.AiUnits or services.lua') end
+    if Ai.PlayersOnDuty(service) then return refuse(callId, 'players_on_duty', service .. ' units on duty, trigger = no_on_duty') end
     if Ai.OnCall(call.id) then return refuse(callId, 'busy') end
     if Ai.Count() >= cfg.maxActive then return refuse(callId, 'limit') end
 
@@ -389,7 +390,7 @@ function Ai.Schedule(callId)
         if not Ai.ServiceFor(call) then return end
         local ok, why = Ai.Send(call.id)
         if not ok and why ~= 'busy' and why ~= 'closed' then
-            local key = why:find('^players_on_duty') and 'ai.note_not_sent_players'
+            local key = why == 'players_on_duty' and 'ai.note_not_sent_players'
                 or why == 'limit' and 'ai.note_not_sent_limit' or 'ai.note_not_sent'
             Calls.AddNote(call.id, key, nil, 'sys')
         end
