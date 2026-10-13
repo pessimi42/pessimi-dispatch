@@ -1,0 +1,89 @@
+# Changelog
+
+## v0.2.0-beta – SMS & lb-phone (2026-10-13)
+
+Adds text messaging between the dispatch centre, callers and units, with lb-phone as the
+first supported phone. Still a beta – please report problems in
+[Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### New
+
+- **lb-phone support**, detected automatically. Callers' real lb-phone numbers are shown
+  on the panel.
+- **Text 112** – a text to 112 creates a new call, or is added to the caller's open call.
+  Useful when a caller can't talk.
+- **SMS from the dispatcher panel** – quick replies ("Help is on the way", "Stay where you
+  are", "Move to a safe place", "Describe the people or vehicles", "Call back") and free
+  text. Every SMS appears in the call's notes.
+- **Automatic texts to callers** – call received, help on the way and case closed. Each
+  can be switched off in `Config.Sms.auto`.
+- **Texts in the reader's language** – callers and units get messages in the language
+  they chose with `/dispatchlang`.
+- **Call details for units** – assigned units get the call summary and a location pin by
+  SMS (`Config.Sms.toUnits`).
+- **Phone required to call 112** (optional) – `Config.Phone.requirePhone`.
+- **112 app on the phone** (optional) – opens the emergency call form. Setup in
+  `install/lb-phone.md`.
+- **Other phones** – `RegisterPhone` export and `server/phones/_template.lua`, plus
+  `SmsCaller` and `IncomingSms` exports.
+
+### Changed
+
+- When a phone is running, "help is on the way" reaches the caller as an SMS instead of an
+  on-screen notification. Without a phone everything works as in 0.1.0-beta.
+
+### Needs testing on live servers
+
+- Whether lb-phone accepts `112` as the sender of a text. If it doesn't, the message is
+  shown as a phone notification titled "112" instead.
+
+### Upgrading from 0.1.0-beta
+
+Replace the resource folder. If you changed `config/config.lua`, copy the new
+`Config.Phone` and `Config.Sms` sections into your version.
+
+## v0.1.0-beta – First beta (2026-10-13)
+
+First public beta of **pessimi42_dispatch**, an emergency dispatcher (112) job for FiveM.
+Core features work, but the resource has not been tested on live servers yet – please
+report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### Highlights
+
+- **Works on Qbox, QBCore and ESX**, detected automatically. Without a framework it runs
+  standalone with ACE permissions.
+- **112 calls from players** – `/112` opens a form (choose service, describe what
+  happened), `/112 <text>` sends straight away. Calls use the player's server-side
+  position and are rate-limited.
+- **Dispatcher panel** (`F6` / `/dispatch`) – call queue sorted by priority A–D, call
+  details, reclassify service, type and priority, notes, assign and remove units,
+  request units (broadcast), close calls, history of closed calls. Dispatchers can also
+  create calls at their map waypoint.
+- **Units** – police and EMS. Toast, sound and GPS route when assigned, `/status`
+  (also accepts radio codes such as `10-8`), `/callsign`, `/respond` for broadcast calls,
+  automatic *on scene* on arrival, and a small status card on screen.
+- **No dispatcher on duty** – calls go to the nearest available unit of the right
+  service automatically. If nobody is free, all on-duty units of that service are
+  alerted. When the last dispatcher goes off duty, waiting calls are handed out the
+  same way.
+- **Ready for more services** – fire and roadside assistance are included and can be
+  enabled in `config/services.lua`. New services need only a config block and
+  translations.
+- **Integrations** – ps-dispatch in both directions (its alerts appear on the panel,
+  assignments can be shown in the ps-dispatch UI). Exports, server events and a
+  template for connecting other dispatch scripts and MDTs.
+- **Languages** – English, Finnish and Swedish. Each player can choose their own with
+  `/dispatchlang`. New languages are a single JSON file.
+
+### Known limitations
+
+- Calls are kept in memory and are cleared when the resource restarts.
+- The dispatcher panel does not show unit positions.
+- Not yet tested in game on all frameworks; the ps-dispatch integration follows its
+  documented exports and still needs live testing.
+
+### Installation
+
+Download `pessimi42_dispatch-v0.1.0-beta.zip` from the release, put the
+`pessimi42_dispatch` folder in your resources and follow the README. Keep the folder
+name `pessimi42_dispatch`.

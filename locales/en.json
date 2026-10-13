@@ -1,0 +1,188 @@
+{
+  "_meta": {
+    "name": "English"
+  },
+  "ui": {
+    "title": "Emergency Dispatch",
+    "calls": "Calls",
+    "units": "Units",
+    "history": "Closed",
+    "new_call": "New call",
+    "no_calls": "No active calls",
+    "no_units": "No units on duty",
+    "select_call": "Select a call to see its details",
+    "all": "All",
+    "message": "Message",
+    "information": "Additional info",
+    "location": "Location",
+    "caller": "Caller",
+    "origin": "Source",
+    "received": "Received",
+    "assigned_units": "Assigned units",
+    "no_assigned": "No units assigned",
+    "notes": "Notes",
+    "add_note": "Add a note…",
+    "add": "Add",
+    "send": "Send",
+    "cancel": "Cancel",
+    "create": "Create",
+    "waypoint": "Set waypoint",
+    "broadcast": "Request units",
+    "close_call": "Close call",
+    "confirm_close": "Click again to close",
+    "assign": "Assign",
+    "unassign": "Remove",
+    "unknown_location": "Unknown location",
+    "unknown": "Unknown",
+    "unspecified": "Unspecified",
+    "service": "Service",
+    "type": "Call type",
+    "priority": "Priority",
+    "status": "Status",
+    "language": "Language",
+    "new_call_title": "Create call",
+    "new_call_hint": "Location is taken from your map waypoint, if one is set.",
+    "ago_now": "just now",
+    "ago_m": "{n} min ago",
+    "ago_h": "{n} h ago",
+    "units_count": "{n} units",
+    "my_call": "Current call",
+    "no_call": "No call",
+    "callsign_missing": "no callsign",
+    "sms": "SMS to caller",
+    "sms_placeholder": "Write a text message…",
+    "sms_out": "SMS sent",
+    "sms_in": "SMS received"
+  },
+  "caller": {
+    "title": "Emergency number 112",
+    "which_service": "What kind of help do you need?",
+    "not_sure": "Not sure",
+    "describe": "What happened, and where are you?",
+    "sent": "Your emergency call has been received. Stay where you are if it is safe.",
+    "cooldown": "Please wait {seconds} s before calling again.",
+    "too_short": "Please describe the emergency.",
+    "no_phone": "You need a phone to call 112.",
+    "units_assigned": "Help is on the way."
+  },
+  "toast": {
+    "new_call": "New call #{id}",
+    "assigned": "Assigned to call #{id}",
+    "broadcast": "Units requested – call #{id}",
+    "respond_hint": "Respond: /{cmd} {id}"
+  },
+  "call_status": {
+    "pending": "Waiting",
+    "broadcast": "Units requested",
+    "active": "In progress",
+    "closed": "Closed"
+  },
+  "unit_status": {
+    "available": "Available",
+    "enroute": "En route",
+    "onscene": "On scene",
+    "busy": "Busy",
+    "unavailable": "Unavailable"
+  },
+  "service": {
+    "police": "Police",
+    "ems": "EMS",
+    "fire": "Fire & Rescue",
+    "mechanic": "Roadside Assistance"
+  },
+  "priority": {
+    "A": "A – Life-threatening",
+    "B": "B – Urgent",
+    "C": "C – Non-urgent",
+    "D": "D – Low"
+  },
+  "calltype": {
+    "general": "General",
+    "robbery": "Robbery",
+    "shooting": "Shots fired",
+    "assault": "Assault",
+    "theft": "Theft",
+    "traffic": "Traffic",
+    "domestic": "Domestic dispute",
+    "suspicious": "Suspicious activity",
+    "injury": "Injury",
+    "unconscious": "Unconscious person",
+    "breathing": "Breathing difficulty",
+    "chest_pain": "Chest pain",
+    "traffic_accident": "Traffic accident",
+    "overdose": "Poisoning / overdose",
+    "building_fire": "Building fire",
+    "vehicle_fire": "Vehicle fire",
+    "wildfire": "Wildfire",
+    "rescue": "Rescue",
+    "hazmat": "Hazardous materials",
+    "breakdown": "Breakdown",
+    "tow": "Tow",
+    "flat_tyre": "Flat tyre"
+  },
+  "origin": {
+    "112": "Emergency call",
+    "dispatcher": "Dispatcher",
+    "alert": "Automatic alert",
+    "api": "System",
+    "ps-dispatch": "ps-dispatch",
+    "sms": "Text message"
+  },
+  "error": {
+    "not_dispatcher": "You are not an on-duty dispatcher.",
+    "not_dispatcher_job": "You are not employed as a dispatcher.",
+    "not_unit": "You are not an on-duty unit.",
+    "invalid_status": "Unknown status. Options: {list}",
+    "no_call": "Call not found.",
+    "no_broadcast": "There is no call to respond to.",
+    "lang_unknown": "Unknown language. Options: {list}",
+    "sms_failed": "The text message could not be sent."
+  },
+  "duty": {
+    "on": "You are on duty as a dispatcher.",
+    "off": "You are off duty."
+  },
+  "unit": {
+    "status_set": "Status: {status}",
+    "callsign_set": "Callsign set to {callsign}",
+    "unassigned": "You were removed from call #{id}.",
+    "call_closed": "Call #{id} was closed.",
+    "responding": "Responding to call #{id}."
+  },
+  "cmd": {
+    "112": "Call the emergency number",
+    "message": "message",
+    "status": "Set your unit status",
+    "callsign": "Set your callsign",
+    "respond": "Respond to a call",
+    "duty": "Toggle dispatcher duty",
+    "lang": "Change the dispatch language"
+  },
+  "key": {
+    "panel": "Dispatch: open panel",
+    "respond": "Dispatch: respond to latest call"
+  },
+  "lang": {
+    "set": "Language: {name}"
+  },
+  "sms": {
+    "received": "112: Your emergency call has been received (case #{id}). Stay where you are if it is safe.",
+    "assigned": "112: Help is on the way (case #{id}).",
+    "closed": "112: Your case #{id} has been closed. Call 112 again if you need help.",
+    "unit_details": "112 #{id} [{priority}] {type} – {street}: {message}",
+    "quick": {
+      "on_the_way": "112: Help is on the way. Stay where you are if it is safe.",
+      "stay_put": "112: Please stay where you are and keep your phone with you.",
+      "safe_place": "112: Move to a safe place if you can, and let us know where you are.",
+      "describe": "112: Can you describe the people or vehicles involved?",
+      "call_back": "112: We could not reach you. Please call 112 again."
+    },
+    "label": {
+      "on_the_way": "On the way",
+      "stay_put": "Stay put",
+      "safe_place": "Safe place",
+      "describe": "Describe",
+      "call_back": "Call back"
+    }
+  }
+}

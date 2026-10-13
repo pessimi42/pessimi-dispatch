@@ -1,0 +1,188 @@
+{
+  "_meta": {
+    "name": "Suomi"
+  },
+  "ui": {
+    "title": "Hätäkeskus",
+    "calls": "Tehtävät",
+    "units": "Yksiköt",
+    "history": "Päättyneet",
+    "new_call": "Uusi tehtävä",
+    "no_calls": "Ei aktiivisia tehtäviä",
+    "no_units": "Ei yksiköitä vuorossa",
+    "select_call": "Valitse tehtävä nähdäksesi tiedot",
+    "all": "Kaikki",
+    "message": "Ilmoitus",
+    "information": "Lisätiedot",
+    "location": "Sijainti",
+    "caller": "Ilmoittaja",
+    "origin": "Lähde",
+    "received": "Vastaanotettu",
+    "assigned_units": "Hälytetyt yksiköt",
+    "no_assigned": "Ei hälytettyjä yksiköitä",
+    "notes": "Muistiinpanot",
+    "add_note": "Lisää muistiinpano…",
+    "add": "Lisää",
+    "send": "Lähetä",
+    "cancel": "Peruuta",
+    "create": "Luo",
+    "waypoint": "Aseta reittipiste",
+    "broadcast": "Pyydä yksiköitä",
+    "close_call": "Päätä tehtävä",
+    "confirm_close": "Paina uudelleen päättääksesi",
+    "assign": "Hälytä",
+    "unassign": "Poista",
+    "unknown_location": "Sijainti tuntematon",
+    "unknown": "Tuntematon",
+    "unspecified": "Määrittelemätön",
+    "service": "Viranomainen",
+    "type": "Tehtävätyyppi",
+    "priority": "Kiireellisyys",
+    "status": "Tila",
+    "language": "Kieli",
+    "new_call_title": "Luo tehtävä",
+    "new_call_hint": "Sijainti otetaan karttasi reittipisteestä, jos se on asetettu.",
+    "ago_now": "juuri nyt",
+    "ago_m": "{n} min sitten",
+    "ago_h": "{n} h sitten",
+    "units_count": "{n} yksikköä",
+    "my_call": "Nykyinen tehtävä",
+    "no_call": "Ei tehtävää",
+    "callsign_missing": "ei tunnusta",
+    "sms": "Tekstiviesti ilmoittajalle",
+    "sms_placeholder": "Kirjoita tekstiviesti…",
+    "sms_out": "Viesti lähetetty",
+    "sms_in": "Viesti vastaanotettu"
+  },
+  "caller": {
+    "title": "Hätänumero 112",
+    "which_service": "Millaista apua tarvitset?",
+    "not_sure": "En tiedä",
+    "describe": "Mitä on tapahtunut ja missä olet?",
+    "sent": "Hätäpuhelusi on vastaanotettu. Pysy paikallasi, jos se on turvallista.",
+    "cooldown": "Odota {seconds} s ennen kuin soitat uudelleen.",
+    "too_short": "Kerro, mitä on tapahtunut.",
+    "no_phone": "Tarvitset puhelimen soittaaksesi 112:een.",
+    "units_assigned": "Apua on tulossa."
+  },
+  "toast": {
+    "new_call": "Uusi tehtävä #{id}",
+    "assigned": "Hälytetty tehtävälle #{id}",
+    "broadcast": "Yksiköitä pyydetään – tehtävä #{id}",
+    "respond_hint": "Kuittaa: /{cmd} {id}"
+  },
+  "call_status": {
+    "pending": "Odottaa",
+    "broadcast": "Yksiköitä pyydetty",
+    "active": "Käynnissä",
+    "closed": "Päättynyt"
+  },
+  "unit_status": {
+    "available": "Vapaa",
+    "enroute": "Matkalla",
+    "onscene": "Kohteessa",
+    "busy": "Varattu",
+    "unavailable": "Ei käytettävissä"
+  },
+  "service": {
+    "police": "Poliisi",
+    "ems": "Ensihoito",
+    "fire": "Pelastustoimi",
+    "mechanic": "Tiepalvelu"
+  },
+  "priority": {
+    "A": "A – Henkeä uhkaava",
+    "B": "B – Kiireellinen",
+    "C": "C – Kiireetön",
+    "D": "D – Matala"
+  },
+  "calltype": {
+    "general": "Yleinen",
+    "robbery": "Ryöstö",
+    "shooting": "Ampuminen",
+    "assault": "Pahoinpitely",
+    "theft": "Varkaus",
+    "traffic": "Liikenne",
+    "domestic": "Perheväkivalta / riita",
+    "suspicious": "Epäilyttävä toiminta",
+    "injury": "Vamma",
+    "unconscious": "Tajuton henkilö",
+    "breathing": "Hengitysvaikeus",
+    "chest_pain": "Rintakipu",
+    "traffic_accident": "Liikenneonnettomuus",
+    "overdose": "Myrkytys / yliannostus",
+    "building_fire": "Rakennuspalo",
+    "vehicle_fire": "Ajoneuvopalo",
+    "wildfire": "Maastopalo",
+    "rescue": "Pelastustehtävä",
+    "hazmat": "Vaaralliset aineet",
+    "breakdown": "Ajoneuvon rikkoutuminen",
+    "tow": "Hinaus",
+    "flat_tyre": "Rengasrikko"
+  },
+  "origin": {
+    "112": "Hätäpuhelu",
+    "dispatcher": "Päivystäjä",
+    "alert": "Automaattinen hälytys",
+    "api": "Järjestelmä",
+    "ps-dispatch": "ps-dispatch",
+    "sms": "Tekstiviesti"
+  },
+  "error": {
+    "not_dispatcher": "Et ole vuorossa oleva päivystäjä.",
+    "not_dispatcher_job": "Et työskentele hätäkeskuksessa.",
+    "not_unit": "Et ole vuorossa oleva yksikkö.",
+    "invalid_status": "Tuntematon tila. Vaihtoehdot: {list}",
+    "no_call": "Tehtävää ei löytynyt.",
+    "no_broadcast": "Ei tehtävää, johon vastata.",
+    "lang_unknown": "Tuntematon kieli. Vaihtoehdot: {list}",
+    "sms_failed": "Tekstiviestiä ei voitu lähettää."
+  },
+  "duty": {
+    "on": "Olet vuorossa päivystäjänä.",
+    "off": "Olet vapaalla."
+  },
+  "unit": {
+    "status_set": "Tila: {status}",
+    "callsign_set": "Tunnus asetettu: {callsign}",
+    "unassigned": "Sinut poistettiin tehtävältä #{id}.",
+    "call_closed": "Tehtävä #{id} päättyi.",
+    "responding": "Kuitattu tehtävälle #{id}."
+  },
+  "cmd": {
+    "112": "Soita hätänumeroon",
+    "message": "viesti",
+    "status": "Aseta yksikön tila",
+    "callsign": "Aseta tunnuksesi",
+    "respond": "Kuittaa tehtävä",
+    "duty": "Vaihda päivystäjän vuoroa",
+    "lang": "Vaihda hätäkeskuksen kieli"
+  },
+  "key": {
+    "panel": "Hätäkeskus: avaa paneeli",
+    "respond": "Hätäkeskus: kuittaa viimeisin tehtävä"
+  },
+  "lang": {
+    "set": "Kieli: {name}"
+  },
+  "sms": {
+    "received": "112: Hätäilmoituksesi on vastaanotettu (tehtävä #{id}). Pysy paikallasi, jos se on turvallista.",
+    "assigned": "112: Apua on tulossa (tehtävä #{id}).",
+    "closed": "112: Tehtävä #{id} on päätetty. Soita uudelleen 112, jos tarvitset apua.",
+    "unit_details": "112 #{id} [{priority}] {type} – {street}: {message}",
+    "quick": {
+      "on_the_way": "112: Apua on tulossa. Pysy paikallasi, jos se on turvallista.",
+      "stay_put": "112: Pysy paikallasi ja pidä puhelin mukanasi.",
+      "safe_place": "112: Siirry turvalliseen paikkaan, jos pystyt, ja kerro missä olet.",
+      "describe": "112: Voitko kuvailla osallisia henkilöitä tai ajoneuvoja?",
+      "call_back": "112: Emme tavoittaneet sinua. Soita uudelleen numeroon 112."
+    },
+    "label": {
+      "on_the_way": "Apua tulossa",
+      "stay_put": "Pysy paikallasi",
+      "safe_place": "Turvaan",
+      "describe": "Kuvaile",
+      "call_back": "Soita takaisin"
+    }
+  }
+}

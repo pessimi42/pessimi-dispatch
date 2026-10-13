@@ -1,0 +1,188 @@
+{
+  "_meta": {
+    "name": "Svenska"
+  },
+  "ui": {
+    "title": "Nödcentralen",
+    "calls": "Uppdrag",
+    "units": "Enheter",
+    "history": "Avslutade",
+    "new_call": "Nytt uppdrag",
+    "no_calls": "Inga aktiva uppdrag",
+    "no_units": "Inga enheter i tjänst",
+    "select_call": "Välj ett uppdrag för att se detaljer",
+    "all": "Alla",
+    "message": "Anmälan",
+    "information": "Tilläggsinformation",
+    "location": "Plats",
+    "caller": "Anmälare",
+    "origin": "Källa",
+    "received": "Mottaget",
+    "assigned_units": "Larmade enheter",
+    "no_assigned": "Inga larmade enheter",
+    "notes": "Anteckningar",
+    "add_note": "Lägg till en anteckning…",
+    "add": "Lägg till",
+    "send": "Skicka",
+    "cancel": "Avbryt",
+    "create": "Skapa",
+    "waypoint": "Sätt vägpunkt",
+    "broadcast": "Begär enheter",
+    "close_call": "Avsluta uppdrag",
+    "confirm_close": "Klicka igen för att avsluta",
+    "assign": "Larma",
+    "unassign": "Ta bort",
+    "unknown_location": "Okänd plats",
+    "unknown": "Okänd",
+    "unspecified": "Ospecificerad",
+    "service": "Myndighet",
+    "type": "Uppdragstyp",
+    "priority": "Brådskande grad",
+    "status": "Status",
+    "language": "Språk",
+    "new_call_title": "Skapa uppdrag",
+    "new_call_hint": "Platsen tas från vägpunkten på din karta, om en är satt.",
+    "ago_now": "nyss",
+    "ago_m": "för {n} min sedan",
+    "ago_h": "för {n} h sedan",
+    "units_count": "{n} enheter",
+    "my_call": "Nuvarande uppdrag",
+    "no_call": "Inget uppdrag",
+    "callsign_missing": "ingen anropssignal",
+    "sms": "Sms till anmälaren",
+    "sms_placeholder": "Skriv ett sms…",
+    "sms_out": "Sms skickat",
+    "sms_in": "Sms mottaget"
+  },
+  "caller": {
+    "title": "Nödnummer 112",
+    "which_service": "Vilken hjälp behöver du?",
+    "not_sure": "Vet inte",
+    "describe": "Vad har hänt och var är du?",
+    "sent": "Ditt nödsamtal har tagits emot. Stanna kvar om det är säkert.",
+    "cooldown": "Vänta {seconds} s innan du ringer igen.",
+    "too_short": "Beskriv vad som har hänt.",
+    "no_phone": "Du behöver en telefon för att ringa 112.",
+    "units_assigned": "Hjälp är på väg."
+  },
+  "toast": {
+    "new_call": "Nytt uppdrag #{id}",
+    "assigned": "Larmad till uppdrag #{id}",
+    "broadcast": "Enheter begärs – uppdrag #{id}",
+    "respond_hint": "Kvittera: /{cmd} {id}"
+  },
+  "call_status": {
+    "pending": "Väntar",
+    "broadcast": "Enheter begärda",
+    "active": "Pågår",
+    "closed": "Avslutat"
+  },
+  "unit_status": {
+    "available": "Ledig",
+    "enroute": "På väg",
+    "onscene": "På plats",
+    "busy": "Upptagen",
+    "unavailable": "Ej tillgänglig"
+  },
+  "service": {
+    "police": "Polis",
+    "ems": "Prehospital akutsjukvård",
+    "fire": "Räddningsväsendet",
+    "mechanic": "Vägassistans"
+  },
+  "priority": {
+    "A": "A – Livshotande",
+    "B": "B – Brådskande",
+    "C": "C – Ej brådskande",
+    "D": "D – Låg"
+  },
+  "calltype": {
+    "general": "Allmänt",
+    "robbery": "Rån",
+    "shooting": "Skottlossning",
+    "assault": "Misshandel",
+    "theft": "Stöld",
+    "traffic": "Trafik",
+    "domestic": "Bråk i hemmet",
+    "suspicious": "Misstänkt aktivitet",
+    "injury": "Skada",
+    "unconscious": "Medvetslös person",
+    "breathing": "Andningssvårigheter",
+    "chest_pain": "Bröstsmärta",
+    "traffic_accident": "Trafikolycka",
+    "overdose": "Förgiftning / överdos",
+    "building_fire": "Byggnadsbrand",
+    "vehicle_fire": "Fordonsbrand",
+    "wildfire": "Terrängbrand",
+    "rescue": "Räddningsuppdrag",
+    "hazmat": "Farliga ämnen",
+    "breakdown": "Motorstopp",
+    "tow": "Bärgning",
+    "flat_tyre": "Punktering"
+  },
+  "origin": {
+    "112": "Nödsamtal",
+    "dispatcher": "Operatör",
+    "alert": "Automatiskt larm",
+    "api": "System",
+    "ps-dispatch": "ps-dispatch",
+    "sms": "Sms"
+  },
+  "error": {
+    "not_dispatcher": "Du är inte en operatör i tjänst.",
+    "not_dispatcher_job": "Du är inte anställd vid nödcentralen.",
+    "not_unit": "Du är inte en enhet i tjänst.",
+    "invalid_status": "Okänd status. Alternativ: {list}",
+    "no_call": "Uppdraget hittades inte.",
+    "no_broadcast": "Det finns inget uppdrag att kvittera.",
+    "lang_unknown": "Okänt språk. Alternativ: {list}",
+    "sms_failed": "Sms:et kunde inte skickas."
+  },
+  "duty": {
+    "on": "Du är i tjänst som operatör.",
+    "off": "Du är ledig."
+  },
+  "unit": {
+    "status_set": "Status: {status}",
+    "callsign_set": "Anropssignal: {callsign}",
+    "unassigned": "Du togs bort från uppdrag #{id}.",
+    "call_closed": "Uppdrag #{id} avslutades.",
+    "responding": "Kvitterat uppdrag #{id}."
+  },
+  "cmd": {
+    "112": "Ring nödnumret",
+    "message": "meddelande",
+    "status": "Ange enhetens status",
+    "callsign": "Ange din anropssignal",
+    "respond": "Kvittera ett uppdrag",
+    "duty": "Växla operatörstjänst",
+    "lang": "Byt språk för nödcentralen"
+  },
+  "key": {
+    "panel": "Nödcentral: öppna panelen",
+    "respond": "Nödcentral: kvittera senaste uppdrag"
+  },
+  "lang": {
+    "set": "Språk: {name}"
+  },
+  "sms": {
+    "received": "112: Ditt nödsamtal har tagits emot (uppdrag #{id}). Stanna kvar om det är säkert.",
+    "assigned": "112: Hjälp är på väg (uppdrag #{id}).",
+    "closed": "112: Ditt uppdrag #{id} har avslutats. Ring 112 igen om du behöver hjälp.",
+    "unit_details": "112 #{id} [{priority}] {type} – {street}: {message}",
+    "quick": {
+      "on_the_way": "112: Hjälp är på väg. Stanna kvar om det är säkert.",
+      "stay_put": "112: Stanna där du är och ha telefonen med dig.",
+      "safe_place": "112: Ta dig till en säker plats om du kan och berätta var du är.",
+      "describe": "112: Kan du beskriva personerna eller fordonen?",
+      "call_back": "112: Vi nådde dig inte. Ring 112 igen."
+    },
+    "label": {
+      "on_the_way": "På väg",
+      "stay_put": "Stanna kvar",
+      "safe_place": "Säker plats",
+      "describe": "Beskriv",
+      "call_back": "Ring igen"
+    }
+  }
+}

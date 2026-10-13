@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dispatcher panel -->
+  <div id="panel" class="hidden">
+    <header>
+      <div class="brand"><span class="pulse"></span><span data-i18n="ui.title"></span></div>
+      <nav id="serviceFilters"></nav>
+      <div class="head-right">
+        <select id="langSelect" class="hidden" aria-label="language"></select>
+        <button id="newCallBtn" class="primary" data-i18n="ui.new_call"></button>
+        <button id="closeBtn" class="ghost icon" aria-label="close">✕</button>
+      </div>
+    </header>
+    <main>
+      <section class="col calls">
+        <div class="col-head">
+          <h2 data-i18n="ui.calls"></h2>
+          <button id="historyToggle" class="chip" data-i18n="ui.history"></button>
+        </div>
+        <div id="callList" class="scroll"></div>
+      </section>
+      <section class="col detail">
+        <div id="callDetail" class="scroll"></div>
+      </section>
+      <section class="col units">
+        <div class="col-head"><h2 data-i18n="ui.units"></h2></div>
+        <div id="unitList" class="scroll"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 112 caller form -->
+  <div id="caller" class="modal hidden">
+    <div class="card">
+      <h3 data-i18n="caller.title"></h3>
+      <label data-i18n="caller.which_service"></label>
+      <div id="callerServices" class="seg"></div>
+      <label for="callerMsg" data-i18n="caller.describe"></label>
+      <textarea id="callerMsg" rows="4" maxlength="300"></textarea>
+      <div class="row end">
+        <button class="ghost" data-close data-i18n="ui.cancel"></button>
+        <button id="callerSend" class="danger" data-i18n="ui.send"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dispatcher: new call -->
+  <div id="newCall" class="modal hidden">
+    <div class="card">
+      <h3 data-i18n="ui.new_call_title"></h3>
+      <div class="grid2">
+        <div><label data-i18n="ui.service"></label><select id="ncService"></select></div>
+        <div><label data-i18n="ui.priority"></label><select id="ncPriority"></select></div>
+      </div>
+      <label data-i18n="ui.type"></label><select id="ncType"></select>
+      <label data-i18n="ui.message"></label><textarea id="ncMessage" rows="3" maxlength="300"></textarea>
+      <p class="hint" data-i18n="ui.new_call_hint"></p>
+      <div class="row end">
+        <button class="ghost" data-close data-i18n="ui.cancel"></button>
+        <button id="ncCreate" class="primary" data-i18n="ui.create"></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+  <div id="hud" class="hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
