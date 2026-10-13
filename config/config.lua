@@ -104,6 +104,10 @@ Config.AiUnits = {
     -- "arrives" after this many seconds and does its job, just without visible NPCs.
     hostRange = 350.0,
     virtualTravelSeconds = 40,
+    -- A virtual unit becomes visible when a player comes within hostRange:
+    handOver = true,             -- still driving: the NPCs spawn and drive in
+    visibleOnScene = true,       -- already working: the vehicle and crew appear at the scene
+    watchInterval = 3,           -- seconds between checks
 
     -- Revive used by AI medics. nil = framework default
     -- (Qbox: qbx_medical Revive export, QBCore: hospital:client:Revive, ESX: esx_ambulancejob:revive).

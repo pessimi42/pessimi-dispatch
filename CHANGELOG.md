@@ -41,6 +41,9 @@ problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
   on scene, left) show in the call details, and their actions are logged in the notes.
 - **Works without nearby players** – the caller or the nearest player controls the NPCs.
   If nobody is near the call, the unit still arrives and does its job without visible NPCs.
+  As soon as a player comes near, it becomes visible: while it's on its way the NPCs spawn
+  and drive in with sirens, and at a scene where it's already working the vehicle (lights
+  on) and crew appear there (`handOver`, `visibleOnScene`).
 - **Configurable** in `Config.AiUnits`: vehicles, peds, timings, per-service on/off, the
   maximum number of AI units at once, and `trigger = 'no_available'` to also use AI when
   units are on duty but all busy.

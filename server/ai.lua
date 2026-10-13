@@ -84,6 +84,44 @@ local function pickHost(call)
     return best
 end
 
+--- What the host client needs to spawn the unit.
+local function payload(a, call)
+    local s = cfg.services[a.service]
+    return {
+        service = a.service,
+        coords = call.coords,
+        vehicle = s.vehicle,
+        ped = s.ped,
+        scenario = s.scenario,
+        target = call._callerSrc,
+        spawnDistance = cfg.spawnDistance,
+        driveTimeout = cfg.driveTimeout,
+        arriveDistance = cfg.arriveDistance,
+        drivingStyle = cfg.drivingStyle,
+    }
+end
+
+--- Virtual travel: the unit "arrives" after virtualTravelSeconds unless a player has
+--- taken it over in the meantime (the token changes then).
+local function startVirtualTravel(a)
+    local token = {}
+    a.travelToken = token
+    SetTimeout(cfg.virtualTravelSeconds * 1000, function()
+        local cur = Ai.active[a.id]
+        if cur and cur.travelToken == token and not cur.host then Ai.Arrived(a.id) end
+    end)
+end
+
+--- Safety net: a unit that never reports arrival is moved on scene anyway.
+local function startSafetyNet(a)
+    local token = {}
+    a.safetyToken = token
+    SetTimeout((cfg.driveTimeout + 60) * 1000, function()
+        local cur = Ai.active[a.id]
+        if cur and cur.safetyToken == token and cur.status == 'enroute' then Ai.Arrived(a.id) end
+    end)
+end
+
 ---------------------------------------------------------------------------
 -- Send
 ---------------------------------------------------------------------------
@@ -104,7 +142,6 @@ function Ai.Send(callId)
     if Ai.OnCall(call.id) then return nil, 'busy' end
     if Ai.Count() >= cfg.maxActive then return nil, 'limit' end
 
-    local s = cfg.services[service]
     local a = {
         id = Ai.nextId, callId = call.id, service = service, status = 'enroute',
         host = pickHost(call), netIds = {}, startedAt = os.time(),
@@ -123,27 +160,11 @@ function Ai.Send(callId)
     end
 
     if a.host then
-        TriggerClientEvent(Ev('client:aiSpawn'), a.host, a.id, {
-            service = service,
-            coords = call.coords,
-            vehicle = s.vehicle,
-            ped = s.ped,
-            scenario = s.scenario,
-            target = call._callerSrc,
-            spawnDistance = cfg.spawnDistance,
-            driveTimeout = cfg.driveTimeout,
-            arriveDistance = cfg.arriveDistance,
-            drivingStyle = cfg.drivingStyle,
-        })
+        TriggerClientEvent(Ev('client:aiSpawn'), a.host, a.id, payload(a, call))
     else
-        SetTimeout(cfg.virtualTravelSeconds * 1000, function() Ai.Arrived(a.id) end)
+        startVirtualTravel(a)
     end
-
-    -- Safety net: an AI unit that never reports back is retired.
-    SetTimeout((cfg.driveTimeout + 60) * 1000, function()
-        local cur = Ai.active[a.id]
-        if cur and cur.status == 'enroute' then Ai.Arrived(a.id) end
-    end)
+    startSafetyNet(a)
 
     TriggerEvent(Ev('onAiSent'), call.id, a.id, service)
     return a.id
@@ -252,7 +273,8 @@ RegisterNetEvent(Ev('server:aiSpawnFailed'), function(id)
     local a = Ai.active[tonumber(id)]
     if not a or a.host ~= source then return end
     a.host = nil
-    SetTimeout(cfg.virtualTravelSeconds * 1000, function() Ai.Arrived(a.id) end)
+    a.noHostUntil = os.time() + 30   -- don't hand it straight back to the same player
+    if a.status == 'enroute' then startVirtualTravel(a) end
 end)
 
 AddEventHandler('playerDropped', function()
@@ -261,9 +283,7 @@ AddEventHandler('playerDropped', function()
         if a.host == src then
             a.host = nil
             deleteEntities(a)
-            if a.status == 'enroute' then
-                SetTimeout(cfg.virtualTravelSeconds * 1000, function() Ai.Arrived(a.id) end)
-            end
+            if a.status == 'enroute' then startVirtualTravel(a) end
         end
     end
 end)
@@ -271,6 +291,56 @@ end)
 AddEventHandler('onResourceStop', function(res)
     if res ~= GetCurrentResourceName() then return end
     for _, a in pairs(Ai.active) do deleteEntities(a) end
+end)
+
+---------------------------------------------------------------------------
+-- Making virtual units visible
+---------------------------------------------------------------------------
+local function nearestPlayer(coords)
+    local best, bestDist
+    for _, id in ipairs(GetPlayers()) do
+        local src = tonumber(id)
+        local ped = GetPlayerPed(src)
+        if ped and ped ~= 0 then
+            local d = Utils.Distance2D(GetEntityCoords(ped), coords)
+            if d <= cfg.hostRange and (not bestDist or d < bestDist) then best, bestDist = src, d end
+        end
+    end
+    return best
+end
+
+--- Hand virtual units to a player who has come near the call:
+--- en route -> the NPCs spawn and drive in; on scene -> they appear at the scene.
+function Ai.Watch()
+    local now = os.time()
+    for _, a in pairs(Ai.active) do
+        if not a.host and (not a.noHostUntil or now >= a.noHostUntil) then
+            local call = Calls.Get(a.callId)
+            local enroute = a.status == 'enroute' and cfg.handOver
+            local onscene = a.status == 'onscene' and cfg.visibleOnScene
+            if call and call.coords and call.status ~= 'closed' and (enroute or onscene) then
+                local src = nearestPlayer(call.coords)
+                if src then
+                    a.host = src
+                    a.travelToken = nil
+                    if enroute then
+                        TriggerClientEvent(Ev('client:aiSpawn'), src, a.id, payload(a, call))
+                        startSafetyNet(a)
+                    else
+                        TriggerClientEvent(Ev('client:aiSpawnOnScene'), src, a.id, payload(a, call))
+                    end
+                    Utils.Debug(('AI unit %d handed to player %d (%s)'):format(a.id, src, a.status))
+                end
+            end
+        end
+    end
+end
+
+CreateThread(function()
+    while true do
+        Wait(cfg.watchInterval * 1000)
+        if cfg.enabled and (cfg.handOver or cfg.visibleOnScene) then Ai.Watch() end
+    end
 end)
 
 ---------------------------------------------------------------------------

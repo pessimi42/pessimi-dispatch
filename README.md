@@ -98,7 +98,10 @@ fire truck or tow truck drives to the scene with sirens and does its job.
 - **Dispatchers** can send one with **Send AI unit** in the call details – the button only
   appears when nobody of that service is on duty.
 - The caller (or the nearest player) controls the NPCs. If nobody is near the call, the
-  unit still arrives after a short delay and does its job, just without visible NPCs.
+  unit still arrives after a short delay and does its job, just without visible NPCs –
+  until someone comes near: a player who approaches while it's on its way sees it drive in
+  with sirens, and a player who reaches a scene where it's already working sees the vehicle
+  (lights on) and crew there. (`handOver`, `visibleOnScene`)
 - The call is closed when the AI unit leaves, unless players are working it too.
 - Revive works out of the box with qbx_medical, qb-ambulancejob and esx_ambulancejob. For
   other medical scripts set `Config.AiUnits.reviveEvent`.

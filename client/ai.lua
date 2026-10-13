@@ -118,6 +118,51 @@ RegisterNetEvent(Ev('client:aiSpawn'), function(id, d)
     end)
 end)
 
+-- A unit that is already working at the scene (it arrived while nobody was near):
+-- park the vehicle with lights on and put the crew to work next to the patient/scene.
+RegisterNetEvent(Ev('client:aiSpawnOnScene'), function(id, d)
+    CreateThread(function()
+        local target = v3(d.coords)
+        local vehHash, pedHash = loadModel(d.vehicle), loadModel(d.ped)
+        local found, pos, heading = GetClosestVehicleNodeWithHeading(target.x, target.y, target.z, 1, 3.0, 0)
+        if not vehHash or not pedHash or not found then
+            return TriggerServerEvent(Ev('server:aiSpawnFailed'), id)
+        end
+
+        local veh = CreateVehicle(vehHash, pos.x, pos.y, pos.z, heading, true, false)
+        local t = GetGameTimer() + 3000
+        while not DoesEntityExist(veh) and GetGameTimer() < t do Wait(0) end
+        if not DoesEntityExist(veh) then return TriggerServerEvent(Ev('server:aiSpawnFailed'), id) end
+        SetVehicleOnGroundProperly(veh)
+        SetEntityAsMissionEntity(veh, true, true)
+        SetVehicleSiren(veh, true)
+        SetVehicleHasMutedSirens(veh, true)   -- lights on, no siren sound on scene
+
+        local goal = target
+        if d.target then
+            local player = GetPlayerFromServerId(d.target)
+            local tped = player ~= -1 and GetPlayerPed(player) or 0
+            if tped ~= 0 and #(GetEntityCoords(tped) - target) < 60.0 then goal = GetEntityCoords(tped) end
+        end
+        local gx, gy = goal.x + 1.2, goal.y + 1.2
+        local ok, gz = GetGroundZFor_3dCoord(gx, gy, goal.z + 2.0, false)
+        local ped = CreatePed(4, pedHash, gx, gy, ok and gz or goal.z, 0.0, true, false)
+        SetEntityAsMissionEntity(ped, true, true)
+        SetBlockingOfNonTemporaryEvents(ped, true)
+        SetPedKeepTask(ped, true)
+        TaskTurnPedToFaceCoord(ped, goal.x, goal.y, goal.z, 1000)
+        SetModelAsNoLongerNeeded(vehHash)
+        SetModelAsNoLongerNeeded(pedHash)
+
+        units[id] = { veh = veh, ped = ped }
+        TriggerServerEvent(Ev('server:aiSpawned'), id, {
+            NetworkGetNetworkIdFromEntity(veh), NetworkGetNetworkIdFromEntity(ped),
+        })
+        Wait(1000)
+        if d.scenario and DoesEntityExist(ped) then TaskStartScenarioInPlace(ped, d.scenario, 0, true) end
+    end)
+end)
+
 RegisterNetEvent(Ev('client:aiLeave'), function(id)
     local u = units[id]
     if not u then return end
