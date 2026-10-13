@@ -312,5 +312,19 @@
   },
   "loc": {
     "note_located": "Ilmoittaja paikannettu."
+  },
+  "scene": {
+    "prompt_treat": "Paina ~INPUT_CONTEXT~ hoitaaksesi potilasta",
+    "prompt_statement": "Paina ~INPUT_CONTEXT~ ottaaksesi lausunnon",
+    "prompt_repair": "Paina ~INPUT_CONTEXT~ korjataksesi ajoneuvon",
+    "note_treated": "Potilas hoidettu kohteessa.",
+    "note_repaired": "Ajoneuvo korjattu kohteessa.",
+    "note_fire_out": "Palo on sammutettu.",
+    "note_handled": "Tilanne hoidettu kohteessa.",
+    "statement": {
+      "1": "Lausunto: epäilty oli tummaan hupparin pukeutunut mies, joka juoksi itään päin.",
+      "2": "Lausunto: kaksi henkilöä, toinen pitkä ja parrakas, poistuivat harmaalla autolla ilman kilpiä.",
+      "3": "Lausunto: punatakkinen nainen huusi jotain ja juoksi kujalle."
+    }
   }
 }

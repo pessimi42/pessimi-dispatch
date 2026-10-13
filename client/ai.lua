@@ -101,7 +101,10 @@ RegisterNetEvent(Ev('client:aiSpawn'), function(id, d)
         Wait(2500)
 
         local goal = target
-        if d.target then
+        if d.targetNetId and NetworkDoesNetworkIdExist(d.targetNetId) then
+            local npc = NetworkGetEntityFromNetworkId(d.targetNetId)    -- scene patient / caller
+            if npc ~= 0 and DoesEntityExist(npc) then goal = GetEntityCoords(npc) end
+        elseif d.target then
             local player = GetPlayerFromServerId(d.target)
             local tped = player ~= -1 and GetPlayerPed(player) or 0
             if tped ~= 0 and #(GetEntityCoords(tped) - target) < 60.0 then goal = GetEntityCoords(tped) end
@@ -139,7 +142,10 @@ RegisterNetEvent(Ev('client:aiSpawnOnScene'), function(id, d)
         SetVehicleHasMutedSirens(veh, true)   -- lights on, no siren sound on scene
 
         local goal = target
-        if d.target then
+        if d.targetNetId and NetworkDoesNetworkIdExist(d.targetNetId) then
+            local npc = NetworkGetEntityFromNetworkId(d.targetNetId)
+            if npc ~= 0 and DoesEntityExist(npc) then goal = GetEntityCoords(npc) end
+        elseif d.target then
             local player = GetPlayerFromServerId(d.target)
             local tped = player ~= -1 and GetPlayerPed(player) or 0
             if tped ~= 0 and #(GetEntityCoords(tped) - target) < 60.0 then goal = GetEntityCoords(tped) end

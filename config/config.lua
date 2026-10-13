@@ -202,6 +202,43 @@ Config.AiCalls = {
     },
 }
 
+---------------------------------------------------------------------------
+-- NPC scenes for AI calls (patients, witnesses, crashes, fires, breakdowns)
+---------------------------------------------------------------------------
+Config.Scenes = {
+    enabled = true,
+    spawnRange = 150.0,          -- NPCs appear when a player comes this close to an AI call
+    maxActive = 6,
+    interactDistance = 2.5,      -- metres from the NPC to get the E prompt
+    interactKey = 38,            -- E
+    fireRadius = 30.0,           -- fires within this radius must be out for a fire call to count as handled
+
+    -- Call type -> scene kind
+    kinds = {
+        injury = 'patient', unconscious = 'patient', breathing = 'patient',
+        chest_pain = 'patient', overdose = 'patient',
+        traffic_accident = 'crash',
+        robbery = 'witness', assault = 'witness', theft = 'witness', traffic = 'witness',
+        domestic = 'witness', suspicious = 'witness', rescue = 'witness', hazmat = 'witness',
+        shooting = 'cower',
+        vehicle_fire = 'carfire', building_fire = 'fire', wildfire = 'fire',
+        breakdown = 'breakdown', tow = 'breakdown', flat_tyre = 'breakdown',
+    },
+
+    -- Which units can interact with each kind (E prompt). Fires are handled by putting them out.
+    interact = {
+        patient = { 'ems' }, crash = { 'ems' },
+        witness = { 'police' }, cower = { 'police' },
+        breakdown = { 'mechanic' },
+    },
+
+    peds = {
+        'a_m_y_business_01', 'a_f_y_tourist_01', 'a_m_m_farmer_01', 'a_f_m_bevhills_01',
+        'a_m_y_hipster_01', 'a_f_y_business_02', 'a_m_m_genfat_01', 'a_f_m_fatwhite_01',
+    },
+    vehicles = { 'blista', 'asea', 'premier', 'primo', 'ingot', 'emperor' },
+}
+
 -- Automatic alerts sent by other client scripts through exports.pessimi42_dispatch:CreateAlert()
 Config.ClientAlerts = {
     enabled = true,

@@ -16,6 +16,7 @@
     pessimi42_dispatch:onUnitAdded     (src, service)
     pessimi42_dispatch:onUnitRemoved   (src)
     pessimi42_dispatch:onAiSent        (callId, aiId, service)
+    pessimi42_dispatch:onSceneHandled  (callId, kind, by)
   (the prefix is the resource name)
 ]]
 
@@ -62,6 +63,9 @@ exports('IsDispatcher', function(src) return Dispatch.list[tonumber(src)] ~= nil
 
 --- Caller location
 exports('LocateCaller', function(id) return Location.Locate(id) end)
+
+--- NPC scenes
+exports('ResolveScene', function(callId) return Scenes.Resolve(callId, 'api') end)
 
 --- AI units
 exports('SendAiUnit', function(id) return Ai.Send(id) end)

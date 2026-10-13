@@ -308,6 +308,7 @@ function Calls.Close(id)
     call.status = 'closed'
     call.closedAt = now()
     Ai.CancelForCall(call.id)
+    Scenes.Clear(call.id)
     for src in pairs(call._units) do
         local unit = Units.Get(src)
         if unit and unit.call == call.id then

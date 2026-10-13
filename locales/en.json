@@ -312,5 +312,19 @@
   },
   "loc": {
     "note_located": "Caller located."
+  },
+  "scene": {
+    "prompt_treat": "Press ~INPUT_CONTEXT~ to treat the patient",
+    "prompt_statement": "Press ~INPUT_CONTEXT~ to take a statement",
+    "prompt_repair": "Press ~INPUT_CONTEXT~ to repair the vehicle",
+    "note_treated": "Patient treated on scene.",
+    "note_repaired": "Vehicle repaired on scene.",
+    "note_fire_out": "Fire is out.",
+    "note_handled": "Situation handled on scene.",
+    "statement": {
+      "1": "Statement: the suspect was a man in a dark hoodie who ran off towards the east.",
+      "2": "Statement: two people, one tall with a beard, left in a grey car without plates.",
+      "3": "Statement: a woman in a red jacket – she shouted something and ran into the alley."
+    }
   }
 }

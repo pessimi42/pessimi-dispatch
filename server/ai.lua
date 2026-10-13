@@ -94,6 +94,7 @@ local function payload(a, call)
         ped = s.ped,
         scenario = s.scenario,
         target = call._callerSrc,
+        targetNetId = Scenes.PedNetId(call.id),
         spawnDistance = cfg.spawnDistance,
         driveTimeout = cfg.driveTimeout,
         arriveDistance = cfg.arriveDistance,
@@ -211,6 +212,7 @@ function Ai.Arrived(id)
         if not call or call.status == 'closed' then return end
         local act = actions[s.action] or actions.secure
         if act(cur, call) then note(cur, 'ai.note_' .. (actions[s.action] and s.action or 'secure')) end
+        if call._ai then Scenes.Resolve(call.id, 'ai') end
     end)
 
     SetTimeout(s.onSceneSeconds * 1000, function() Ai.Finish(id) end)

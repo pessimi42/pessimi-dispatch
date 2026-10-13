@@ -1,6 +1,6 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.3.0-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.4.2-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
@@ -77,6 +77,24 @@ breakdowns and more, at locations around the map, from callers with names and nu
 Everything is configurable in `Config.AiCalls`: timings, services and their weights, call
 types and priorities, caller names and locations. Caller messages are in the locale files
 (`aicall.*`), written in the server's default language.
+
+### NPC scenes
+
+AI calls aren't just text: when a player comes near (150 m), the scene the caller described
+appears, and the responding units have something to do there.
+
+| Call | At the scene | Handled by |
+|---|---|---|
+| Collapse, chest pain, breathing, overdose, injury | patient on the ground, bystander on the phone | EMS: **E** to treat |
+| Traffic accident | damaged car, injured driver | EMS: **E** to treat |
+| Robbery, assault, theft, suspicious… | witness on the phone | Police: **E** for a statement |
+| Shots fired | victim crouching in cover | Police: **E** for a statement |
+| Vehicle / building / wildfire | burning car or fires | putting the fires out |
+| Breakdown, tow, flat tyre | broken car, hood open, driver waiting | Mechanic: **E** to repair |
+
+Treatments, statements and repairs are logged in the call's notes. AI units handle scenes
+too (an AI medic treats the patient). NPCs are removed when the call closes, and player calls
+never get NPCs. Configure in `Config.Scenes`.
 
 ## AI units
 
@@ -163,10 +181,12 @@ exports.pessimi42_dispatch:CreateAlert({ service = 'police', type = 'robbery', p
 Server exports: `CreateCall, GetCall, GetCalls, UpdateCall, AddNote, AssignUnit, UnassignUnit,
 BroadcastCall, AutoDispatch, CloseCall, GetUnit, GetUnits, SetUnitStatus, FindNearestUnit,
 IsDispatcherOnDuty, IsDispatcher, RegisterAdapter, RegisterService, RegisterPhone, SmsCaller,
-IncomingSms, SendAiUnit, GetAiUnits, GenerateAiCall, SetAiCalls, AreAiCallsEnabled, LocateCaller`.
+IncomingSms, SendAiUnit, GetAiUnits, GenerateAiCall, SetAiCalls, AreAiCallsEnabled, LocateCaller,
+ResolveScene`.
 
 Server events (`AddEventHandler`): `pessimi42_dispatch:onCallCreated / onCallUpdated / onCallClosed /
-onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved / onAiSent`.
+onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved / onAiSent /
+onSceneHandled`.
 
 Client exports: `CreateAlert, OpenCallerForm, IsDispatcher, GetService, GetMyCall, GetStatus`.
 

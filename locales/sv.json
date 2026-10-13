@@ -312,5 +312,19 @@
   },
   "loc": {
     "note_located": "Anmälaren lokaliserad."
+  },
+  "scene": {
+    "prompt_treat": "Tryck ~INPUT_CONTEXT~ för att behandla patienten",
+    "prompt_statement": "Tryck ~INPUT_CONTEXT~ för att ta upp ett vittnesmål",
+    "prompt_repair": "Tryck ~INPUT_CONTEXT~ för att reparera fordonet",
+    "note_treated": "Patienten behandlad på plats.",
+    "note_repaired": "Fordonet reparerat på plats.",
+    "note_fire_out": "Branden är släckt.",
+    "note_handled": "Situationen hanterad på plats.",
+    "statement": {
+      "1": "Vittnesmål: den misstänkte var en man i mörk huvtröja som sprang österut.",
+      "2": "Vittnesmål: två personer, en lång med skägg, åkte iväg i en grå bil utan registreringsskyltar.",
+      "3": "Vittnesmål: en kvinna i röd jacka ropade något och sprang in i gränden."
+    }
   }
 }
