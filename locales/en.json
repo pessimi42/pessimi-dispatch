@@ -52,7 +52,9 @@
     "sms": "SMS to caller",
     "sms_placeholder": "Write a text message…",
     "sms_out": "SMS sent",
-    "sms_in": "SMS received"
+    "sms_in": "SMS received",
+    "send_ai": "Send AI unit",
+    "ai_unit": "AI unit"
   },
   "caller": {
     "title": "Emergency number 112",
@@ -136,7 +138,8 @@
     "no_call": "Call not found.",
     "no_broadcast": "There is no call to respond to.",
     "lang_unknown": "Unknown language. Options: {list}",
-    "sms_failed": "The text message could not be sent."
+    "sms_failed": "The text message could not be sent.",
+    "ai_unavailable": "No AI unit available for this call."
   },
   "duty": {
     "on": "You are on duty as a dispatcher.",
@@ -184,5 +187,21 @@
       "describe": "Describe",
       "call_back": "Call back"
     }
+  },
+  "ai_status": {
+    "enroute": "En route",
+    "onscene": "On scene",
+    "done": "Left the scene",
+    "failed": "Did not arrive"
+  },
+  "ai": {
+    "note_sent": "AI unit dispatched.",
+    "note_arrived": "AI unit is on scene.",
+    "note_revive": "AI medic treated the patient.",
+    "note_repair": "AI mechanic repaired the vehicle.",
+    "note_extinguish": "AI firefighters put out the fire.",
+    "note_secure": "AI patrol secured the scene.",
+    "note_done": "AI unit left the scene.",
+    "note_failed": "AI unit could not reach the scene."
   }
 }

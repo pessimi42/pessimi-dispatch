@@ -15,6 +15,7 @@
     pessimi42_dispatch:onUnitStatus    (src, status)
     pessimi42_dispatch:onUnitAdded     (src, service)
     pessimi42_dispatch:onUnitRemoved   (src)
+    pessimi42_dispatch:onAiSent        (callId, aiId, service)
   (the prefix is the resource name)
 ]]
 
@@ -58,6 +59,14 @@ end)
 
 exports('IsDispatcherOnDuty', function() return Dispatch.HasDispatcher() end)
 exports('IsDispatcher', function(src) return Dispatch.list[tonumber(src)] ~= nil end)
+
+--- AI units
+exports('SendAiUnit', function(id) return Ai.Send(id) end)
+exports('GetAiUnits', function()
+    local out = {}
+    for _, a in pairs(Ai.active) do out[#out + 1] = { id = a.id, callId = a.callId, service = a.service, status = a.status } end
+    return out
+end)
 
 --- Phone support for another phone script. See server/phones/_template.lua.
 exports('RegisterPhone', function(name, impl) return Phone.Register(name, impl) end)

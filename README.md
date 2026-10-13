@@ -1,6 +1,6 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.2.0-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.3.0-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
@@ -46,6 +46,30 @@ notifications if it is running, otherwise the framework's own.
 - When the last dispatcher goes off duty, everything still waiting in the queue is
   auto-dispatched the same way.
 - `mode = 'broadcast'` or `'none'` if you prefer that.
+
+## AI units
+
+When no player unit can take a call, an NPC unit responds instead: a patrol car, ambulance,
+fire truck or tow truck drives to the scene with sirens and does its job.
+
+| Service | On scene |
+|---|---|
+| Police | secures the scene for a while |
+| EMS | treats the caller – revives them through your medical script |
+| Fire | puts out fires around the scene |
+| Mechanic | repairs the nearest vehicle |
+
+- **Automatic** when no dispatcher is on duty: a call that still has no player unit after
+  `waitSeconds` (default 45 s) gets an AI unit. If a player responds in the meantime, no AI
+  is sent. With `trigger = 'no_on_duty'` AI only comes when nobody of that service is on duty.
+- **Dispatchers** can always send one with **Send AI unit** in the call details.
+- The caller (or the nearest player) controls the NPCs. If nobody is near the call, the
+  unit still arrives after a short delay and does its job, just without visible NPCs.
+- The call is closed when the AI unit leaves, unless players are working it too.
+- Revive works out of the box with qbx_medical, qb-ambulancejob and esx_ambulancejob. For
+  other medical scripts set `Config.AiUnits.reviveEvent`.
+
+Everything is configurable in `Config.AiUnits` (vehicles, peds, timings, limits, per service).
 
 ## Phone & SMS (lb-phone)
 
@@ -102,10 +126,10 @@ exports.pessimi42_dispatch:CreateAlert({ service = 'police', type = 'robbery', p
 Server exports: `CreateCall, GetCall, GetCalls, UpdateCall, AddNote, AssignUnit, UnassignUnit,
 BroadcastCall, AutoDispatch, CloseCall, GetUnit, GetUnits, SetUnitStatus, FindNearestUnit,
 IsDispatcherOnDuty, IsDispatcher, RegisterAdapter, RegisterService, RegisterPhone, SmsCaller,
-IncomingSms`.
+IncomingSms, SendAiUnit, GetAiUnits`.
 
 Server events (`AddEventHandler`): `pessimi42_dispatch:onCallCreated / onCallUpdated / onCallClosed /
-onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved`.
+onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved / onAiSent`.
 
 Client exports: `CreateAlert, OpenCallerForm, IsDispatcher, GetService, GetMyCall, GetStatus`.
 

@@ -27,6 +27,7 @@ local function unitCount(call)
     for _ in pairs(call._units) do n = n + 1 end
     return n
 end
+Calls.UnitCount = unitCount
 
 --- Push a change to dispatchers, to units on the call and to listening resources.
 local function changed(call, kind)
@@ -41,6 +42,9 @@ local function changed(call, kind)
     local event = ({ created = 'onCallCreated', closed = 'onCallClosed' })[kind] or 'onCallUpdated'
     TriggerEvent(Ev(event), pub)
 end
+
+--- Push a change made outside this file (e.g. AI units).
+function Calls.Touch(call) changed(call, 'updated') end
 
 --- Keep only the newest Config.Calls.keepClosed closed calls.
 local function prune()
@@ -146,9 +150,11 @@ function Calls.AutoDispatch(id)
             Utils.Debug(('auto-assigned call #%d to %d'):format(id, src))
             return Calls.Assign(id, src)
         end
+        Ai.Schedule(id)
         if Config.Fallback.broadcastIfNoUnit then return Calls.Broadcast(id) end
         return false
     elseif mode == 'broadcast' then
+        Ai.Schedule(id)
         return Calls.Broadcast(id)
     end
     return false
@@ -248,7 +254,7 @@ function Calls.Unassign(id, unitSrc, opts)
 
     TriggerEvent(Ev('onUnitUnassigned'), call.id, unitSrc)
 
-    if call.status == 'active' and unitCount(call) == 0 then
+    if call.status == 'active' and unitCount(call) == 0 and not Ai.OnCall(call.id) then
         if not Dispatch.HasDispatcher() and not opts.byDispatcher then
             -- Nobody can manage the queue: a unit clearing means the job is done,
             -- a unit disconnecting means someone else should take it.
@@ -295,6 +301,7 @@ function Calls.Close(id)
     Sms.AutoCaller(call, 'closed')
     call.status = 'closed'
     call.closedAt = now()
+    Ai.CancelForCall(call.id)
     for src in pairs(call._units) do
         local unit = Units.Get(src)
         if unit and unit.call == call.id then
@@ -320,7 +327,7 @@ CreateThread(function()
         if limit > 0 then
             local t = now()
             for id, c in pairs(Calls.list) do
-                if c.status ~= 'closed' and unitCount(c) == 0 and t - c.updatedAt > limit then
+                if c.status ~= 'closed' and unitCount(c) == 0 and not Ai.OnCall(id) and t - c.updatedAt > limit then
                     Calls.Close(id)
                 end
             end

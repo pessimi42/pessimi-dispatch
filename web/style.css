@@ -98,6 +98,8 @@ h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: v
 .note-add { display: flex; gap: 6px; margin-top: 6px; }
 .note.sms_out { border-left: 3px solid var(--accent); }
 .note.sms_in { border-left: 3px solid #3b82f6; }
+.assigned .u.ai { padding: 3px 10px; border: 1px dashed var(--muted); background: transparent; }
+.note.ai { border-left: 3px solid var(--muted); font-style: italic; }
 .sms-quick { display: flex; flex-wrap: wrap; gap: 6px; }
 
 /* Units */

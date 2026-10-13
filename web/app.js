@@ -30,6 +30,8 @@ const S = {
   closeArmed: null,
   sms: false,
   quickReplies: [],
+  aiServices: [],
+  fallbackService: 'police',
 };
 
 /* ---------- i18n ---------- */
@@ -129,6 +131,12 @@ function renderDetail() {
   const closed = c.status === 'closed';
   const dis = closed ? 'disabled' : '';
 
+  const aiFor = c.service || (S.aiServices.includes(S.fallbackService) ? S.fallbackService : null);
+  const aiBusy = (c.ai || []).some((a) => a.status === 'enroute' || a.status === 'onscene');
+  const canAi = !closed && c.coords && aiFor && S.aiServices.includes(aiFor) && !aiBusy;
+  const aiUnits = (c.ai || []).map((a) =>
+    `<span class="u ai">${esc(t('ui.ai_unit'))} · ${esc(svcName(a.service))} · ${esc(t(`ai_status.${a.status}`))}</span>`).join('');
+
   const units = c.units.map((src) => {
     const u = S.units.get(src);
     return `<span class="u">${esc(u ? unitLabel(u) : `#${src}`)}
@@ -137,7 +145,9 @@ function renderDetail() {
 
   const notes = (c.notes || []).map((n) => {
     const label = n.kind === 'sms_out' ? `${t('ui.sms_out')} · ` : n.kind === 'sms_in' ? `${t('ui.sms_in')} · ` : '';
-    return `<div class="note ${esc(n.kind || '')}">${esc(n.text)}<small>${esc(label)}${esc(n.author || '')} · ${clock(n.at)}</small></div>`;
+    const text = n.kind === 'ai' ? t(n.text) : n.text;
+    const author = n.kind === 'ai' ? t('ui.ai_unit') : (n.author || '');
+    return `<div class="note ${esc(n.kind || '')}">${esc(text)}<small>${esc(label)}${esc(author)} · ${clock(n.at)}</small></div>`;
   }).join('');
 
   const sms = c.canSms ? `
@@ -177,7 +187,7 @@ function renderDetail() {
     </dl>
 
     <label>${esc(t('ui.assigned_units'))}</label>
-    <div class="assigned">${units || `<span class="hint">${esc(t('ui.no_assigned'))}</span>`}</div>
+    <div class="assigned">${units + aiUnits || `<span class="hint">${esc(t('ui.no_assigned'))}</span>`}</div>
 
     ${sms}
 
@@ -189,6 +199,7 @@ function renderDetail() {
 
     <div class="d-actions">
       ${c.coords ? `<button data-act="waypoint">${esc(t('ui.waypoint'))}</button>` : ''}
+      ${canAi ? `<button data-act="sendAi">${esc(t('ui.send_ai'))}</button>` : ''}
       ${closed ? '' : `<button data-act="broadcast">${esc(t('ui.broadcast'))}</button>
       <button data-act="close" class="${S.closeArmed === c.id ? 'danger' : 'warn'}">
         ${esc(S.closeArmed === c.id ? t('ui.confirm_close') : t('ui.close_call'))}</button>`}
@@ -316,6 +327,7 @@ document.addEventListener('click', (e) => {
     case 'newCallBtn': return openNewCall();
     case 'waypoint': return c && action('waypoint', c.coords);
     case 'broadcast': return c && action('broadcast', { callId: c.id });
+    case 'sendAi': return c && action('sendAi', { callId: c.id });
     case 'close':
       if (!c) return;
       if (S.closeArmed === c.id) { S.closeArmed = null; action('close', { callId: c.id }); }
@@ -373,6 +385,7 @@ const handlers = {
     S.dict = d.locale; S.lang = d.lang; S.languages = d.languages || [];
     S.services = d.services; S.priorities = d.priorities; S.statuses = d.statuses;
     S.hud = d.hud; S.role = d.role || S.role; S.quickReplies = d.quickReplies || [];
+    S.aiServices = d.aiServices || []; S.fallbackService = d.fallbackService || S.fallbackService;
     applyStaticText(); renderPanel(); renderHud();
   },
   locale(d) { S.dict = d.locale; S.lang = d.lang; applyStaticText(); renderPanel(); renderHud(); },

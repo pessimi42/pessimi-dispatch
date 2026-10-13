@@ -68,6 +68,62 @@ Config.Sms = {
     quickReplies = { 'on_the_way', 'stay_put', 'safe_place', 'describe', 'call_back' },
 }
 
+---------------------------------------------------------------------------
+-- AI units (NPC responders when no player unit can take a call)
+---------------------------------------------------------------------------
+Config.AiUnits = {
+    enabled = true,
+    -- Automatic dispatch: a call that still has no unit after `waitSeconds` gets an AI unit.
+    auto = true,
+    waitSeconds = 45,
+    -- 'no_available' = send AI when no player unit took the call (busy or none on duty)
+    -- 'no_on_duty'   = send AI only when nobody of that service is on duty at all
+    trigger = 'no_available',
+    autoWithDispatcher = false,  -- true: also send automatically while a dispatcher is on duty
+                                 -- (dispatchers can always send one from the panel)
+    maxActive = 4,               -- AI units on the map at the same time
+    closeWhenDone = true,        -- close the call when the AI unit leaves (if no players are on it)
+
+    spawnDistance = { 180.0, 320.0 }, -- metres from the call (on a road)
+    driveTimeout = 120,          -- seconds; then the vehicle is moved close to the scene
+    arriveDistance = 30.0,
+    drivingStyle = 786603,
+    -- A player near the call controls the NPCs. With nobody in range the AI unit still
+    -- "arrives" after this many seconds and does its job, just without visible NPCs.
+    hostRange = 350.0,
+    virtualTravelSeconds = 40,
+
+    -- Revive used by AI medics. nil = framework default
+    -- (Qbox: qbx_medical Revive export, QBCore: hospital:client:Revive, ESX: esx_ambulancejob:revive).
+    -- Set a client event name here if you use another medical script.
+    reviveEvent = nil,
+
+    -- action: 'revive' (treat the caller) | 'repair' (fix the nearest vehicle)
+    --         'extinguish' (put out fires) | 'secure' (presence only)
+    services = {
+        police = {
+            enabled = true, action = 'secure',
+            vehicle = 'police', ped = 's_m_y_cop_01',
+            scenario = 'WORLD_HUMAN_COP_IDLES', actSeconds = 20, onSceneSeconds = 150,
+        },
+        ems = {
+            enabled = true, action = 'revive',
+            vehicle = 'ambulance', ped = 's_m_m_paramedic_01',
+            scenario = 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', actSeconds = 15, onSceneSeconds = 60,
+        },
+        fire = {
+            enabled = true, action = 'extinguish',
+            vehicle = 'firetruk', ped = 's_m_y_fireman_01',
+            scenario = 'WORLD_HUMAN_STAND_IMPATIENT', actSeconds = 15, onSceneSeconds = 90,
+        },
+        mechanic = {
+            enabled = true, action = 'repair',
+            vehicle = 'towtruck', ped = 's_m_m_trucker_01',
+            scenario = 'WORLD_HUMAN_VEHICLE_MECHANIC', actSeconds = 20, onSceneSeconds = 60,
+        },
+    },
+}
+
 -- Automatic alerts sent by other client scripts through exports.pessimi42_dispatch:CreateAlert()
 Config.ClientAlerts = {
     enabled = true,

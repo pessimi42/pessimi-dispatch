@@ -91,6 +91,10 @@ local actions = {
     update = function(_, p) Calls.Update(tonumber(p.callId), p.patch) end,
     note = function(src, p) Calls.AddNote(tonumber(p.callId), p.text, Dispatch.list[src].name) end,
     close = function(_, p) Calls.Close(tonumber(p.callId)) end,
+    sendAi = function(src, p)
+        local ok = Ai.Send(tonumber(p.callId))
+        if not ok then Notify(src, 'error.ai_unavailable', nil, 'error') end
+    end,
     sms = function(src, p)
         local call = Calls.Get(tonumber(p.callId))
         if not call or call.status == 'closed' then return end

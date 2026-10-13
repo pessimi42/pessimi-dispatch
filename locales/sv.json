@@ -52,7 +52,9 @@
     "sms": "Sms till anmälaren",
     "sms_placeholder": "Skriv ett sms…",
     "sms_out": "Sms skickat",
-    "sms_in": "Sms mottaget"
+    "sms_in": "Sms mottaget",
+    "send_ai": "Skicka AI-enhet",
+    "ai_unit": "AI-enhet"
   },
   "caller": {
     "title": "Nödnummer 112",
@@ -136,7 +138,8 @@
     "no_call": "Uppdraget hittades inte.",
     "no_broadcast": "Det finns inget uppdrag att kvittera.",
     "lang_unknown": "Okänt språk. Alternativ: {list}",
-    "sms_failed": "Sms:et kunde inte skickas."
+    "sms_failed": "Sms:et kunde inte skickas.",
+    "ai_unavailable": "Ingen AI-enhet tillgänglig för detta uppdrag."
   },
   "duty": {
     "on": "Du är i tjänst som operatör.",
@@ -184,5 +187,21 @@
       "describe": "Beskriv",
       "call_back": "Ring igen"
     }
+  },
+  "ai_status": {
+    "enroute": "På väg",
+    "onscene": "På plats",
+    "done": "Har lämnat",
+    "failed": "Kom inte fram"
+  },
+  "ai": {
+    "note_sent": "AI-enhet larmad.",
+    "note_arrived": "AI-enheten är på plats.",
+    "note_revive": "AI-ambulanspersonal behandlade patienten.",
+    "note_repair": "AI-mekaniker reparerade fordonet.",
+    "note_extinguish": "AI-brandmän släckte branden.",
+    "note_secure": "AI-patrull säkrade platsen.",
+    "note_done": "AI-enheten lämnade platsen.",
+    "note_failed": "AI-enheten kom inte fram."
   }
 }

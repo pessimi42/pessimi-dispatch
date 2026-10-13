@@ -1,5 +1,46 @@
 # Changelog
 
+## v0.3.0-beta – AI units (2026-10-13)
+
+NPC responders for calls that no player unit can take. Still a beta – please report
+problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### New
+
+- **AI units** – an NPC patrol car, ambulance, fire truck or tow truck drives to the call
+  with sirens when no player unit is available.
+  - Police secure the scene for a while.
+  - EMS revive the caller through your medical script (qbx_medical, qb-ambulancejob and
+    esx_ambulancejob supported out of the box; others via `Config.AiUnits.reviveEvent`).
+  - Fire puts out fires around the scene.
+  - Mechanics repair the nearest vehicle.
+- **Automatic when no dispatcher is on duty** – a call still without a player unit after
+  45 seconds (`waitSeconds`) gets an AI unit. If a player responds first, no AI is sent.
+- **"Send AI unit" button** in the dispatcher panel. AI units and their status (en route,
+  on scene, left) show in the call details, and their actions are logged in the notes.
+- **Works without nearby players** – the caller or the nearest player controls the NPCs.
+  If nobody is near the call, the unit still arrives and does its job without visible NPCs.
+- **Configurable** in `Config.AiUnits`: vehicles, peds, timings, per-service on/off, the
+  maximum number of AI units at once and whether AI only comes when nobody of that
+  service is on duty (`trigger = 'no_on_duty'`).
+- `SendAiUnit` and `GetAiUnits` exports and an `onAiSent` server event.
+
+### Changed
+
+- A call with an AI unit on it counts as active: it isn't closed automatically while the
+  AI unit is working, and players can still respond to it.
+
+### Needs testing on live servers
+
+- NPC driving and on-scene behaviour on busy servers.
+- Revive on ESX, which uses the standard `esx_ambulancejob:revive` event.
+
+### Upgrading from 0.2.0-beta
+
+Replace the resource folder. If you changed `config/config.lua`, copy the new
+`Config.AiUnits` section into your version. To turn AI units off, set
+`Config.AiUnits.enabled = false`.
+
 ## v0.2.0-beta – SMS & lb-phone (2026-10-13)
 
 Adds text messaging between the dispatch centre, callers and units, with lb-phone as the

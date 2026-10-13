@@ -52,7 +52,9 @@
     "sms": "Tekstiviesti ilmoittajalle",
     "sms_placeholder": "Kirjoita tekstiviesti…",
     "sms_out": "Viesti lähetetty",
-    "sms_in": "Viesti vastaanotettu"
+    "sms_in": "Viesti vastaanotettu",
+    "send_ai": "Lähetä AI-yksikkö",
+    "ai_unit": "AI-yksikkö"
   },
   "caller": {
     "title": "Hätänumero 112",
@@ -136,7 +138,8 @@
     "no_call": "Tehtävää ei löytynyt.",
     "no_broadcast": "Ei tehtävää, johon vastata.",
     "lang_unknown": "Tuntematon kieli. Vaihtoehdot: {list}",
-    "sms_failed": "Tekstiviestiä ei voitu lähettää."
+    "sms_failed": "Tekstiviestiä ei voitu lähettää.",
+    "ai_unavailable": "Tälle tehtävälle ei ole AI-yksikköä saatavilla."
   },
   "duty": {
     "on": "Olet vuorossa päivystäjänä.",
@@ -184,5 +187,21 @@
       "describe": "Kuvaile",
       "call_back": "Soita takaisin"
     }
+  },
+  "ai_status": {
+    "enroute": "Matkalla",
+    "onscene": "Kohteessa",
+    "done": "Poistunut",
+    "failed": "Ei saapunut"
+  },
+  "ai": {
+    "note_sent": "AI-yksikkö hälytetty.",
+    "note_arrived": "AI-yksikkö on kohteessa.",
+    "note_revive": "AI-ensihoitaja hoiti potilaan.",
+    "note_repair": "AI-mekaanikko korjasi ajoneuvon.",
+    "note_extinguish": "AI-palomiehet sammuttivat palon.",
+    "note_secure": "AI-partio varmisti kohteen.",
+    "note_done": "AI-yksikkö poistui kohteesta.",
+    "note_failed": "AI-yksikkö ei päässyt kohteeseen."
   }
 }

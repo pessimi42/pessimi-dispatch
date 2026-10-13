@@ -18,6 +18,15 @@ Locale.Set(savedLanguage())
 
 local function T(key, vars) return Locale.T(key, vars) end
 
+local function aiServices()
+    local list = {}
+    if not Config.AiUnits.enabled then return list end
+    for id, s in pairs(Config.AiUnits.services) do
+        if s.enabled and Utils.ServiceEnabled(id) then list[#list + 1] = id end
+    end
+    return list
+end
+
 local function sendInit()
     local services = {}
     for id, s in pairs(Services) do
@@ -36,6 +45,8 @@ local function sendInit()
         statuses = Config.UnitStatuses,
         hud = Config.Units.hud,
         quickReplies = Config.Sms.quickReplies,
+        aiServices = aiServices(),
+        fallbackService = Config.Fallback.unspecifiedService,
         role = Role,
     })
     -- Messages sent before the page loaded were dropped; replay unit state.
