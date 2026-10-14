@@ -9,6 +9,10 @@
   dispatch panel as before – but no patrol car or officers spawn or drive to the call.
   NPC EMS, fire and mechanic units still come in person. Set per service with `visible` in
   `Config.AiUnits.services` (`visible = false` for police by default).
+- **NPC medics treat everyone who needs it at the scene.** Instead of reviving only the
+  player who called 112, an NPC EMS unit now revives every downed or injured player within
+  20 m of the scene (`treatRadius`) – including a friend the caller called for. Unhurt
+  players, and a caller who has since left the scene, are not touched.
 
 ## v0.5.1-beta – NPC units (2026-10-14)
 

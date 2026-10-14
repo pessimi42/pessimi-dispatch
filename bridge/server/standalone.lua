@@ -37,3 +37,5 @@ end
 function Bridge.Revive(src)
     Utils.Warn('NPC medic: no revive event configured (Config.AiUnits.reviveEvent)')
 end
+
+function Bridge.IsDowned() return false end

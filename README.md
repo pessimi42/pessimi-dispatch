@@ -107,7 +107,7 @@ come to the scene in person (`visible = false`; set it to `true` to have patrol 
 | Service | On scene |
 |---|---|
 | Police | secures the scene for a while (panel only) |
-| EMS | treats the caller – revives them through your medical script |
+| EMS | revives every downed or injured player within 20 m of the scene through your medical script |
 | Fire | puts out fires around the scene |
 | Mechanic | repairs the nearest vehicle |
 

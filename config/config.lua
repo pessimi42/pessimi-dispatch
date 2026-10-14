@@ -137,6 +137,9 @@ Config.AiUnits = {
             enabled = true, action = 'revive',
             vehicle = { 'ambulance' }, ped = { 's_m_m_paramedic_01' },
             scenario = 'CODE_HUMAN_MEDIC_TEND_TO_DEAD', actSeconds = 15, onSceneSeconds = 60,
+            -- Treats every downed or injured player within this many metres of the scene
+            -- (the caller too, if they're there). Unhurt players are left alone.
+            treatRadius = 20.0,
         },
         fire = {
             enabled = true, action = 'extinguish',

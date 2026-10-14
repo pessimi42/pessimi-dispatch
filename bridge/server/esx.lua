@@ -61,5 +61,8 @@ function Bridge.Revive(src)
     TriggerClientEvent('esx_ambulancejob:revive', src)
 end
 
+--- ESX has no shared "downed" flag; NPC medics fall back to the ped's health.
+function Bridge.IsDowned() return false end
+
 AddEventHandler('esx:playerLoaded', function(src) Units.Refresh(src) end)
 AddEventHandler('esx:setJob', function(src) Units.Refresh(src) end)

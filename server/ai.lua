@@ -190,16 +190,42 @@ end
 ---------------------------------------------------------------------------
 -- On scene
 ---------------------------------------------------------------------------
+--- Player needs a medic: downed per the framework, or the ped is dead / below full health.
+local function isHurt(src)
+    if Bridge.IsDowned(src) then return true end
+    local ped = GetPlayerPed(src)
+    if not ped or ped == 0 then return false end
+    local health, max = GetEntityHealth(ped), GetEntityMaxHealth(ped)
+    return health <= 0 or (max and max > 0 and health < max - 5)
+end
+
+--- Every hurt player within the service's treatRadius of the scene.
+local function patientsAt(service, coords)
+    local radius = (cfg.services[service] and cfg.services[service].treatRadius) or 20.0
+    local list = {}
+    for _, id in ipairs(GetPlayers()) do
+        local src = tonumber(id)
+        local ped = GetPlayerPed(src)
+        if ped and ped ~= 0 and Utils.Distance2D(GetEntityCoords(ped), coords) <= radius and isHurt(src) then
+            list[#list + 1] = src
+        end
+    end
+    return list
+end
+
 local actions = {
     revive = function(a, call)
-        local target = call._callerSrc
-        if not target or not GetPlayerName(target) then return false end
-        if cfg.reviveEvent then
-            TriggerClientEvent(cfg.reviveEvent, target)
-        else
-            Bridge.Revive(target)
+        if not call.coords then return false end
+        local patients = patientsAt(a.service, call.coords)
+        for _, src in ipairs(patients) do
+            if cfg.reviveEvent then
+                TriggerClientEvent(cfg.reviveEvent, src)
+            else
+                Bridge.Revive(src)
+            end
+            Utils.Debug(('NPC medic treated player %d (call #%d)'):format(src, call.id))
         end
-        return true
+        return #patients > 0
     end,
     repair = function(a, call)
         local target = (call._callerSrc and GetPlayerName(call._callerSrc)) and call._callerSrc or a.host

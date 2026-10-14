@@ -52,6 +52,13 @@ function Bridge.Revive(src)
     end
 end
 
+--- Downed (dead / last stand) according to the framework, used by NPC medics.
+function Bridge.IsDowned(src)
+    local p = player(src)
+    local m = p and p.PlayerData.metadata
+    return m ~= nil and (m.isdead == true or m.inlaststand == true)
+end
+
 AddEventHandler('QBCore:Server:PlayerLoaded', function(p)
     Units.Refresh(p.PlayerData.source)
 end)
