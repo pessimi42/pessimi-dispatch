@@ -182,7 +182,7 @@ function Scenes.Clear(callId)
     TriggerClientEvent(Ev('client:sceneInfo'), -1, { callId = callId, removed = true })
 end
 
---- Ped netId of a call's scene (AI medics walk to it).
+--- Ped netId of a call's scene (NPC medics walk to it).
 function Scenes.PedNetId(callId)
     local scene = Scenes.active[callId]
     return scene and scene.pedNetId or nil

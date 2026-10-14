@@ -93,11 +93,11 @@ appears, and the responding units have something to do there.
 | Vehicle / building / wildfire | burning car or fires | putting the fires out |
 | Breakdown, tow, flat tyre | broken car, hood open, driver waiting | Mechanic: **E** to repair |
 
-Treatments, statements and repairs are logged in the call's notes. AI units handle scenes
-too (an AI medic treats the patient). NPCs are removed when the call closes, and player calls
+Treatments, statements and repairs are logged in the call's notes. NPC units handle scenes
+too (an NPC medic treats the patient). NPCs are removed when the call closes, and player calls
 never get NPCs. Configure in `Config.Scenes`.
 
-## AI units
+## NPC units
 
 When no player unit can take a call, an NPC unit responds instead: a patrol car, ambulance,
 fire truck or tow truck drives to the scene with sirens and does its job.
@@ -110,21 +110,21 @@ fire truck or tow truck drives to the scene with sirens and does its job.
 | Mechanic | repairs the nearest vehicle |
 
 - **Players come first:** AI is only used when nobody of that service is on duty. As soon
-  as a police officer or medic clocks in, their service gets no more AI units. (Set
+  as a police officer or medic clocks in, their service gets no more NPC units. (Set
   `trigger = 'no_available'` to also use AI when units are on duty but all busy, or
   `trigger = 'always'` to send AI to any call left without a unit.)
 - **Automatic** when no dispatcher is on duty: a call that still has no unit after
-  `waitSeconds` (default 45 s) gets an AI unit. With a dispatcher on duty this only
-  happens if `autoWithDispatcher = true`. If no AI unit can be sent, the reason is added
+  `waitSeconds` (default 45 s) gets an NPC unit. With a dispatcher on duty this only
+  happens if `autoWithDispatcher = true`. If no NPC unit can be sent, the reason is added
   to the call's notes.
-- **Dispatchers** can send one with **Send AI unit** in the call details – the button only
+- **Dispatchers** can send one with **Send NPC unit** in the call details – the button only
   appears when nobody of that service is on duty.
 - The caller (or the nearest player) controls the NPCs. If nobody is near the call, the
   unit still arrives after a short delay and does its job, just without visible NPCs –
   until someone comes near: a player who approaches while it's on its way sees it drive in
   with sirens, and a player who reaches a scene where it's already working sees the vehicle
   (lights on) and crew there. (`handOver`, `visibleOnScene`)
-- The call is closed when the AI unit leaves, unless players are working it too.
+- The call is closed when the NPC unit leaves, unless players are working it too.
 - Revive works out of the box with qbx_medical, qb-ambulancejob and esx_ambulancejob. For
   other medical scripts set `Config.AiUnits.reviveEvent`.
 
@@ -132,13 +132,13 @@ Everything is configurable in `Config.AiUnits` (vehicles, peds, timings, limits,
 
 **Vehicle and ped models** can be lists – the first model that spawns and stays is used.
 Many Qbox/QBCore servers blacklist `s_m_y_cop_01` and `firetruk` (smallresources) and
-delete them on spawn; the defaults already fall back to allowed models, but if an AI unit
+delete them on spawn; the defaults already fall back to allowed models, but if an NPC unit
 never appears, check that its models aren't blacklisted on your server.
 
 ## Testing
 
 Set `Config.TestMode = true` (top of `config/config.lua`) to try everything quickly: an AI
-call every 30–60 seconds even with nobody on duty, AI units after 10 seconds (also when
+call every 30–60 seconds even with nobody on duty, NPC units after 10 seconds (also when
 players of the service are on duty) and debug prints in the server console and F8. Turn it
 off again on a live server.
 

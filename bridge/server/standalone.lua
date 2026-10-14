@@ -35,5 +35,5 @@ end
 
 --- No framework medical system: set Config.AiUnits.reviveEvent to your script's event.
 function Bridge.Revive(src)
-    Utils.Warn('AI medic: no revive event configured (Config.AiUnits.reviveEvent)')
+    Utils.Warn('NPC medic: no revive event configured (Config.AiUnits.reviveEvent)')
 end

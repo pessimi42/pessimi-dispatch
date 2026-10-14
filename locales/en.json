@@ -53,8 +53,8 @@
     "sms_placeholder": "Write a text message…",
     "sms_out": "SMS sent",
     "sms_in": "SMS received",
-    "send_ai": "Send AI unit",
-    "ai_unit": "AI unit",
+    "send_ai": "Send NPC unit",
+    "ai_unit": "NPC unit",
     "ai_calls": "AI calls",
     "ai_badge": "AI",
     "on": "On",
@@ -147,8 +147,8 @@
     "no_broadcast": "There is no call to respond to.",
     "lang_unknown": "Unknown language. Options: {list}",
     "sms_failed": "The text message could not be sent.",
-    "ai_unavailable": "No AI unit available for this call.",
-    "ai_players_on_duty": "Units of this service are on duty – AI units are only used when nobody is.",
+    "ai_unavailable": "No NPC unit available for this call.",
+    "ai_players_on_duty": "Units of this service are on duty – NPC units are only used when nobody is.",
     "no_permission": "You are not allowed to do that.",
     "locate_unavailable": "The caller cannot be located (offline or no phone)."
   },
@@ -206,17 +206,17 @@
     "failed": "Did not arrive"
   },
   "ai": {
-    "note_sent": "AI unit dispatched.",
-    "note_arrived": "AI unit is on scene.",
-    "note_revive": "AI medic treated the patient.",
-    "note_repair": "AI mechanic repaired the vehicle.",
-    "note_extinguish": "AI firefighters put out the fire.",
-    "note_secure": "AI patrol secured the scene.",
-    "note_done": "AI unit left the scene.",
-    "note_failed": "AI unit could not reach the scene.",
-    "note_not_sent_players": "No AI unit sent: units of this service are on duty.",
-    "note_not_sent_limit": "No AI unit sent: all AI units are busy.",
-    "note_not_sent": "No AI unit could be sent to this call."
+    "note_sent": "NPC unit dispatched.",
+    "note_arrived": "NPC unit is on scene.",
+    "note_revive": "NPC medic treated the patient.",
+    "note_repair": "NPC mechanic repaired the vehicle.",
+    "note_extinguish": "NPC firefighters put out the fire.",
+    "note_secure": "NPC patrol secured the scene.",
+    "note_done": "NPC unit left the scene.",
+    "note_failed": "NPC unit could not reach the scene.",
+    "note_not_sent_players": "No NPC unit sent: units of this service are on duty.",
+    "note_not_sent_limit": "No NPC unit sent: all NPC units are busy.",
+    "note_not_sent": "No NPC unit could be sent to this call."
   },
   "aicall": {
     "robbery": {

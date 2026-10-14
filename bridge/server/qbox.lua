@@ -43,7 +43,7 @@ function Bridge.HasAnyItem(src, items)
     return true -- Qbox ships with ox_inventory; without it we do not block calls
 end
 
---- Used by AI medics.
+--- Used by NPC medics.
 function Bridge.Revive(src)
     if GetResourceState('qbx_medical') == 'started' then
         exports.qbx_medical:Revive(src)

@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **"AI units" are now called "NPC units"** everywhere players and dispatchers see them
+  (panel button, call notes, messages) in English, Finnish and Swedish. "AI calls" keep
+  their name. Config names and exports (`Config.AiUnits`, `SendAiUnit`, `GetAiUnits`) are
+  unchanged, so existing configs and integrations keep working.
+
 ## v0.5.0-beta – AI units & scenes fixes, test mode (2026-10-13)
 
 Fixes for AI units and NPC scenes found in testing, plus a test mode for trying things

@@ -4,7 +4,7 @@ Config = {}
 Config.Framework = 'auto'
 Config.Debug = false
 
--- Test mode: frequent AI calls, fast AI units and debug prints. See the
+-- Test mode: frequent AI calls, fast NPC units and debug prints. See the
 -- "Test mode" block at the end of this file for exactly what it changes.
 -- Turn OFF on a live server.
 Config.TestMode = false
@@ -86,27 +86,27 @@ Config.Location = {
 }
 
 ---------------------------------------------------------------------------
--- AI units (NPC responders when no player unit can take a call)
+-- NPC units (responders when no player unit can take a call)
 ---------------------------------------------------------------------------
 Config.AiUnits = {
     enabled = true,
-    -- Automatic dispatch: a call that still has no unit after `waitSeconds` gets an AI unit.
+    -- Automatic dispatch: a call that still has no unit after `waitSeconds` gets an NPC unit.
     auto = true,
     waitSeconds = 45,
     -- 'no_on_duty'   = AI only when nobody of that service is on duty (players always come first)
     -- 'no_available' = AI also when units are on duty but all busy
     -- 'always'       = AI whenever a call has no unit after waitSeconds (testing)
-    -- Applies to automatic dispatch and to the dispatcher's "Send AI unit" button.
+    -- Applies to automatic dispatch and to the dispatcher's "Send NPC unit" button.
     trigger = 'no_on_duty',
     autoWithDispatcher = false,  -- true: also send automatically while a dispatcher is on duty
-    maxActive = 4,               -- AI units on the map at the same time
-    closeWhenDone = true,        -- close the call when the AI unit leaves (if no players are on it)
+    maxActive = 4,               -- NPC units on the map at the same time
+    closeWhenDone = true,        -- close the call when the NPC unit leaves (if no players are on it)
 
     spawnDistance = { 180.0, 320.0 }, -- metres from the call (on a road)
     driveTimeout = 120,          -- seconds; then the vehicle is moved close to the scene
     arriveDistance = 30.0,
     drivingStyle = 786603,
-    -- A player near the call controls the NPCs. With nobody in range the AI unit still
+    -- A player near the call controls the NPCs. With nobody in range the NPC unit still
     -- "arrives" after this many seconds and does its job, just without visible NPCs.
     hostRange = 350.0,
     virtualTravelSeconds = 40,
@@ -115,7 +115,7 @@ Config.AiUnits = {
     visibleOnScene = true,       -- already working: the vehicle and crew appear at the scene
     watchInterval = 3,           -- seconds between checks
 
-    -- Revive used by AI medics. nil = framework default
+    -- Revive used by NPC medics. nil = framework default
     -- (Qbox: qbx_medical Revive export, QBCore: hospital:client:Revive, ESX: esx_ambulancejob:revive).
     -- Set a client event name here if you use another medical script.
     reviveEvent = nil,
@@ -168,7 +168,7 @@ Config.AiCalls = {
     -- Calls are only generated when someone can take them: a dispatcher on duty or units
     -- of the chosen service. Weights decide how often each service gets a call.
     weights = { police = 5, ems = 3, fire = 1, mechanic = 1 },
-    requireResponders = true,    -- false: generate even when nobody is on duty (AI units take them)
+    requireResponders = true,    -- false: generate even when nobody is on duty (NPC units take them)
 
     -- Call types per service (texts in locales: aicall.<type>.1 / .2) and their priority
     types = {
@@ -336,7 +336,7 @@ if Config.TestMode then
     Config.AiCalls.interval = { 0.5, 1 }
     Config.AiCalls.maxOpen = 4
     Config.AiCalls.requireResponders = false
-    -- AI units leave sooner and come even when players of the service are on duty
+    -- NPC units leave sooner and come even when players of the service are on duty
     Config.AiUnits.waitSeconds = 10
     Config.AiUnits.virtualTravelSeconds = 15
     Config.AiUnits.trigger = 'always'

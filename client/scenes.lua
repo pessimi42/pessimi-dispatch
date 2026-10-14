@@ -273,7 +273,7 @@ RegisterNetEvent(Ev('client:sceneClear'), clearScene)
 ---------------------------------------------------------------------------
 -- Everyone: E prompts for the right units
 ---------------------------------------------------------------------------
---- Entity of a call's scene NPC (patient, witness…), or 0. AI units walk to it.
+--- Entity of a call's scene NPC (patient, witness…), or 0. NPC units walk to it.
 function DispatchScenePed(callId)
     local s = callId and scenes[callId]
     if not s or not s.pedNetId or not NetworkDoesNetworkIdExist(s.pedNetId) then return 0 end

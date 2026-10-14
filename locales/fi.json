@@ -53,8 +53,8 @@
     "sms_placeholder": "Kirjoita tekstiviesti…",
     "sms_out": "Viesti lähetetty",
     "sms_in": "Viesti vastaanotettu",
-    "send_ai": "Lähetä AI-yksikkö",
-    "ai_unit": "AI-yksikkö",
+    "send_ai": "Lähetä NPC-yksikkö",
+    "ai_unit": "NPC-yksikkö",
     "ai_calls": "AI-ilmoitukset",
     "ai_badge": "AI",
     "on": "Päällä",
@@ -147,8 +147,8 @@
     "no_broadcast": "Ei tehtävää, johon vastata.",
     "lang_unknown": "Tuntematon kieli. Vaihtoehdot: {list}",
     "sms_failed": "Tekstiviestiä ei voitu lähettää.",
-    "ai_unavailable": "Tälle tehtävälle ei ole AI-yksikköä saatavilla.",
-    "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – AI-yksiköitä käytetään vain, kun ketään ei ole.",
+    "ai_unavailable": "Tälle tehtävälle ei ole NPC-yksikköä saatavilla.",
+    "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – NPC-yksiköitä käytetään vain, kun ketään ei ole.",
     "no_permission": "Sinulla ei ole oikeutta tähän.",
     "locate_unavailable": "Ilmoittajaa ei voida paikantaa (ei paikalla tai ei puhelinta)."
   },
@@ -206,17 +206,17 @@
     "failed": "Ei saapunut"
   },
   "ai": {
-    "note_sent": "AI-yksikkö hälytetty.",
-    "note_arrived": "AI-yksikkö on kohteessa.",
-    "note_revive": "AI-ensihoitaja hoiti potilaan.",
-    "note_repair": "AI-mekaanikko korjasi ajoneuvon.",
-    "note_extinguish": "AI-palomiehet sammuttivat palon.",
-    "note_secure": "AI-partio varmisti kohteen.",
-    "note_done": "AI-yksikkö poistui kohteesta.",
-    "note_failed": "AI-yksikkö ei päässyt kohteeseen.",
-    "note_not_sent_players": "AI-yksikköä ei hälytetty: palvelun yksiköitä on vuorossa.",
-    "note_not_sent_limit": "AI-yksikköä ei hälytetty: kaikki AI-yksiköt ovat varattuja.",
-    "note_not_sent": "Tehtävälle ei voitu hälyttää AI-yksikköä."
+    "note_sent": "NPC-yksikkö hälytetty.",
+    "note_arrived": "NPC-yksikkö on kohteessa.",
+    "note_revive": "NPC-ensihoitaja hoiti potilaan.",
+    "note_repair": "NPC-mekaanikko korjasi ajoneuvon.",
+    "note_extinguish": "NPC-palomiehet sammuttivat palon.",
+    "note_secure": "NPC-partio varmisti kohteen.",
+    "note_done": "NPC-yksikkö poistui kohteesta.",
+    "note_failed": "NPC-yksikkö ei päässyt kohteeseen.",
+    "note_not_sent_players": "NPC-yksikköä ei hälytetty: palvelun yksiköitä on vuorossa.",
+    "note_not_sent_limit": "NPC-yksikköä ei hälytetty: kaikki NPC-yksiköt ovat varattuja.",
+    "note_not_sent": "Tehtävälle ei voitu hälyttää NPC-yksikköä."
   },
   "aicall": {
     "robbery": {

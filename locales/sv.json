@@ -53,8 +53,8 @@
     "sms_placeholder": "Skriv ett sms…",
     "sms_out": "Sms skickat",
     "sms_in": "Sms mottaget",
-    "send_ai": "Skicka AI-enhet",
-    "ai_unit": "AI-enhet",
+    "send_ai": "Skicka NPC-enhet",
+    "ai_unit": "NPC-enhet",
     "ai_calls": "AI-samtal",
     "ai_badge": "AI",
     "on": "På",
@@ -147,8 +147,8 @@
     "no_broadcast": "Det finns inget uppdrag att kvittera.",
     "lang_unknown": "Okänt språk. Alternativ: {list}",
     "sms_failed": "Sms:et kunde inte skickas.",
-    "ai_unavailable": "Ingen AI-enhet tillgänglig för detta uppdrag.",
-    "ai_players_on_duty": "Enheter från myndigheten är i tjänst – AI-enheter används bara när ingen är det.",
+    "ai_unavailable": "Ingen NPC-enhet tillgänglig för detta uppdrag.",
+    "ai_players_on_duty": "Enheter från myndigheten är i tjänst – NPC-enheter används bara när ingen är det.",
     "no_permission": "Du har inte behörighet till det.",
     "locate_unavailable": "Anmälaren kan inte lokaliseras (offline eller ingen telefon)."
   },
@@ -206,17 +206,17 @@
     "failed": "Kom inte fram"
   },
   "ai": {
-    "note_sent": "AI-enhet larmad.",
-    "note_arrived": "AI-enheten är på plats.",
-    "note_revive": "AI-ambulanspersonal behandlade patienten.",
-    "note_repair": "AI-mekaniker reparerade fordonet.",
-    "note_extinguish": "AI-brandmän släckte branden.",
-    "note_secure": "AI-patrull säkrade platsen.",
-    "note_done": "AI-enheten lämnade platsen.",
-    "note_failed": "AI-enheten kom inte fram.",
-    "note_not_sent_players": "Ingen AI-enhet larmad: enheter inom tjänsten är i tjänst.",
-    "note_not_sent_limit": "Ingen AI-enhet larmad: alla AI-enheter är upptagna.",
-    "note_not_sent": "Ingen AI-enhet kunde larmas till samtalet."
+    "note_sent": "NPC-enhet larmad.",
+    "note_arrived": "NPC-enheten är på plats.",
+    "note_revive": "NPC-ambulanspersonal behandlade patienten.",
+    "note_repair": "NPC-mekaniker reparerade fordonet.",
+    "note_extinguish": "NPC-brandmän släckte branden.",
+    "note_secure": "NPC-patrull säkrade platsen.",
+    "note_done": "NPC-enheten lämnade platsen.",
+    "note_failed": "NPC-enheten kom inte fram.",
+    "note_not_sent_players": "Ingen NPC-enhet larmad: enheter inom tjänsten är i tjänst.",
+    "note_not_sent_limit": "Ingen NPC-enhet larmad: alla NPC-enheter är upptagna.",
+    "note_not_sent": "Ingen NPC-enhet kunde larmas till samtalet."
   },
   "aicall": {
     "robbery": {

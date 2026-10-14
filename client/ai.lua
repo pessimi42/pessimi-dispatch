@@ -1,4 +1,4 @@
--- AI units, client side. Runs only on the "host" player the server picked:
+-- NPC units, client side. Runs only on the "host" player the server picked:
 -- spawns the vehicle and crew, drives to the call with sirens, plays a scenario
 -- on scene and leaves when the server says so.
 
@@ -149,7 +149,7 @@ local function register(id, veh, ped)
 end
 
 local function fail(id, why, veh, ped)
-    debug(('AI unit %d could not spawn: %s'):format(id, why))
+    debug(('NPC unit %d could not spawn: %s'):format(id, why))
     delete(ped)
     delete(veh)
     units[id] = nil
@@ -173,7 +173,7 @@ RegisterNetEvent(Ev('client:aiSpawn'), function(id, d)
         local ped = createPed(d.ped, veh)
         if not ped then return fail(id, 'no crew model could be spawned', veh) end
         if not register(id, veh, ped) then return end
-        debug(('AI unit %d spawned %.0fm from the call'):format(id, #(pos - target)))
+        debug(('NPC unit %d spawned %.0fm from the call'):format(id, #(pos - target)))
 
         TaskVehicleDriveToCoordLongrange(ped, veh, target.x, target.y, target.z, 28.0, d.drivingStyle, d.arriveDistance * 0.5)
 

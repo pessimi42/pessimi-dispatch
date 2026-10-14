@@ -50,7 +50,7 @@ function Bridge.HasAnyItem(src, items)
     return false
 end
 
---- Used by AI medics (qb-ambulancejob).
+--- Used by NPC medics (qb-ambulancejob).
 function Bridge.Revive(src)
     TriggerClientEvent('hospital:client:Revive', src)
 end

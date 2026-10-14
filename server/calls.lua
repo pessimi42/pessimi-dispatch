@@ -45,7 +45,7 @@ local function changed(call, kind)
     TriggerEvent(Ev(event), pub)
 end
 
---- Push a change made outside this file (e.g. AI units).
+--- Push a change made outside this file (e.g. NPC units).
 function Calls.Touch(call) changed(call, 'updated') end
 
 --- Keep only the newest Config.Calls.keepClosed closed calls.

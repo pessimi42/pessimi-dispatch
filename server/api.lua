@@ -67,7 +67,7 @@ exports('LocateCaller', function(id) return Location.Locate(id) end)
 --- NPC scenes
 exports('ResolveScene', function(callId) return Scenes.Resolve(callId, 'api') end)
 
---- AI units
+--- NPC units
 exports('SendAiUnit', function(id) return Ai.Send(id) end)
 exports('GetAiUnits', function()
     local out = {}

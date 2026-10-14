@@ -1,4 +1,4 @@
--- AI units: NPC responders for calls no player unit can take.
+-- NPC units: responders for calls no player unit can take.
 --
 -- A player near the call ("host") spawns and drives the NPCs; the server decides
 -- everything else (when to act, revive, leave). Without a host in range the unit
@@ -14,7 +14,7 @@ local function serviceCfg(service)
     return (s and s.enabled) and s or nil
 end
 
---- Service an AI unit would come from for this call, or nil.
+--- Service an NPC unit would come from for this call, or nil.
 function Ai.ServiceFor(call)
     local service = call.service or Config.Fallback.unspecifiedService
     return serviceCfg(service) and service or nil
@@ -26,7 +26,7 @@ function Ai.Count()
     return n
 end
 
---- True if an AI unit is currently working this call.
+--- True if an NPC unit is currently working this call.
 function Ai.OnCall(callId)
     for _, a in pairs(Ai.active) do
         if a.callId == callId then return true end
@@ -136,7 +136,7 @@ end
 --- ('closed'|'no_coords'|'no_service'|'players_on_duty'|'busy'|'limit').
 --- Debug print with details; the returned reason stays a plain code callers can compare.
 local function refuse(callId, why, detail)
-    Utils.Debug(('AI unit NOT sent to call #%s: %s%s'):format(tostring(callId), why, detail and (' (' .. detail .. ')') or ''))
+    Utils.Debug(('NPC unit NOT sent to call #%s: %s%s'):format(tostring(callId), why, detail and (' (' .. detail .. ')') or ''))
     return nil, why
 end
 
@@ -211,7 +211,7 @@ local actions = {
 function Ai.Arrived(id)
     local a = Ai.active[id]
     if not a or a.status ~= 'enroute' then return end
-    Utils.Debug(('AI unit %d on scene (call #%d)'):format(a.id, a.callId))
+    Utils.Debug(('NPC unit %d on scene (call #%d)'):format(a.id, a.callId))
     setStatus(a, 'onscene')
     note(a, 'ai.note_arrived')
     local s = cfg.services[a.service]
@@ -237,7 +237,7 @@ function Ai.Finish(id, opts)
     setStatus(a, opts.failed and 'failed' or 'done')
     if not opts.silent then note(a, opts.failed and 'ai.note_failed' or 'ai.note_done') end
 
-    Utils.Debug(('AI unit %d leaving call #%d'):format(a.id, a.callId))
+    Utils.Debug(('NPC unit %d leaving call #%d'):format(a.id, a.callId))
     if a.host and GetPlayerName(a.host) then
         TriggerClientEvent(Ev('client:aiLeave'), a.host, a.id)
         -- Safety net: if the host could not drive them away (ownership moved to another
@@ -273,7 +273,7 @@ function Ai.Finish(id, opts)
     end
 end
 
---- Call closed by a dispatcher/unit: send its AI units home.
+--- Call closed by a dispatcher/unit: send its NPC units home.
 function Ai.CancelForCall(callId)
     for id, a in pairs(Ai.active) do
         if a.callId == callId then Ai.Finish(id, { callClosing = true, silent = true }) end
@@ -360,7 +360,7 @@ function Ai.Watch()
                     else
                         TriggerClientEvent(Ev('client:aiSpawnOnScene'), src, a.id, payload(a, call))
                     end
-                    Utils.Debug(('AI unit %d handed to player %d (%s)'):format(a.id, src, a.status))
+                    Utils.Debug(('NPC unit %d handed to player %d (%s)'):format(a.id, src, a.status))
                 end
             end
         end
@@ -381,7 +381,7 @@ end)
 --- if the call is still unattended.
 function Ai.Schedule(callId)
     if not cfg.enabled or not cfg.auto then return end
-    Utils.Debug(('call #%d: AI unit in %d s if still unattended'):format(callId, cfg.waitSeconds))
+    Utils.Debug(('call #%d: NPC unit in %d s if still unattended'):format(callId, cfg.waitSeconds))
     SetTimeout(cfg.waitSeconds * 1000, function()
         local call = Calls.Get(callId)
         if not call or call.status == 'closed' or call.status == 'active' then return end
