@@ -99,12 +99,14 @@ never get NPCs. Configure in `Config.Scenes`.
 
 ## NPC units
 
-When no player unit can take a call, an NPC unit responds instead: a patrol car, ambulance,
-fire truck or tow truck drives to the scene with sirens and does its job.
+When no player unit can take a call, an NPC unit responds instead: an ambulance, fire truck
+or tow truck drives to the scene with sirens and does its job. NPC police only work in the
+dispatch system – they are dispatched, arrive and secure the scene on the panel, but don't
+come to the scene in person (`visible = false`; set it to `true` to have patrol cars drive in).
 
 | Service | On scene |
 |---|---|
-| Police | secures the scene for a while |
+| Police | secures the scene for a while (panel only) |
 | EMS | treats the caller – revives them through your medical script |
 | Fire | puts out fires around the scene |
 | Mechanic | repairs the nearest vehicle |

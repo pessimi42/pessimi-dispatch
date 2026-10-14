@@ -127,6 +127,13 @@ end
 ---------------------------------------------------------------------------
 -- Send
 ---------------------------------------------------------------------------
+--- Does this service's NPC unit physically come to the scene? `visible = false` units only
+--- exist in the dispatch system: they are dispatched, arrive, act and leave on the panel.
+function Ai.Visible(service)
+    local s = cfg.services[service]
+    return s ~= nil and s.visible ~= false
+end
+
 --- True if Config.AiUnits.trigger keeps AI away because players of `service` are on duty.
 function Ai.PlayersOnDuty(service)
     return cfg.trigger == 'no_on_duty' and #Units.OnDutyIn(service) > 0
@@ -152,7 +159,7 @@ function Ai.Send(callId)
 
     local a = {
         id = Ai.nextId, callId = call.id, service = service, status = 'enroute',
-        host = pickHost(call), netIds = {}, startedAt = os.time(),
+        host = Ai.Visible(service) and pickHost(call) or nil, netIds = {}, startedAt = os.time(),
     }
     Ai.nextId = Ai.nextId + 1
     Ai.active[a.id] = a
@@ -345,7 +352,7 @@ end
 function Ai.Watch()
     local now = os.time()
     for _, a in pairs(Ai.active) do
-        if not a.host and (not a.noHostUntil or now >= a.noHostUntil) then
+        if not a.host and Ai.Visible(a.service) and (not a.noHostUntil or now >= a.noHostUntil) then
             local call = Calls.Get(a.callId)
             local enroute = a.status == 'enroute' and cfg.handOver
             local onscene = a.status == 'onscene' and cfg.visibleOnScene

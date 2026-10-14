@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **NPC police no longer come to the scene in person.** An NPC police unit is still
+  dispatched, arrives, secures the scene and leaves – its status and notes update in the
+  dispatch panel as before – but no patrol car or officers spawn or drive to the call.
+  NPC EMS, fire and mechanic units still come in person. Set per service with `visible` in
+  `Config.AiUnits.services` (`visible = false` for police by default).
+
 ## v0.5.1-beta – NPC units (2026-10-14)
 
 Small naming update. Still a beta – please report problems in

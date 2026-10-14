@@ -126,8 +126,10 @@ Config.AiUnits = {
     -- action: 'revive' (treat the caller) | 'repair' (fix the nearest vehicle)
     --         'extinguish' (put out fires) | 'secure' (presence only)
     services = {
+        -- visible = false: the unit never spawns or drives to the scene; it is only dispatched,
+        -- arrives, acts and leaves in the dispatch panel (status and notes as usual).
         police = {
-            enabled = true, action = 'secure',
+            enabled = true, visible = false, action = 'secure',
             vehicle = { 'police', 'police2', 'police3' }, ped = { 'csb_cop', 's_m_y_cop_01', 's_m_m_security_01' },
             scenario = 'WORLD_HUMAN_COP_IDLES', actSeconds = 20, onSceneSeconds = 150,
         },
