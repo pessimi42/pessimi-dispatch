@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## v0.8.0-beta – EMS task classes, roadside C/D (2026-10-14)
+
+EMS calls use task classes modelled on the Finnish emergency response centre, each with a
+default urgency, and roadside assistance has its own two classes. Still a beta – please
+report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 ### Changed
 
@@ -18,6 +22,19 @@
   `priority_<service>.<class>`.
 - **AI calls cover the new EMS classes** – 20 of them, with caller messages in all three
   languages and an NPC patient at the scene.
+
+### Upgrading from 0.7.0-beta
+
+Replace the resource folder. If you changed the config files, update them:
+
+- `config/services.lua`, EMS: new `callTypes` list and `typePriority` table.
+- `config/services.lua`, mechanic: replace `fixedPriority = 'D'` with
+  `allowedPriorities = { 'C', 'D' }`.
+- `config/config.lua`: the EMS entries in `Config.AiCalls.types` (no `priority` needed –
+  it comes from `typePriority`) and the new EMS types in `Config.Scenes.kinds`.
+- Locale files: new `calltype.*` names, new A–D `priority` labels, `priority_mechanic`
+  and new `aicall.*` texts – merge them if you translated your own.
+- Calls already open keep their old type; nothing to migrate.
 
 ## v0.7.0-beta – AI call rules, sirens by priority, NPC mechanic (2026-10-14)
 

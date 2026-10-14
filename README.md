@@ -1,6 +1,6 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.7.0-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.8.0-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
