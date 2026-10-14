@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## v0.5.1-beta – NPC units (2026-10-14)
+
+Small naming update. Still a beta – please report problems in
+[Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 ### Changed
 
@@ -8,6 +11,11 @@
   (panel button, call notes, messages) in English, Finnish and Swedish. "AI calls" keep
   their name. Config names and exports (`Config.AiUnits`, `SendAiUnit`, `GetAiUnits`) are
   unchanged, so existing configs and integrations keep working.
+
+### Upgrading from 0.5.0-beta
+
+Replace the resource folder. No config changes. If you translated your own locale files,
+update the `ui.send_ai`, `ui.ai_unit`, `error.ai_*` and `ai.note_*` texts.
 
 ## v0.5.0-beta – AI units & scenes fixes, test mode (2026-10-13)
 
