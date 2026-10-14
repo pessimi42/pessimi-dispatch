@@ -150,7 +150,8 @@
     "ai_unavailable": "Ingen NPC-enhet tillgänglig för detta uppdrag.",
     "ai_players_on_duty": "Enheter från myndigheten är i tjänst – NPC-enheter används bara när ingen är det.",
     "no_permission": "Du har inte behörighet till det.",
-    "locate_unavailable": "Anmälaren kan inte lokaliseras (offline eller ingen telefon)."
+    "locate_unavailable": "Anmälaren kan inte lokaliseras (offline eller ingen telefon).",
+    "ai_player_calls_only": "Den här tjänstens NPC-enheter tar bara uppdrag från spelare."
   },
   "duty": {
     "on": "Du är i tjänst som operatör.",

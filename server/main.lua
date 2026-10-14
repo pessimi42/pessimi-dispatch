@@ -97,7 +97,8 @@ local actions = {
     sendAi = function(src, p)
         local ok, why = Ai.Send(tonumber(p.callId))
         if not ok then
-            Notify(src, why == 'players_on_duty' and 'error.ai_players_on_duty' or 'error.ai_unavailable', nil, 'error')
+            Notify(src, why == 'players_on_duty' and 'error.ai_players_on_duty'
+                or why == 'player_calls_only' and 'error.ai_player_calls_only' or 'error.ai_unavailable', nil, 'error')
         end
     end,
     sms = function(src, p)

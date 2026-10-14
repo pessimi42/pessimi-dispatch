@@ -18,6 +18,8 @@ function Calls.Public(call)
     out.units = units
     out.canSms = call.status ~= 'closed' and Sms.CallerNumber(call) ~= nil and (call._ai or Sms.Available())
     out.tracking = Location.Tracking(call)
+    local aiService = call.service or Config.Fallback.unspecifiedService
+    out.aiBlocked = Ai.BlockedForCall(call, aiService) or Ai.PlayersOnDuty(aiService) or nil
     out.canLocate = Config.Location.locateButton and Location.CanLocate(call)
     return out
 end
@@ -84,7 +86,7 @@ function Calls.Create(data, opts)
         id = id,
         service = service,
         type = Utils.ValidCallType(service, data.type) or 'general',
-        priority = Utils.ValidPriority(data.priority) or (svc and svc.defaultPriority) or Config.DefaultPriority,
+        priority = (svc and svc.fixedPriority) or Utils.ValidPriority(data.priority) or (svc and svc.defaultPriority) or Config.DefaultPriority,
         status = 'pending',
         message = Utils.Sanitize(data.message, Config.EmergencyCall.maxLength) or '',
         information = Utils.Sanitize(data.information, 500),
@@ -185,6 +187,8 @@ function Calls.Update(id, patch)
     end
     if patch.type and Utils.ValidCallType(call.service, patch.type) then call.type = patch.type end
     if patch.priority and Utils.ValidPriority(patch.priority) then call.priority = patch.priority end
+    local fixed = call.service and Services[call.service] and Services[call.service].fixedPriority
+    if fixed then call.priority = fixed end
     if patch.message then call.message = Utils.Sanitize(patch.message, Config.EmergencyCall.maxLength) or call.message end
     if patch.information then call.information = Utils.Sanitize(patch.information, 500) end
     if patch.code then call.code = Utils.Sanitize(patch.code, 16) end

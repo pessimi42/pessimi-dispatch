@@ -31,7 +31,7 @@ local function sendInit()
     local services = {}
     for id, s in pairs(Services) do
         if s.enabled then
-            services[#services + 1] = { id = id, color = s.color, icon = s.icon, order = s.order or 99, callTypes = s.callTypes }
+            services[#services + 1] = { id = id, color = s.color, icon = s.icon, order = s.order or 99, callTypes = s.callTypes, fixedPriority = s.fixedPriority }
         end
     end
     table.sort(services, function(a, b) return a.order < b.order end)

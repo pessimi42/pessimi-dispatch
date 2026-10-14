@@ -38,17 +38,27 @@ end
 local function pick(list) return list[math.random(#list)] end
 
 --- Weighted random service among enabled services someone can respond to.
+--- Weighted random service for an automatic AI call, or nil and a reason.
+--- Only while a dispatcher is on duty (requireDispatcher). With playersOnDuty = 'any' there
+--- are none while any responding service has a player on duty; with 'service' only that
+--- service is skipped.
 local function pickService()
-    local hasDispatcher = Dispatch.HasDispatcher()
+    if cfg.requireDispatcher ~= false and not Dispatch.HasDispatcher() then
+        return nil, 'no_dispatcher'
+    end
+    local mode = cfg.playersOnDuty
+    if mode == 'any' and #Units.OnDutyIn(nil) > 0 then
+        return nil, 'players_on_duty'
+    end
     local pool, total = {}, 0
     for service, weight in pairs(cfg.weights) do
         if Utils.ServiceEnabled(service) and cfg.types[service] and weight > 0
-            and (cfg.requireResponders == false or hasDispatcher or #Units.OnDutyIn(service) > 0) then
+            and not (mode == 'service' and #Units.OnDutyIn(service) > 0) then
             pool[#pool + 1] = { service = service, weight = weight }
             total = total + weight
         end
     end
-    if total == 0 then return nil end
+    if total == 0 then return nil, 'players_on_duty' end
     local r = math.random() * total
     for _, p in ipairs(pool) do
         r = r - p.weight
@@ -64,8 +74,11 @@ end
 --- Create one AI call now. Returns the call id, or nil and a reason.
 function AiCalls.Generate(service)
     if service and not (Utils.ServiceEnabled(service) and cfg.types[service]) then return nil, 'bad_service' end
-    service = service or pickService()
-    if not service then return nil, 'no_responders' end
+    if not service then
+        local why
+        service, why = pickService()
+        if not service then return nil, why end
+    end
     local t = pick(cfg.types[service])
     local loc = pick(cfg.locations)
     local asSms = math.random() < cfg.smsChance
@@ -116,7 +129,10 @@ CreateThread(function()
             Utils.Debug(('AI call skipped: %d AI calls already open (maxOpen)'):format(openCount()))
         else
             local id, why = AiCalls.Generate()
-            if not id then Utils.Debug('AI call skipped:', why, '(no dispatcher or units on duty)') end
+            if not id then
+                Utils.Debug('AI call skipped:', why == 'no_dispatcher' and 'no dispatcher on duty'
+                    or 'players on duty in a responding service')
+            end
         end
     end
 end)

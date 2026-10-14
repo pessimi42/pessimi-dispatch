@@ -1,6 +1,6 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.5.1-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.7.0-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
@@ -69,7 +69,10 @@ breakdowns and more, at locations around the map, from callers with names and nu
 - **Only when it's quiet:** a call is generated every 3–8 minutes, and only if no player
   has called or texted 112 for 5 minutes (`quietMinutes`). At most 3 AI calls are open at
   once.
-- **Only when someone can respond:** a dispatcher on duty, or units of the call's service.
+- **Only with a dispatcher on duty, and only when no responders are playing:** AI calls are
+  generated only while a dispatcher is on duty and no player is on duty as police, EMS,
+  fire or mechanic. As soon as any of them clocks in, AI calls stop. (`requireDispatcher`,
+  `playersOnDuty` – set it to `'service'` to only skip the services that have players)
 - About a quarter arrive as texts. When the dispatcher texts an AI caller, the caller
   answers. Nothing is sent to real phones.
 - AI calls are marked **AI** on the panel (`showBadge = false` hides it).
@@ -100,7 +103,8 @@ never get NPCs. Configure in `Config.Scenes`.
 ## NPC units
 
 When no player unit can take a call, an NPC unit responds instead: an ambulance, fire truck
-or tow truck drives to the scene with sirens and does its job. NPC police only work in the
+or tow truck drives to the scene and does its job – with blue lights and sirens on A and B
+calls, without them and at normal speed on C and D calls (`sirenPriorities`). NPC police only work in the
 dispatch system – they are dispatched, arrive and secure the scene on the panel, but don't
 come to the scene in person (`visible = false`; set it to `true` to have patrol cars drive in).
 
@@ -109,7 +113,7 @@ come to the scene in person (`visible = false`; set it to `true` to have patrol 
 | Police | secures the scene for a while (panel only) |
 | EMS | revives every downed or injured player within 20 m of the scene through your medical script |
 | Fire | puts out fires around the scene |
-| Mechanic | repairs the nearest vehicle |
+| Mechanic | repairs the nearest vehicle – only for calls made by players, and only when no player mechanic is on duty |
 
 - **Players come first:** AI is only used when nobody of that service is on duty. As soon
   as a police officer or medic clocks in, their service gets no more NPC units. (Set
@@ -173,6 +177,9 @@ Fire and mechanic are already in `config/services.lua` – set `enabled = true` 
 the job names. For a brand new service, add a block there and add `service.<id>` and its
 `calltype.<key>` strings to the locale files. Everything else (panel, filters, caller
 form, blips, fallback) picks it up automatically.
+
+`fixedPriority` locks every call of a service to one priority – roadside assistance
+(mechanic) calls are always class **D**, whatever the caller or dispatcher picks.
 
 ## Integrating with police/EMS dispatch scripts and MDTs
 

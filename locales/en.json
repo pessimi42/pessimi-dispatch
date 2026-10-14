@@ -150,7 +150,8 @@
     "ai_unavailable": "No NPC unit available for this call.",
     "ai_players_on_duty": "Units of this service are on duty – NPC units are only used when nobody is.",
     "no_permission": "You are not allowed to do that.",
-    "locate_unavailable": "The caller cannot be located (offline or no phone)."
+    "locate_unavailable": "The caller cannot be located (offline or no phone).",
+    "ai_player_calls_only": "NPC units of this service only take calls made by players."
   },
   "duty": {
     "on": "You are on duty as a dispatcher.",

@@ -167,7 +167,8 @@ RegisterNetEvent(Ev('client:aiSpawn'), function(id, d)
         SetVehicleOnGroundProperly(veh)
         SetEntityAsMissionEntity(veh, true, true)
         SetVehicleEngineOn(veh, true, true, false)
-        SetVehicleSiren(veh, true)
+        -- A/B calls: lights and sirens. C/D calls: none, normal driving.
+        SetVehicleSiren(veh, d.sirens == true)
         SetVehicleHasMutedSirens(veh, false)
 
         local ped = createPed(d.ped, veh)
@@ -175,7 +176,7 @@ RegisterNetEvent(Ev('client:aiSpawn'), function(id, d)
         if not register(id, veh, ped) then return end
         debug(('NPC unit %d spawned %.0fm from the call'):format(id, #(pos - target)))
 
-        TaskVehicleDriveToCoordLongrange(ped, veh, target.x, target.y, target.z, 28.0, d.drivingStyle, d.arriveDistance * 0.5)
+        TaskVehicleDriveToCoordLongrange(ped, veh, target.x, target.y, target.z, d.speed or 28.0, d.drivingStyle, d.arriveDistance * 0.5)
 
         -- Drive until close, or move the vehicle nearby if it takes too long
         local deadline = GetGameTimer() + d.driveTimeout * 1000
@@ -198,7 +199,7 @@ RegisterNetEvent(Ev('client:aiSpawn'), function(id, d)
 
         -- On scene: stop, get out, walk to the patient/scene and work
         TaskVehicleTempAction(ped, veh, 27, 3000)
-        SetVehicleHasMutedSirens(veh, true)   -- lights stay on, siren off
+        if d.sirens then SetVehicleHasMutedSirens(veh, true) end   -- lights stay on, siren off
         Wait(1500)
         TaskLeaveVehicle(ped, veh, 256)
         Wait(2500)
@@ -229,8 +230,10 @@ RegisterNetEvent(Ev('client:aiSpawnOnScene'), function(id, d)
         if not veh then return fail(id, 'no vehicle model could be spawned') end
         SetVehicleOnGroundProperly(veh)
         SetEntityAsMissionEntity(veh, true, true)
-        SetVehicleSiren(veh, true)
-        SetVehicleHasMutedSirens(veh, true)
+        if d.sirens then                        -- A/B: lights on, no siren sound on scene
+            SetVehicleSiren(veh, true)
+            SetVehicleHasMutedSirens(veh, true)
+        end
 
         local goal, npc = workGoal(d, target)
         local gx, gy = goal.x + 1.2, goal.y + 1.2

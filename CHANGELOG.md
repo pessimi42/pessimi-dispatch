@@ -1,6 +1,57 @@
 # Changelog
 
-## Unreleased
+## v0.7.0-beta – AI call rules, sirens by priority, NPC mechanic (2026-10-14)
+
+AI calls only come for a dispatcher working without player responders, NPC units use lights
+and sirens only on A and B calls, roadside calls are always class D, and an NPC mechanic
+helps players when no player mechanic is on duty. Still a beta – please report problems in
+[Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### New
+
+- **NPC mechanic.** Roadside assistance (mechanic) is now enabled by default. When no
+  player mechanic is on duty, an NPC tow truck takes roadside calls made by players – no
+  sirens, as they're class D – and repairs the nearest vehicle at the scene. It never takes
+  generated AI calls (`playerCallsOnly`), and AI calls no longer include roadside calls
+  (`weights.mechanic = 0`). A service can now override the NPC `trigger` on its own
+  (`trigger = 'no_on_duty'` for the mechanic).
+
+### Changed
+
+- **AI calls only for a dispatcher working alone.** Automatic AI calls are now generated
+  only while at least one dispatcher is on duty and no player is on duty in any responding
+  service (police, EMS, fire, mechanic). As soon as any of them clocks in, AI calls stop.
+  Settings `requireDispatcher` and `playersOnDuty` in `Config.AiCalls` replace
+  `requireResponders`; `playersOnDuty = 'service'` only skips the services that have
+  players. `/aicall` for admins still creates a call right away.
+- **No lights or sirens for C and D calls.** NPC units drive to A and B calls with blue
+  lights and sirens as before, but to C and D calls without them and at normal speed, and
+  don't switch lights on at the scene (`sirenPriorities`, `urgentSpeed`, `normalSpeed` in
+  `Config.AiUnits`).
+- **Roadside assistance calls are always class D.** A new `fixedPriority` service setting
+  (set to `'D'` for mechanic) forces the priority of every call of that service – also when
+  a dispatcher changes it or moves a call to the mechanic service. The priority list is
+  locked in the panel for such calls.
+
+### Upgrading from 0.6.0-beta
+
+Replace the resource folder. If you changed the config files, update them:
+
+- `config/config.lua`, `Config.AiCalls`: replace `requireResponders` with
+  `requireDispatcher = true` and `playersOnDuty = 'any'`, and set `mechanic = 0` in
+  `weights`. In the test mode block at the end use `requireDispatcher = false` and
+  `playersOnDuty = false`.
+- `config/config.lua`, `Config.AiUnits`: add `sirenPriorities = { A = true, B = true }`,
+  `urgentSpeed = 28.0` and `normalSpeed = 17.0`; in the mechanic entry of `services` add
+  `trigger = 'no_on_duty'` and `playerCallsOnly = true`.
+- `config/services.lua`, mechanic: `enabled = true` and `fixedPriority = 'D',`.
+- Locale files have a new key `error.ai_player_calls_only`.
+
+## v0.6.0-beta – NPC police on the panel, NPC medics treat everyone (2026-10-14)
+
+NPC police now work only in the dispatch system, and NPC medics treat every hurt player at
+the scene. Still a beta – please report problems in
+[Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 ### Changed
 
@@ -13,6 +64,12 @@
   player who called 112, an NPC EMS unit now revives every downed or injured player within
   20 m of the scene (`treatRadius`) – including a friend the caller called for. Unhurt
   players, and a caller who has since left the scene, are not touched.
+
+### Upgrading from 0.5.1-beta
+
+Replace the resource folder. If you changed `config/config.lua`, add to the entries in
+`Config.AiUnits.services`: `visible = false,` for police (or `true` to keep patrol cars
+driving to the scene) and `treatRadius = 20.0,` for EMS.
 
 ## v0.5.1-beta – NPC units (2026-10-14)
 

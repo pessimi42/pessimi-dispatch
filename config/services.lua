@@ -7,6 +7,7 @@
 -- notify     how units of this service are alerted: 'native' (built-in toast)
 --            and/or any registered adapter such as 'ps-dispatch'
 -- callTypes  keys translated as calltype.<key>; 'general' always exists
+-- fixedPriority  optional: every call of this service always has this priority
 
 Services = {
     police = {
@@ -47,13 +48,14 @@ Services = {
     },
 
     mechanic = {
-        enabled = false,
+        enabled = true,             -- roadside assistance: player mechanics or the NPC mechanic
         order = 4,
         jobs = { mechanic = 0 },
         color = '#14b8a6',
         icon = 'wrench',
         blip = { sprite = 446, color = 25, callSprite = 446 },
         defaultPriority = 'D',
+        fixedPriority = 'D',        -- roadside calls are always class D
         notify = { 'native' },
         callTypes = { 'general', 'breakdown', 'tow', 'flat_tyre' },
     },

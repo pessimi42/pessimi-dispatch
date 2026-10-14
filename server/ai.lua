@@ -100,6 +100,8 @@ local function payload(a, call)
         driveTimeout = cfg.driveTimeout,
         arriveDistance = cfg.arriveDistance,
         drivingStyle = cfg.drivingStyle,
+        sirens = (cfg.sirenPriorities or {})[call.priority] == true,
+        speed = ((cfg.sirenPriorities or {})[call.priority] and cfg.urgentSpeed or cfg.normalSpeed) or 28.0,
     }
 end
 
@@ -136,7 +138,15 @@ end
 
 --- True if Config.AiUnits.trigger keeps AI away because players of `service` are on duty.
 function Ai.PlayersOnDuty(service)
-    return cfg.trigger == 'no_on_duty' and #Units.OnDutyIn(service) > 0
+    local s = cfg.services[service]
+    local trigger = (s and s.trigger) or cfg.trigger      -- a service may override the trigger
+    return trigger == 'no_on_duty' and #Units.OnDutyIn(service) > 0
+end
+
+--- Some NPC services only take calls made by players (Config.AiUnits.services.<x>.playerCallsOnly).
+function Ai.BlockedForCall(call, service)
+    local s = cfg.services[service]
+    return s ~= nil and s.playerCallsOnly == true and call._ai == true
 end
 
 --- Returns the AI id, or nil and a reason
@@ -153,6 +163,7 @@ function Ai.Send(callId)
     if not call.coords then return refuse(callId, 'no_coords') end
     local service = Ai.ServiceFor(call)
     if not service then return refuse(callId, 'no_service', 'service disabled in Config.AiUnits or services.lua') end
+    if Ai.BlockedForCall(call, service) then return refuse(callId, 'player_calls_only', service .. ' NPC units only take calls made by players') end
     if Ai.PlayersOnDuty(service) then return refuse(callId, 'players_on_duty', service .. ' units on duty, trigger = no_on_duty') end
     if Ai.OnCall(call.id) then return refuse(callId, 'busy') end
     if Ai.Count() >= cfg.maxActive then return refuse(callId, 'limit') end
@@ -422,7 +433,7 @@ function Ai.Schedule(callId)
         if Dispatch.HasDispatcher() and not cfg.autoWithDispatcher then return end
         if not Ai.ServiceFor(call) then return end
         local ok, why = Ai.Send(call.id)
-        if not ok and why ~= 'busy' and why ~= 'closed' then
+        if not ok and why ~= 'busy' and why ~= 'closed' and why ~= 'player_calls_only' then
             local key = why == 'players_on_duty' and 'ai.note_not_sent_players'
                 or why == 'limit' and 'ai.note_not_sent_limit' or 'ai.note_not_sent'
             Calls.AddNote(call.id, key, nil, 'sys')

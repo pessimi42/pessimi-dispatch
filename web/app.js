@@ -143,7 +143,7 @@ function renderDetail() {
   const aiBusy = (c.ai || []).some((a) => a.status === 'enroute' || a.status === 'onscene');
   const playersOnDuty = [...S.units.values()].some((u) => u.service === aiFor);
   const canAi = !closed && c.coords && aiFor && S.aiServices.includes(aiFor) && !aiBusy
-    && !(S.aiOnlyWhenNoneOnDuty && playersOnDuty);
+    && !c.aiBlocked && !(S.aiOnlyWhenNoneOnDuty && playersOnDuty);
   const aiUnits = (c.ai || []).map((a) =>
     `<span class="u ai">${esc(t('ui.ai_unit'))} · ${esc(svcName(a.service))} · ${esc(t(`ai_status.${a.status}`))}</span>`).join('');
 
@@ -182,7 +182,7 @@ function renderDetail() {
       <div><label>${esc(t('ui.type'))}</label>
         <select data-patch="type" ${dis}>${options(typesFor(c.service).map((x) => [x, t(`calltype.${x}`)]), c.type)}</select></div>
       <div><label>${esc(t('ui.priority'))}</label>
-        <select data-patch="priority" ${dis}>${options(S.priorities.map((p) => [p.id, t(`priority.${p.id}`)]), c.priority)}</select></div>
+        <select data-patch="priority" ${closed || svc(c.service)?.fixedPriority ? 'disabled' : ''}>${options(S.priorities.map((p) => [p.id, t(`priority.${p.id}`)]), c.priority)}</select></div>
     </div>
 
     <label>${esc(t('ui.message'))}</label>
@@ -272,6 +272,9 @@ function openNewCall() {
 }
 function fillNcTypes() {
   $('#ncType').innerHTML = options(typesFor($('#ncService').value).map((x) => [x, t(`calltype.${x}`)]), 'general');
+  const fixed = svc($('#ncService').value)?.fixedPriority;
+  if (fixed) $('#ncPriority').value = fixed;
+  $('#ncPriority').disabled = !!fixed;
 }
 
 /* ---------- toasts ---------- */

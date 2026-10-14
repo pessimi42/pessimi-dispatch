@@ -150,7 +150,8 @@
     "ai_unavailable": "Tälle tehtävälle ei ole NPC-yksikköä saatavilla.",
     "ai_players_on_duty": "Viranomaisen yksiköitä on vuorossa – NPC-yksiköitä käytetään vain, kun ketään ei ole.",
     "no_permission": "Sinulla ei ole oikeutta tähän.",
-    "locate_unavailable": "Ilmoittajaa ei voida paikantaa (ei paikalla tai ei puhelinta)."
+    "locate_unavailable": "Ilmoittajaa ei voida paikantaa (ei paikalla tai ei puhelinta).",
+    "ai_player_calls_only": "Tämän palvelun NPC-yksiköt ottavat vain pelaajien tekemiä tehtäviä."
   },
   "duty": {
     "on": "Olet vuorossa päivystäjänä.",

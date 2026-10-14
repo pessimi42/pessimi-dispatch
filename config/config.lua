@@ -106,6 +106,11 @@ Config.AiUnits = {
     driveTimeout = 120,          -- seconds; then the vehicle is moved close to the scene
     arriveDistance = 30.0,
     drivingStyle = 786603,
+    -- Lights and sirens only for these call priorities. C and D calls: no blue lights or
+    -- sirens, normal driving speed.
+    sirenPriorities = { A = true, B = true },
+    urgentSpeed = 28.0,          -- m/s with lights and sirens
+    normalSpeed = 17.0,          -- m/s without
     -- A player near the call controls the NPCs. With nobody in range the NPC unit still
     -- "arrives" after this many seconds and does its job, just without visible NPCs.
     hostRange = 350.0,
@@ -146,8 +151,12 @@ Config.AiUnits = {
             vehicle = { 'firetruk', 'ambulance' }, ped = { 's_m_y_fireman_01' },
             scenario = 'WORLD_HUMAN_STAND_IMPATIENT', actSeconds = 15, onSceneSeconds = 90,
         },
+        -- NPC mechanic: only when no player mechanics are on duty, and only for calls made by
+        -- players (never for AI calls). Repairs the nearest vehicle at the scene.
         mechanic = {
             enabled = true, action = 'repair',
+            trigger = 'no_on_duty',      -- per-service override of the trigger above
+            playerCallsOnly = true,      -- not for generated AI calls
             vehicle = { 'towtruck', 'towtruck2' }, ped = { 's_m_m_trucker_01' },
             scenario = 'WORLD_HUMAN_VEHICLE_MECHANIC', actSeconds = 20, onSceneSeconds = 60,
         },
@@ -170,10 +179,15 @@ Config.AiCalls = {
     smsChance = 0.25,            -- share of AI calls that arrive as a text instead of a phone call
     replyToSms = true,           -- the "caller" answers the dispatcher's texts
     showBadge = true,            -- mark AI calls with an "AI" tag on the panel
-    -- Calls are only generated when someone can take them: a dispatcher on duty or units
-    -- of the chosen service. Weights decide how often each service gets a call.
-    weights = { police = 5, ems = 3, fire = 1, mechanic = 1 },
-    requireResponders = true,    -- false: generate even when nobody is on duty (NPC units take them)
+    -- When AI calls are generated:
+    requireDispatcher = true,    -- only while a dispatcher is on duty
+    -- Players on duty in a responding service (police, EMS, fire, mechanic):
+    --   'any'     = no AI calls at all while any of them has a player on duty
+    --   'service' = no AI calls for that service only (others still get them)
+    --   false     = ignore players on duty
+    playersOnDuty = 'any',
+    -- How often each service gets a call (among the services allowed above)
+    weights = { police = 5, ems = 3, fire = 1, mechanic = 0 },  -- mechanic 0: NPC mechanics only take player calls
 
     -- Call types per service (texts in locales: aicall.<type>.1 / .2) and their priority
     types = {
@@ -340,7 +354,8 @@ if Config.TestMode then
     Config.AiCalls.quietMinutes = 0
     Config.AiCalls.interval = { 0.5, 1 }
     Config.AiCalls.maxOpen = 4
-    Config.AiCalls.requireResponders = false
+    Config.AiCalls.requireDispatcher = false
+    Config.AiCalls.playersOnDuty = false
     -- NPC units leave sooner and come even when players of the service are on duty
     Config.AiUnits.waitSeconds = 10
     Config.AiUnits.virtualTravelSeconds = 15
