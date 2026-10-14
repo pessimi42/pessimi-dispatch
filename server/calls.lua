@@ -81,12 +81,14 @@ function Calls.Create(data, opts)
 
     local id = Calls.nextId
     Calls.nextId = id + 1
+    local ctype = Utils.ValidCallType(service, data.type) or 'general'
 
     local call = {
         id = id,
         service = service,
-        type = Utils.ValidCallType(service, data.type) or 'general',
-        priority = (svc and svc.fixedPriority) or Utils.ValidPriority(data.priority) or (svc and svc.defaultPriority) or Config.DefaultPriority,
+        type = ctype,
+        priority = Utils.ClampPriority(service, Utils.ValidPriority(data.priority)
+            or Utils.TypePriority(service, ctype) or (svc and svc.defaultPriority) or Config.DefaultPriority),
         status = 'pending',
         message = Utils.Sanitize(data.message, Config.EmergencyCall.maxLength) or '',
         information = Utils.Sanitize(data.information, 500),
@@ -185,10 +187,13 @@ function Calls.Update(id, patch)
             if not Utils.ValidCallType(call.service, call.type) then call.type = 'general' end
         end
     end
-    if patch.type and Utils.ValidCallType(call.service, patch.type) then call.type = patch.type end
+    if patch.type and Utils.ValidCallType(call.service, patch.type) and patch.type ~= call.type then
+        call.type = patch.type
+        -- a new task class brings its default urgency, unless one was chosen in the same change
+        if not patch.priority then call.priority = Utils.TypePriority(call.service, call.type) or call.priority end
+    end
     if patch.priority and Utils.ValidPriority(patch.priority) then call.priority = patch.priority end
-    local fixed = call.service and Services[call.service] and Services[call.service].fixedPriority
-    if fixed then call.priority = fixed end
+    call.priority = Utils.ClampPriority(call.service, call.priority)
     if patch.message then call.message = Utils.Sanitize(patch.message, Config.EmergencyCall.maxLength) or call.message end
     if patch.information then call.information = Utils.Sanitize(patch.information, 500) end
     if patch.code then call.code = Utils.Sanitize(patch.code, 16) end

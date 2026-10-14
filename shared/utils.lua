@@ -75,6 +75,35 @@ function Utils.ValidCallType(service, callType)
     return nil
 end
 
+--- Priorities a service's calls may have, or nil for all.
+function Utils.AllowedPriorities(service)
+    local s = service and Services[service]
+    if not s then return nil end
+    if s.allowedPriorities then return s.allowedPriorities end
+    if s.fixedPriority then return { s.fixedPriority } end
+    return nil
+end
+
+--- Move a priority to the nearest one the service allows (A/B -> C for C/D-only services).
+function Utils.ClampPriority(service, p)
+    local allowed = Utils.AllowedPriorities(service)
+    if not allowed or not p or Utils.Contains(allowed, p) then return p end
+    local idx = Utils.PriorityIndex[p] or #Config.Priorities
+    local best, bestDist
+    for _, a in ipairs(allowed) do
+        local d = math.abs((Utils.PriorityIndex[a] or idx) - idx)
+        if not bestDist or d < bestDist then best, bestDist = a, d end
+    end
+    return best
+end
+
+--- Default priority for a call type (Services[service].typePriority), or nil.
+function Utils.TypePriority(service, callType)
+    local s = service and Services[service]
+    local p = s and s.typePriority and s.typePriority[callType]
+    return Utils.ValidPriority(p)
+end
+
 --- Accepts vector3, {x,y,z} or {1,2,3}; returns a plain table (safe for JSON/NUI).
 function Utils.Coords(c)
     if type(c) ~= 'table' and type(c) ~= 'vector3' and type(c) ~= 'vector4' then return nil end

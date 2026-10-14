@@ -197,10 +197,15 @@ Config.AiCalls = {
             { type = 'traffic', priority = 'C' }, { type = 'domestic', priority = 'B' },
             { type = 'suspicious', priority = 'C' },
         },
+        -- EMS: priority comes from typePriority in config/services.lua
         ems = {
-            { type = 'injury', priority = 'B' }, { type = 'unconscious', priority = 'A' },
-            { type = 'breathing', priority = 'A' }, { type = 'chest_pain', priority = 'A' },
-            { type = 'traffic_accident', priority = 'B' }, { type = 'overdose', priority = 'B' },
+            { type = 'cardiac_arrest' }, { type = 'unconscious' }, { type = 'breathing' },
+            { type = 'chest_pain' }, { type = 'stroke' }, { type = 'seizure' },
+            { type = 'bleeding' }, { type = 'allergy' }, { type = 'overdose' },
+            { type = 'hypoglycemia' }, { type = 'childbirth' }, { type = 'fall_height' },
+            { type = 'fall' }, { type = 'injury' }, { type = 'traffic_accident' },
+            { type = 'drowning' }, { type = 'burn' }, { type = 'abdominal_pain' },
+            { type = 'mental_health' }, { type = 'weakness' },
         },
         fire = {
             { type = 'building_fire', priority = 'A' }, { type = 'vehicle_fire', priority = 'B' },
@@ -246,7 +251,11 @@ Config.Scenes = {
     -- Call type -> scene kind
     kinds = {
         injury = 'patient', unconscious = 'patient', breathing = 'patient',
-        chest_pain = 'patient', overdose = 'patient',
+        chest_pain = 'patient', overdose = 'patient', cardiac_arrest = 'patient',
+        stroke = 'patient', seizure = 'patient', bleeding = 'patient', allergy = 'patient',
+        hypoglycemia = 'patient', childbirth = 'patient', fall_height = 'patient',
+        fall = 'patient', drowning = 'patient', burn = 'patient', abdominal_pain = 'patient',
+        mental_health = 'patient', weakness = 'patient',
         traffic_accident = 'crash',
         robbery = 'witness', assault = 'witness', theft = 'witness', traffic = 'witness',
         domestic = 'witness', suspicious = 'witness', rescue = 'witness', hazmat = 'witness',

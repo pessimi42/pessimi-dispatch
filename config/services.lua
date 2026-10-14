@@ -7,7 +7,10 @@
 -- notify     how units of this service are alerted: 'native' (built-in toast)
 --            and/or any registered adapter such as 'ps-dispatch'
 -- callTypes  keys translated as calltype.<key>; 'general' always exists
--- fixedPriority  optional: every call of this service always has this priority
+-- allowedPriorities  optional: the only priorities this service's calls can have; anything
+--                else is moved to the nearest allowed one. Labels can be given per service in
+--                the locales as priority_<service>.<A-D>. (fixedPriority = 'D' = one allowed.)
+-- typePriority   optional: default priority per call type
 
 Services = {
     police = {
@@ -31,7 +34,29 @@ Services = {
         blip = { sprite = 61, color = 1, callSprite = 153 },
         defaultPriority = 'B',
         notify = { 'native' },
-        callTypes = { 'general', 'injury', 'unconscious', 'breathing', 'chest_pain', 'traffic_accident', 'overdose' },
+        -- Modelled on the Finnish emergency response centre's EMS task classes.
+        callTypes = {
+            'general',
+            'cardiac_arrest', 'unconscious', 'breathing', 'chest_pain', 'arrhythmia', 'stroke',
+            'seizure', 'bleeding', 'allergy', 'overdose', 'hypoglycemia', 'childbirth',
+            'gunshot', 'stabbing', 'blunt_trauma', 'fall_height', 'fall', 'injury',
+            'traffic_accident', 'drowning', 'electric_shock', 'burn',
+            'abdominal_pain', 'back_pain', 'fever', 'weakness', 'mental_health',
+            'other_illness', 'transfer',
+        },
+        -- Default urgency per task class (A immediate & life-threatening, B immediate,
+        -- C within 30 min, D within 2 h). Used for new calls and when the dispatcher
+        -- changes the type; the dispatcher can still set another class.
+        typePriority = {
+            cardiac_arrest = 'A', unconscious = 'A', breathing = 'A', gunshot = 'A',
+            stabbing = 'A', drowning = 'A',
+            chest_pain = 'B', arrhythmia = 'B', stroke = 'B', seizure = 'B', bleeding = 'B',
+            allergy = 'B', overdose = 'B', childbirth = 'B', blunt_trauma = 'B',
+            fall_height = 'B', traffic_accident = 'B', electric_shock = 'B', burn = 'B',
+            hypoglycemia = 'C', fall = 'C', injury = 'C', abdominal_pain = 'C',
+            weakness = 'C', mental_health = 'C', other_illness = 'C',
+            back_pain = 'D', fever = 'D', transfer = 'D',
+        },
     },
 
     -- Ready for later: set enabled = true and check the job names.
@@ -55,7 +80,8 @@ Services = {
         icon = 'wrench',
         blip = { sprite = 446, color = 25, callSprite = 446 },
         defaultPriority = 'D',
-        fixedPriority = 'D',        -- roadside calls are always class D
+        -- Roadside calls are C (disrupting traffic) or D (not affecting other road users)
+        allowedPriorities = { 'C', 'D' },
         notify = { 'native' },
         callTypes = { 'general', 'breakdown', 'tow', 'flat_tyre' },
     },

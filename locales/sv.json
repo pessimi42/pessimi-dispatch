@@ -101,10 +101,10 @@
     "mechanic": "Vägassistans"
   },
   "priority": {
-    "A": "A – Livshotande",
-    "B": "B – Brådskande",
-    "C": "C – Ej brådskande",
-    "D": "D – Låg"
+    "A": "A – Omedelbar, livshotande",
+    "B": "B – Omedelbar, brådskande",
+    "C": "C – Brådskande, inom 30 min",
+    "D": "D – Ej brådskande, inom 2 h"
   },
   "calltype": {
     "general": "Allmänt",
@@ -115,8 +115,8 @@
     "traffic": "Trafik",
     "domestic": "Bråk i hemmet",
     "suspicious": "Misstänkt aktivitet",
-    "injury": "Skada",
-    "unconscious": "Medvetslös person",
+    "injury": "Sår / annan skada",
+    "unconscious": "Medvetslöshet",
     "breathing": "Andningssvårigheter",
     "chest_pain": "Bröstsmärta",
     "traffic_accident": "Trafikolycka",
@@ -128,7 +128,30 @@
     "hazmat": "Farliga ämnen",
     "breakdown": "Motorstopp",
     "tow": "Bärgning",
-    "flat_tyre": "Punktering"
+    "flat_tyre": "Punktering",
+    "cardiac_arrest": "Hjärtstopp (HLR)",
+    "arrhythmia": "Hjärtrytmrubbning",
+    "stroke": "Stroke",
+    "seizure": "Kramper",
+    "bleeding": "Blödning",
+    "allergy": "Allergisk reaktion",
+    "hypoglycemia": "Lågt blodsocker (diabetiker)",
+    "childbirth": "Förlossning",
+    "gunshot": "Skottskada",
+    "stabbing": "Knivskada",
+    "blunt_trauma": "Slag / misshandel",
+    "fall_height": "Fall från höjd",
+    "fall": "Fall",
+    "drowning": "Drunkning",
+    "electric_shock": "Elolycka",
+    "burn": "Brännskada",
+    "abdominal_pain": "Buksmärta",
+    "back_pain": "Ryggsmärta",
+    "fever": "Feber / infektion",
+    "weakness": "Nedsatt allmäntillstånd",
+    "mental_health": "Psykisk kris",
+    "other_illness": "Annan sjukdom",
+    "transfer": "Sjuktransport"
   },
   "origin": {
     "112": "Nödsamtal",
@@ -308,6 +331,62 @@
       "1": "Ja, jag är kvar här. Skynda er!",
       "2": "Okej. Det pågår fortfarande, jag ser det härifrån.",
       "3": "Tack, jag väntar här."
+    },
+    "cardiac_arrest": {
+      "1": "En man föll ihop och andas inte! Någon har börjat med HLR.",
+      "2": "Min pappa andas inte och har ingen puls, vad ska jag göra?"
+    },
+    "stroke": {
+      "1": "Min mammas ena mungipa hänger och hon kan inte lyfta höger arm.",
+      "2": "Min man började plötsligt sluddra och kan inte stå upp."
+    },
+    "seizure": {
+      "1": "En ung man har kramper vid busshållplatsen, hela kroppen skakar.",
+      "2": "Min dotter har kramper och det har hållit på i flera minuter."
+    },
+    "bleeding": {
+      "1": "Någon skar sig på glas i armen och det blöder mycket, vi får inte stopp på det.",
+      "2": "En äldre man kräks blod."
+    },
+    "allergy": {
+      "1": "Min väninna åt nötter och läpparna och halsen svullnar upp.",
+      "2": "Jag blev stucken av en geting och nu har jag utslag överallt och känner mig yr."
+    },
+    "hypoglycemia": {
+      "1": "Min diabetiker-granne är förvirrad och svettig, han är osammanhängande.",
+      "2": "Min son har diabetes och beter sig konstigt och är väldigt blek."
+    },
+    "childbirth": {
+      "1": "Min frus vatten har gått och värkarna kommer väldigt tätt!",
+      "2": "Hon föder i bilen, vi hinner inte till sjukhuset!"
+    },
+    "fall_height": {
+      "1": "En arbetare föll från byggnadsställningen, ungefär fem meter, han rör sig knappt.",
+      "2": "Någon föll från en balkong och ligger på marken."
+    },
+    "fall": {
+      "1": "Min mormor föll i badrummet och kommer inte upp, höften gör ont.",
+      "2": "En äldre man halkade på gatan och slog i huvudet."
+    },
+    "drowning": {
+      "1": "Någon gick under vid bryggan, vi drog upp honom och han andas dåligt!",
+      "2": "Ett barn hittades flytande i poolen!"
+    },
+    "burn": {
+      "1": "Het olja stänkte på min arm och bröstet, huden lossnar.",
+      "2": "En man brändes när grillen flammade upp, ansiktet och händerna är svårt brända."
+    },
+    "abdominal_pain": {
+      "1": "Jag har fruktansvärt ont i magen på höger sida och har kräkts.",
+      "2": "Min fru har haft svår magsmärta i flera timmar och det blir värre."
+    },
+    "mental_health": {
+      "1": "Min vän är väldigt förvirrad och pratar om att skada sig själv, jag är orolig.",
+      "2": "En kvinna sitter på gatan och gråter och skriker, hon verkar mycket upprörd."
+    },
+    "weakness": {
+      "1": "Min äldre pappa är väldigt svag idag och kommer inte ur sängen.",
+      "2": "En äldre dam i butiken verkar förvirrad och kan knappt stå."
     }
   },
   "aicalls": {
@@ -332,5 +411,9 @@
       "2": "Vittnesmål: två personer, en lång med skägg, åkte iväg i en grå bil utan registreringsskyltar.",
       "3": "Vittnesmål: en kvinna i röd jacka ropade något och sprang in i gränden."
     }
+  },
+  "priority_mechanic": {
+    "C": "C – Stör trafiken",
+    "D": "D – Hindrar inte andra trafikanter"
   }
 }

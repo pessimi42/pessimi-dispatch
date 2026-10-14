@@ -101,10 +101,10 @@
     "mechanic": "Roadside Assistance"
   },
   "priority": {
-    "A": "A – Life-threatening",
-    "B": "B – Urgent",
-    "C": "C – Non-urgent",
-    "D": "D – Low"
+    "A": "A – Immediate, life-threatening",
+    "B": "B – Immediate, urgent",
+    "C": "C – Urgent, within 30 min",
+    "D": "D – Non-urgent, within 2 h"
   },
   "calltype": {
     "general": "General",
@@ -115,8 +115,8 @@
     "traffic": "Traffic",
     "domestic": "Domestic dispute",
     "suspicious": "Suspicious activity",
-    "injury": "Injury",
-    "unconscious": "Unconscious person",
+    "injury": "Wound / other injury",
+    "unconscious": "Unconscious",
     "breathing": "Breathing difficulty",
     "chest_pain": "Chest pain",
     "traffic_accident": "Traffic accident",
@@ -128,7 +128,30 @@
     "hazmat": "Hazardous materials",
     "breakdown": "Breakdown",
     "tow": "Tow",
-    "flat_tyre": "Flat tyre"
+    "flat_tyre": "Flat tyre",
+    "cardiac_arrest": "Cardiac arrest (CPR)",
+    "arrhythmia": "Heart rhythm problem",
+    "stroke": "Stroke",
+    "seizure": "Seizure",
+    "bleeding": "Bleeding",
+    "allergy": "Allergic reaction",
+    "hypoglycemia": "Low blood sugar (diabetic)",
+    "childbirth": "Childbirth",
+    "gunshot": "Gunshot wound",
+    "stabbing": "Stab wound",
+    "blunt_trauma": "Assault injury",
+    "fall_height": "Fall from height",
+    "fall": "Fall",
+    "drowning": "Drowning",
+    "electric_shock": "Electric shock",
+    "burn": "Burn",
+    "abdominal_pain": "Abdominal pain",
+    "back_pain": "Back pain",
+    "fever": "Fever / infection",
+    "weakness": "General weakness",
+    "mental_health": "Mental health crisis",
+    "other_illness": "Other illness",
+    "transfer": "Patient transfer"
   },
   "origin": {
     "112": "Emergency call",
@@ -308,6 +331,62 @@
       "1": "Yes, I'm still here. Please hurry!",
       "2": "Okay. It's still going on, I can see it from here.",
       "3": "Thank you, I'll wait here."
+    },
+    "cardiac_arrest": {
+      "1": "A man collapsed and isn't breathing! Someone has started CPR.",
+      "2": "My father isn't breathing and has no pulse, what do I do?"
+    },
+    "stroke": {
+      "1": "My mother's face is drooping and she can't lift her right arm.",
+      "2": "My husband suddenly started slurring his words and can't stand up."
+    },
+    "seizure": {
+      "1": "A young man is having a seizure on the bus stop, he's shaking all over.",
+      "2": "My daughter is having a seizure and it's been going on for several minutes."
+    },
+    "bleeding": {
+      "1": "Someone cut their arm on glass and it's bleeding a lot, we can't stop it.",
+      "2": "An elderly man is vomiting blood."
+    },
+    "allergy": {
+      "1": "My friend ate nuts and her lips and throat are swelling up.",
+      "2": "I got stung by a wasp and now I have a rash everywhere and feel dizzy."
+    },
+    "hypoglycemia": {
+      "1": "My diabetic neighbour is confused and sweating, he won't make sense.",
+      "2": "My son has diabetes and he's acting strange and very pale."
+    },
+    "childbirth": {
+      "1": "My wife's water broke and the contractions are very close together!",
+      "2": "She's giving birth in the car, we won't make it to the hospital!"
+    },
+    "fall_height": {
+      "1": "A worker fell from the scaffolding, about five metres, he's not moving much.",
+      "2": "Someone fell off a balcony, he's lying on the ground."
+    },
+    "fall": {
+      "1": "My grandmother fell in the bathroom and can't get up, her hip hurts.",
+      "2": "An old man slipped on the street and hit his head."
+    },
+    "drowning": {
+      "1": "Someone went under at the pier and we just pulled him out, he's not breathing well!",
+      "2": "A child was found floating in the pool!"
+    },
+    "burn": {
+      "1": "Hot oil splashed on my arm and chest, the skin is peeling.",
+      "2": "A man got burned by a grill flare-up, his face and hands are badly burned."
+    },
+    "abdominal_pain": {
+      "1": "I have terrible stomach pain on the right side and I've been vomiting.",
+      "2": "My wife has had severe stomach pain for hours and it's getting worse."
+    },
+    "mental_health": {
+      "1": "My friend is very confused and talking about hurting himself, I'm worried.",
+      "2": "A woman is sitting on the street crying and shouting, she seems very distressed."
+    },
+    "weakness": {
+      "1": "My elderly father is very weak today and can't get out of bed.",
+      "2": "An old lady at the store seems confused and can barely stand."
     }
   },
   "aicalls": {
@@ -332,5 +411,9 @@
       "2": "Statement: two people, one tall with a beard, left in a grey car without plates.",
       "3": "Statement: a woman in a red jacket – she shouted something and ran into the alley."
     }
+  },
+  "priority_mechanic": {
+    "C": "C – Disrupting traffic",
+    "D": "D – Not affecting other road users"
   }
 }

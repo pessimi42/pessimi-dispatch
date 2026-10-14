@@ -101,10 +101,10 @@
     "mechanic": "Tiepalvelu"
   },
   "priority": {
-    "A": "A – Henkeä uhkaava",
-    "B": "B – Kiireellinen",
-    "C": "C – Kiireetön",
-    "D": "D – Matala"
+    "A": "A – Välitön, hengenvaara",
+    "B": "B – Välitön, kiireellinen",
+    "C": "C – Kiireellinen, 30 min",
+    "D": "D – Kiireetön, 2 h"
   },
   "calltype": {
     "general": "Yleinen",
@@ -115,8 +115,8 @@
     "traffic": "Liikenne",
     "domestic": "Perheväkivalta / riita",
     "suspicious": "Epäilyttävä toiminta",
-    "injury": "Vamma",
-    "unconscious": "Tajuton henkilö",
+    "injury": "Haava / muu vamma",
+    "unconscious": "Tajuttomuus",
     "breathing": "Hengitysvaikeus",
     "chest_pain": "Rintakipu",
     "traffic_accident": "Liikenneonnettomuus",
@@ -128,7 +128,30 @@
     "hazmat": "Vaaralliset aineet",
     "breakdown": "Ajoneuvon rikkoutuminen",
     "tow": "Hinaus",
-    "flat_tyre": "Rengasrikko"
+    "flat_tyre": "Rengasrikko",
+    "cardiac_arrest": "Elvytys",
+    "arrhythmia": "Rytmihäiriö",
+    "stroke": "Aivohalvaus",
+    "seizure": "Kouristelu",
+    "bleeding": "Verenvuoto",
+    "allergy": "Allerginen reaktio",
+    "hypoglycemia": "Diabeetikon matala verensokeri",
+    "childbirth": "Synnytys",
+    "gunshot": "Ampumavamma",
+    "stabbing": "Puukotus",
+    "blunt_trauma": "Isku / pahoinpitely",
+    "fall_height": "Putoaminen",
+    "fall": "Kaatuminen",
+    "drowning": "Hukkuminen",
+    "electric_shock": "Sähköisku",
+    "burn": "Palovamma",
+    "abdominal_pain": "Vatsakipu",
+    "back_pain": "Selkäkipu",
+    "fever": "Kuume / infektio",
+    "weakness": "Yleistilan lasku",
+    "mental_health": "Mielenterveysongelma",
+    "other_illness": "Muu sairastuminen",
+    "transfer": "Siirtokuljetus"
   },
   "origin": {
     "112": "Hätäpuhelu",
@@ -308,6 +331,62 @@
       "1": "Kyllä, olen vielä täällä. Tulkaa nopeasti!",
       "2": "Selvä. Tilanne jatkuu yhä, näen sen täältä.",
       "3": "Kiitos, odotan täällä."
+    },
+    "cardiac_arrest": {
+      "1": "Mies kaatui eikä hengitä! Joku aloitti jo elvytyksen.",
+      "2": "Isäni ei hengitä eikä sydän tunnu lyövän, mitä teen?"
+    },
+    "stroke": {
+      "1": "Äitini toinen suupieli roikkuu eikä hän pysty nostamaan oikeaa kättään.",
+      "2": "Mieheni puhe alkoi yhtäkkiä sammaltaa eikä hän pysty seisomaan."
+    },
+    "seizure": {
+      "1": "Nuori mies kouristelee bussipysäkillä, koko keho nykii.",
+      "2": "Tyttäreni kouristelee, ja se on jatkunut jo useita minuutteja."
+    },
+    "bleeding": {
+      "1": "Joku viilsi kätensä lasiin ja vuotaa paljon verta, emme saa sitä tyrehtymään.",
+      "2": "Iäkäs mies oksentaa verta."
+    },
+    "allergy": {
+      "1": "Ystäväni söi pähkinää ja huulet ja kurkku turpoavat.",
+      "2": "Ampiainen pisti minua, nyt koko kehossa on ihottumaa ja huimaa."
+    },
+    "hypoglycemia": {
+      "1": "Diabeetikkonaapurini on sekava ja hikinen, puhe ei ole järkevää.",
+      "2": "Pojallani on diabetes, hän käyttäytyy oudosti ja on todella kalpea."
+    },
+    "childbirth": {
+      "1": "Vaimoni lapsivesi meni ja supistukset tulevat todella tiheään!",
+      "2": "Hän synnyttää autossa, emme ehdi sairaalaan!"
+    },
+    "fall_height": {
+      "1": "Työmies putosi telineiltä noin viisi metriä, hän ei juuri liiku.",
+      "2": "Joku putosi parvekkeelta ja makaa maassa."
+    },
+    "fall": {
+      "1": "Mummoni kaatui kylpyhuoneessa eikä pääse ylös, lonkkaan sattuu.",
+      "2": "Vanha mies liukastui kadulla ja löi päänsä."
+    },
+    "drowning": {
+      "1": "Joku painui pinnan alle laiturilla, vedimme hänet ylös ja hän hengittää huonosti!",
+      "2": "Lapsi löytyi kellumasta uima-altaasta!"
+    },
+    "burn": {
+      "1": "Kuumaa öljyä roiskui käsivarrelleni ja rintaan, iho irtoaa.",
+      "2": "Grilli leimahti ja mies sai pahoja palovammoja kasvoihin ja käsiin."
+    },
+    "abdominal_pain": {
+      "1": "Minulla on kova vatsakipu oikealla puolella ja olen oksentanut.",
+      "2": "Vaimollani on ollut kova vatsakipu tunteja ja se pahenee."
+    },
+    "mental_health": {
+      "1": "Ystäväni on todella sekava ja puhuu itsensä vahingoittamisesta, olen huolissani.",
+      "2": "Nainen istuu kadulla itkien ja huutaen, hän vaikuttaa todella hätääntyneeltä."
+    },
+    "weakness": {
+      "1": "Iäkäs isäni on tänään todella heikko eikä pääse sängystä.",
+      "2": "Vanha rouva kaupassa vaikuttaa sekavalta ja tuskin pysyy pystyssä."
     }
   },
   "aicalls": {
@@ -332,5 +411,9 @@
       "2": "Lausunto: kaksi henkilöä, toinen pitkä ja parrakas, poistuivat harmaalla autolla ilman kilpiä.",
       "3": "Lausunto: punatakkinen nainen huusi jotain ja juoksi kujalle."
     }
+  },
+  "priority_mechanic": {
+    "C": "C – Häiritsee liikennettä",
+    "D": "D – Ei haittaa tienkäyttäjille"
   }
 }

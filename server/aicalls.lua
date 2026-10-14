@@ -87,7 +87,7 @@ function AiCalls.Generate(service)
     local id = Calls.Create({
         service = service,
         type = t.type,
-        priority = t.priority,
+        priority = t.priority or Utils.TypePriority(service, t.type),
         message = Locale.T(('aicall.%s.%d'):format(t.type, variant)),
         coords = { x = loc.x + math.random(-15, 15), y = loc.y + math.random(-15, 15), z = loc.z },
         caller = { name = pick(cfg.names), phone = randomPhone() },

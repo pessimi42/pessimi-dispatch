@@ -38,6 +38,11 @@ is open, the location **follows the caller** automatically (checked every 10 s, 
 name update with it. Dispatchers can also press **Locate caller** to refresh it immediately.
 Settings in `Config.Location`; `requirePhone = true` only locates callers with an equipped phone.
 
+**Task classes and urgency:** EMS calls use task classes modelled on the Finnish emergency
+response centre (cardiac arrest, stroke, childbirth, drowning…). Each class has a default
+urgency (`typePriority` in `config/services.lua`); A = immediate, life-threatening,
+B = immediate, C = within 30 min, D = within 2 h. NPC units use lights and sirens on A and B.
+
 **Call lifecycle:** `pending` → `broadcast` (units requested) → `active` (unit assigned) → `closed`.
 
 ### No dispatcher on duty (`Config.Fallback`)
@@ -178,8 +183,10 @@ the job names. For a brand new service, add a block there and add `service.<id>`
 `calltype.<key>` strings to the locale files. Everything else (panel, filters, caller
 form, blips, fallback) picks it up automatically.
 
-`fixedPriority` locks every call of a service to one priority – roadside assistance
-(mechanic) calls are always class **D**, whatever the caller or dispatcher picks.
+`allowedPriorities` limits which classes a service's calls can have, with labels of its
+own (`priority_<service>.<class>` in the locales). Roadside assistance (mechanic) calls are
+**C – disrupting traffic** or **D – not affecting other road users**; anything higher is
+moved to C.
 
 ## Integrating with police/EMS dispatch scripts and MDTs
 

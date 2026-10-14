@@ -55,6 +55,13 @@ const svc = (id) => S.services.find((s) => s.id === id);
 const svcColor = (id) => svc(id)?.color || '#8b95a3';
 const svcName = (id) => (id ? t(`service.${id}`) : t('ui.unspecified'));
 const prio = (id) => S.priorities.find((p) => p.id === id);
+/** Priorities a service allows (all if none set) and their labels (service-specific if any). */
+const prioIdsFor = (serviceId) => svc(serviceId)?.allowedPriorities || S.priorities.map((p) => p.id);
+const prioLabel = (serviceId, id) => {
+  const k = `priority_${serviceId}.${id}`;
+  return serviceId && t(k) !== k ? t(k) : t(`priority.${id}`);
+};
+const prioOptions = (serviceId) => prioIdsFor(serviceId).map((id) => [id, prioLabel(serviceId, id)]);
 const prioIndex = (id) => { const i = S.priorities.findIndex((p) => p.id === id); return i < 0 ? 99 : i; };
 const status = (id) => S.statuses.find((s) => s.id === id);
 const unitLabel = (u) => u.callsign || u.name || `#${u.src}`;
@@ -182,7 +189,7 @@ function renderDetail() {
       <div><label>${esc(t('ui.type'))}</label>
         <select data-patch="type" ${dis}>${options(typesFor(c.service).map((x) => [x, t(`calltype.${x}`)]), c.type)}</select></div>
       <div><label>${esc(t('ui.priority'))}</label>
-        <select data-patch="priority" ${closed || svc(c.service)?.fixedPriority ? 'disabled' : ''}>${options(S.priorities.map((p) => [p.id, t(`priority.${p.id}`)]), c.priority)}</select></div>
+        <select data-patch="priority" ${closed || prioIdsFor(c.service).length < 2 ? 'disabled' : ''}>${options(prioOptions(c.service), c.priority)}</select></div>
     </div>
 
     <label>${esc(t('ui.message'))}</label>
@@ -265,16 +272,18 @@ function openCaller() {
 function openNewCall() {
   const svcSel = $('#ncService');
   svcSel.innerHTML = options([['', t('ui.unspecified')], ...S.services.map((s) => [s.id, svcName(s.id)])], S.filter !== 'all' && S.filter !== 'none' ? S.filter : '');
-  $('#ncPriority').innerHTML = options(S.priorities.map((p) => [p.id, t(`priority.${p.id}`)]), S.priorities[2]?.id);
   fillNcTypes();
   $('#ncMessage').value = '';
   $('#newCall').classList.remove('hidden');
 }
 function fillNcTypes() {
   $('#ncType').innerHTML = options(typesFor($('#ncService').value).map((x) => [x, t(`calltype.${x}`)]), 'general');
-  const fixed = svc($('#ncService').value)?.fixedPriority;
-  if (fixed) $('#ncPriority').value = fixed;
-  $('#ncPriority').disabled = !!fixed;
+  const sv = $('#ncService').value;
+  const ids = prioIdsFor(sv);
+  const wanted = svc(sv)?.defaultPriority || 'C';
+  const fallback = ids.includes(wanted) ? wanted : ids[ids.length - 1];
+  $('#ncPriority').innerHTML = options(prioOptions(sv), fallback);
+  $('#ncPriority').disabled = ids.length < 2;
 }
 
 /* ---------- toasts ---------- */
@@ -384,6 +393,11 @@ document.addEventListener('change', (e) => {
   if (el.dataset.patch && c) return action('update', { callId: c.id, patch: { [el.dataset.patch]: el.value || false } });
   if (el.dataset.unitStatus) return action('unitStatus', { unit: Number(el.dataset.unitStatus), status: el.value });
   if (el.id === 'ncService') return fillNcTypes();
+  if (el.id === 'ncType') {
+    const p = svc($('#ncService').value)?.typePriority?.[el.value];
+    if (p && prioIdsFor($('#ncService').value).includes(p)) $('#ncPriority').value = p;
+    return;
+  }
   if (el.id === 'langSelect') return post('setLanguage', { lang: el.value });
 });
 

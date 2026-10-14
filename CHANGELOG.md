@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **EMS task classes modelled on the Finnish emergency response centre.** EMS calls now use
+  29 task classes such as cardiac arrest (elvytys), stroke, seizure, childbirth, drowning,
+  stab wound, fall from height, low blood sugar and patient transfer, in English, Finnish
+  and Swedish. Each class has a default urgency (`typePriority` in `config/services.lua`),
+  used for new calls and when the dispatcher changes the class – the dispatcher can still
+  pick another one. The A–D labels now describe response times: A immediate and
+  life-threatening, B immediate, C within 30 min, D within 2 h.
+- **Roadside assistance has two urgency classes: C – disrupting traffic, D – not affecting
+  other road users.** Mechanic calls can be C or D (D by default); an A or B is moved to C.
+  The panel only offers these two, with their own labels. New service setting
+  `allowedPriorities` (replaces `fixedPriority`, which still works) and locale keys
+  `priority_<service>.<class>`.
+- **AI calls cover the new EMS classes** – 20 of them, with caller messages in all three
+  languages and an NPC patient at the scene.
+
 ## v0.7.0-beta – AI call rules, sirens by priority, NPC mechanic (2026-10-14)
 
 AI calls only come for a dispatcher working without player responders, NPC units use lights
