@@ -44,10 +44,12 @@ function Sms.ToCaller(call, text, key, vars, author)
     return text
 end
 
---- Automatic caller messages: 'received' | 'assigned' | 'closed'.
+--- Automatic caller messages: 'received' | 'assigned' | 'closed' | 'unavailable'.
 --- `fallbackKey` is shown on screen to an online caller when no SMS could be sent.
 function Sms.AutoCaller(call, event, fallbackKey)
-    if Config.Sms.auto[event] and Sms.ToCaller(call, nil, 'sms.' .. event, { id = call.id }) then
+    local on = Config.Sms.auto[event]
+    if on == nil and event == 'unavailable' then on = true end   -- on without the config line too
+    if on and Sms.ToCaller(call, nil, 'sms.' .. event, { id = call.id }) then
         return true
     end
     local src = caller(call)

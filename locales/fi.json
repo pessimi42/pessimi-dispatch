@@ -63,7 +63,14 @@
     "tracking": "Seuranta päällä",
     "located": "paikannettu {ago}",
     "system": "Järjestelmä",
-    "fast": "tiheä"
+    "fast": "tiheä",
+    "sms_add_number": "Ilmoittajan puhelinnumero puuttuu. Lisää numero, niin voit lähettää tekstiviestin.",
+    "phone_placeholder": "Puhelinnumero",
+    "save": "Tallenna",
+    "sms_no_phone": "Tekstiviestit eivät ole käytössä: palvelimella ei ole tuettua puhelinta.",
+    "move_to_waiting": "Siirrä odottamaan",
+    "group_waiting": "Odottavat",
+    "group_active": "Käynnissä"
   },
   "caller": {
     "title": "Hätänumero 112",
@@ -74,7 +81,8 @@
     "cooldown": "Odota {seconds} s ennen kuin soitat uudelleen.",
     "too_short": "Kerro, mitä on tapahtunut.",
     "no_phone": "Tarvitset puhelimen soittaaksesi 112:een.",
-    "units_assigned": "Apua on tulossa."
+    "units_assigned": "Apua on tulossa.",
+    "unavailable": "Neuvonta ei ole juuri nyt tavoitettavissa. Jos kyseessä on hätätilanne, soita uudelleen 112 ja kerro, mitä on tapahtunut."
   },
   "toast": {
     "new_call": "Uusi tehtävä #{id}",
@@ -83,6 +91,7 @@
     "respond_hint": "Kuittaa: /{cmd} {id}"
   },
   "call_status": {
+    "received": "Vastaanotettu",
     "pending": "Odottaa",
     "broadcast": "Yksiköitä pyydetty",
     "active": "Käynnissä",
@@ -99,7 +108,8 @@
     "police": "Poliisi",
     "ems": "Ensihoito",
     "fire": "Pelastustoimi",
-    "mechanic": "Tiepalvelu"
+    "mechanic": "Mekaanikko",
+    "advice": "Neuvonta"
   },
   "priority": {
     "A": "A – Välitön, hengenvaara",
@@ -152,7 +162,8 @@
     "weakness": "Yleistilan lasku",
     "mental_health": "Mielenterveysongelma",
     "other_illness": "Muu sairastuminen",
-    "transfer": "Siirtokuljetus"
+    "transfer": "Siirtokuljetus",
+    "phone_advice": "Puhelinneuvonta"
   },
   "origin": {
     "112": "Hätäpuhelu",
@@ -222,7 +233,8 @@
       "safe_place": "Turvaan",
       "describe": "Kuvaile",
       "call_back": "Soita takaisin"
-    }
+    },
+    "unavailable": "112: Neuvonta ei ole juuri nyt tavoitettavissa (tehtävä #{id}). Jos kyseessä on hätätilanne, soita uudelleen 112 ja kerro, mitä on tapahtunut."
   },
   "ai_status": {
     "enroute": "Matkalla",
@@ -388,6 +400,10 @@
     "weakness": {
       "1": "Iäkäs isäni on tänään todella heikko eikä pääse sängystä.",
       "2": "Vanha rouva kaupassa vaikuttaa sekavalta ja tuskin pysyy pystyssä."
+    },
+    "phone_advice": {
+      "1": "Minulla on korkea kuume ja kurkku kipeä – pitäisikö mennä lääkäriin vai pärjäänkö kotona?",
+      "2": "Lapseni nieli vähän astianpesuainetta. Hän vaikuttaa ihan hyvävointiselta, mitä minun pitäisi tehdä?"
     }
   },
   "aicalls": {
@@ -418,5 +434,8 @@
   "priority_mechanic": {
     "C": "C – Häiritsee liikennettä",
     "D": "D – Ei haittaa tienkäyttäjille"
+  },
+  "callnote": {
+    "waiting": "Siirretty odottamaan ensikäsittelyn jälkeen"
   }
 }

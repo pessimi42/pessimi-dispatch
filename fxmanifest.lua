@@ -4,7 +4,7 @@ lua54 'yes'
 
 name 'pessimi42_dispatch'
 description 'Emergency dispatcher job (112) for Qbox, QBCore and ESX'
-version '0.8.1-beta'
+version '0.9.0-beta'
 
 shared_scripts {
     'config/config.lua',
@@ -20,6 +20,7 @@ server_scripts {
     'bridge/server/*.lua',
     'server/units.lua',
     'server/calls.lua',
+    'server/storage.lua',
     'server/adapters.lua',
     'server/phone.lua',
     'server/phones/*.lua',

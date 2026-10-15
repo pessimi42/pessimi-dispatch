@@ -151,3 +151,8 @@ h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: v
 }
 #hud .st { font-weight: 700; }
 #hud .call { display: block; margin: 6px 0 0; padding: 6px 8px; cursor: default; grid-template-columns: none; }
+
+/* New, not yet handled calls stand out from waiting ones */
+.tag.st-received { color: var(--accent); border: 1px solid var(--accent); background: transparent; }
+.group { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 10px 4px 6px; }
+.group:first-child { margin-top: 2px; }

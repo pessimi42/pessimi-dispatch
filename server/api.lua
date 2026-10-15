@@ -42,6 +42,7 @@ exports('AddNote', function(id, text, author) return Calls.AddNote(id, text, aut
 exports('AssignUnit', function(id, src) return Calls.Assign(id, src) end)
 exports('UnassignUnit', function(id, src) return Calls.Unassign(id, src) end)
 exports('BroadcastCall', function(id) return Calls.Broadcast(id) end)
+exports('SetCallWaiting', function(id) return Calls.Wait(id, GetInvokingResource()) end)
 exports('AutoDispatch', function(id) return Calls.AutoDispatch(id) end)
 exports('CloseCall', function(id) return Calls.Close(id) end)
 

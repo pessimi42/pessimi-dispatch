@@ -73,16 +73,35 @@ Services = {
     },
 
     mechanic = {
-        enabled = true,             -- roadside assistance: player mechanics or the NPC mechanic
+        enabled = true,             -- mechanic: player mechanics or the NPC mechanic
         order = 4,
         jobs = { mechanic = 0 },
         color = '#14b8a6',
         icon = 'wrench',
         blip = { sprite = 446, color = 25, callSprite = 446 },
         defaultPriority = 'D',
-        -- Roadside calls are C (disrupting traffic) or D (not affecting other road users)
+        -- Mechanic calls are C (disrupting traffic) or D (not affecting other road users)
         allowedPriorities = { 'C', 'D' },
         notify = { 'native' },
         callTypes = { 'general', 'breakdown', 'tow', 'flat_tyre' },
+    },
+
+    -- Advice (neuvonta): calls the dispatcher handles on the phone or by text – nobody is
+    -- sent. Always D. To let players take them (e.g. a nurse line), add their job to `jobs`.
+    -- unavailableReply: when no dispatcher (and no unit of this service) is on duty, the
+    -- caller gets a text that advice is not available right now and the call is closed.
+    advice = {
+        enabled = true,
+        order = 5,
+        jobs = {},
+        color = '#a855f7',
+        icon = 'phone',
+        blip = { sprite = 280, color = 27, callSprite = 280 },
+        defaultPriority = 'D',
+        allowedPriorities = { 'D' },
+        notify = { 'native' },
+        callTypes = { 'phone_advice' },
+        typePriority = { phone_advice = 'D', general = 'D' },
+        unavailableReply = true,
     },
 }

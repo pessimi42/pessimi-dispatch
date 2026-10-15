@@ -1,8 +1,8 @@
--- Call lifecycle: pending -> broadcast -> active -> closed
+-- Call lifecycle: received -> (pending after first handling) -> broadcast -> active -> closed
 
 Calls = { list = {}, nextId = 1 }
 
-local CALL_STATUSES = { pending = true, broadcast = true, active = true, closed = true }
+local CALL_STATUSES = { received = true, pending = true, broadcast = true, active = true, closed = true }
 
 local function now() return os.time() end
 
@@ -17,6 +17,13 @@ function Calls.Public(call)
     for src in pairs(call._units) do units[#units + 1] = src end
     out.units = units
     out.canSms = call.status ~= 'closed' and Sms.CallerNumber(call) ~= nil and (call._ai or Sms.Available())
+    -- Why texting is or isn't possible, so the panel can always show the section:
+    -- 'ok' | 'no_number' (the dispatcher can add one) | 'no_phone' (no phone resource)
+    if call.status ~= 'closed' then
+        out.smsState = out.canSms and 'ok'
+            or (not call._ai and not Sms.Available()) and 'no_phone'
+            or 'no_number'
+    end
     out.tracking = Location.Tracking(call)
     local aiService = call.service or Config.Fallback.unspecifiedService
     out.aiBlocked = Ai.BlockedForCall(call, aiService) or Ai.PlayersOnDuty(aiService) or nil
@@ -36,6 +43,7 @@ Calls.UnitCount = unitCount
 --- Push a change to dispatchers, to units on the call and to listening resources.
 local function changed(call, kind)
     call.updatedAt = now()
+    Storage.Changed(call)
     local pub = Calls.Public(call)
     Dispatch.Send('client:callChanged', pub, kind)
     if call.status ~= 'closed' then
@@ -114,6 +122,7 @@ end)
 --[[ data:
     service, type, priority, message, information, code, coords, street,
     caller = { name, phone }, origin ('112'|'dispatcher'|'alert'|'api'|<integration>),
+    createdBy (dispatcher name),
     callerSrc (server only), meta (any table)
   opts:
     skipFallback  don't auto-dispatch when no dispatcher is on duty
@@ -135,7 +144,7 @@ function Calls.Create(data, opts)
         type = ctype,
         priority = Utils.ClampPriority(service, Utils.ValidPriority(data.priority)
             or Utils.TypePriority(service, ctype) or (svc and svc.defaultPriority) or Config.DefaultPriority),
-        status = 'pending',
+        status = 'received',          -- new; the dispatcher moves it to 'pending' after first handling
         message = Utils.Sanitize(data.message, Config.EmergencyCall.maxLength) or '',
         information = Utils.Sanitize(data.information, 500),
         code = Utils.Sanitize(data.code, 16),
@@ -146,6 +155,7 @@ function Calls.Create(data, opts)
             phone = Utils.Sanitize(data.caller.phone, 30),
         } or nil,
         origin = Utils.Sanitize(data.origin, 32) or 'api',
+        createdBy = Utils.Sanitize(data.createdBy, 60),
         createdAt = now(),
         updatedAt = now(),
         notes = {},
@@ -159,6 +169,16 @@ function Calls.Create(data, opts)
     Calls.list[id] = call
     changed(call, 'created')
     if not call._ai and (call.origin == '112' or call.origin == 'sms') then AiCalls.NotePlayerCall() end
+
+    -- Nobody can take this call (e.g. advice while no dispatcher is on duty): tell the
+    -- caller and close it instead of leaving it waiting.
+    if svc and svc.unavailableReply and not call._ai and not Dispatch.HasDispatcher()
+        and #Units.OnDutyIn(service) == 0 then
+        Sms.AutoCaller(call, 'unavailable', 'caller.unavailable')
+        call._noClosedSms = true
+        Calls.Close(id)
+        return id
+    end
 
     if opts.smsReceived then Sms.AutoCaller(call, 'received') end
 
@@ -245,6 +265,15 @@ function Calls.Update(id, patch)
     if patch.code then call.code = Utils.Sanitize(patch.code, 16) end
     if patch.coords then call.coords = Utils.Coords(patch.coords) or call.coords end
     if patch.street then call.street = Utils.Sanitize(patch.street, 120) end
+    if patch.callerPhone then
+        -- the dispatcher adds the caller's number (e.g. to an alert or a call they made)
+        local phone = Utils.Sanitize(patch.callerPhone, 30)
+        phone = phone and phone:gsub('[%s%-]', '') or nil
+        if phone and phone:match('^%+?%d+$') and #phone >= 3 and #phone <= 20 then
+            call.caller = call.caller or {}
+            call.caller.phone = phone
+        end
+    end
     if patch.status and CALL_STATUSES[patch.status] and patch.status ~= 'closed' then call.status = patch.status end
 
     changed(call, 'updated')
@@ -343,9 +372,20 @@ function Calls.Broadcast(id)
     if not call or call.status == 'closed' then return false end
     local targets = Units.OnDutyIn(call.service)
     call._broadcast = true
-    if call.status == 'pending' then call.status = 'broadcast' end
+    if call.status == 'pending' or call.status == 'received' then call.status = 'broadcast' end
     changed(call, 'updated')
     if #targets > 0 then Adapters.Broadcast(call, targets) end
+    return true
+end
+
+--- The dispatcher has done the first handling and puts the call to wait (received ->
+--- pending), to be dispatched later.
+function Calls.Wait(id, by)
+    local call = Calls.Get(id)
+    if not call or call.status ~= 'received' then return false end
+    call.status = 'pending'
+    call.notes[#call.notes + 1] = { text = 'callnote.waiting', author = Utils.Sanitize(by, 60), at = now(), kind = 'sys' }
+    changed(call, 'updated')
     return true
 end
 
@@ -363,7 +403,7 @@ end
 function Calls.Close(id)
     local call = Calls.Get(id)
     if not call or call.status == 'closed' then return false end
-    Sms.AutoCaller(call, 'closed')
+    if not call._noClosedSms then Sms.AutoCaller(call, 'closed') end
     call.status = 'closed'
     call.closedAt = now()
     Ai.CancelForCall(call.id)

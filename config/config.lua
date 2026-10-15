@@ -69,6 +69,7 @@ Config.Sms = {
         received = true,         -- "Your call has been received"
         assigned = true,         -- "Help is on the way"
         closed = true,           -- "Your case has been closed"
+        unavailable = true,      -- "Advice is not available right now" (services with unavailableReply)
     },
     toUnits = true,              -- assigned units get the call details + location pin by SMS
     -- Quick replies in the dispatcher panel (translated as sms.quick.<key>, in the caller's language)
@@ -193,7 +194,7 @@ Config.AiCalls = {
     --   false     = ignore players on duty
     playersOnDuty = 'any',
     -- How often each service gets a call (among the services allowed above)
-    weights = { police = 5, ems = 3, fire = 1, mechanic = 0 },  -- mechanic 0: NPC mechanics only take player calls
+    weights = { police = 5, ems = 3, fire = 1, mechanic = 0, advice = 1 },  -- mechanic 0: NPC mechanics only take player calls
 
     -- Call types per service (texts in locales: aicall.<type>.1 / .2) and their priority
     types = {
@@ -221,6 +222,10 @@ Config.AiCalls = {
         mechanic = {
             { type = 'breakdown', priority = 'D' }, { type = 'tow', priority = 'D' },
             { type = 'flat_tyre', priority = 'D' },
+        },
+        -- Advice calls: the dispatcher answers by text (the caller replies) and closes the call
+        advice = {
+            { type = 'phone_advice', priority = 'D' },
         },
     },
 
@@ -356,6 +361,21 @@ Config.Calls = {
     autoCloseMinutes = 45,       -- close calls nobody has touched for this long (0 = never)
     keepClosed = 25,             -- closed calls kept in memory for the history view
     maxNotes = 100,              -- notes per call; the oldest go when there are more
+}
+
+-- Saving calls so they survive a restart and stay as history
+Config.Storage = {
+    -- 'auto' = oxmysql when it is running (table created automatically), otherwise the
+    -- resource's own key-value store. 'oxmysql' | 'kvp' | 'none' (memory only, as before).
+    backend = 'auto',
+    origins = { dispatcher = true },   -- which calls: dispatcher = made on the panel; also
+                                       -- ['112'], sms, alert, api, or all = true for everything
+    saveAi = false,              -- AI calls too
+    restore = true,              -- after a restart, saved open calls come back to the panel
+                                 -- (without units) and the newest closed ones to the history
+    keepDays = 30,               -- delete saved closed calls older than this (0 = keep forever)
+    flushSeconds = 5,            -- changes are written in batches this often
+    table = 'pessimi42_dispatch_calls',
 }
 
 Config.Sounds = {

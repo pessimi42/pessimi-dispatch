@@ -115,6 +115,7 @@ local actions = {
         end
     end,
     broadcast = function(_, p) Calls.Broadcast(tonumber(p.callId)) end,
+    wait = function(src, p) Calls.Wait(tonumber(p.callId), Dispatch.list[src].name) end,
     unitStatus = function(_, p)
         local status = Utils.ResolveStatus(p.status)
         if status then Units.SetStatus(tonumber(p.unit), status) end
@@ -124,7 +125,7 @@ local actions = {
         Calls.Create({
             service = p.service, type = p.type, priority = p.priority,
             message = p.message, coords = p.coords, street = p.street,
-            origin = 'dispatcher',
+            origin = 'dispatcher', createdBy = Dispatch.list[src] and Dispatch.list[src].name,
         }, { skipFallback = true })
     end,
 }

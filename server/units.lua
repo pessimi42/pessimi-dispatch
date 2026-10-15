@@ -22,7 +22,7 @@ function Dispatch.Leave(src)
     Utils.Debug('dispatcher off', src)
     if Dispatch.HasDispatcher() then return end
     for id, c in pairs(Calls.list) do
-        if c.status == 'pending' then Calls.AutoDispatch(id) end
+        if c.status == 'pending' or c.status == 'received' then Calls.AutoDispatch(id) end
     end
 end
 

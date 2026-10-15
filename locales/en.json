@@ -63,7 +63,14 @@
     "tracking": "Tracking caller",
     "located": "located {ago}",
     "system": "System",
-    "fast": "fast"
+    "fast": "fast",
+    "sms_add_number": "No phone number for the caller. Add one to text them.",
+    "phone_placeholder": "Phone number",
+    "save": "Save",
+    "sms_no_phone": "Texting is not available: the server has no supported phone.",
+    "move_to_waiting": "Move to waiting",
+    "group_waiting": "Waiting",
+    "group_active": "In progress"
   },
   "caller": {
     "title": "Emergency number 112",
@@ -74,7 +81,8 @@
     "cooldown": "Please wait {seconds} s before calling again.",
     "too_short": "Please describe the emergency.",
     "no_phone": "You need a phone to call 112.",
-    "units_assigned": "Help is on the way."
+    "units_assigned": "Help is on the way.",
+    "unavailable": "Advice is not available right now. If this is an emergency, call 112 again and tell us what has happened."
   },
   "toast": {
     "new_call": "New call #{id}",
@@ -83,6 +91,7 @@
     "respond_hint": "Respond: /{cmd} {id}"
   },
   "call_status": {
+    "received": "Received",
     "pending": "Waiting",
     "broadcast": "Units requested",
     "active": "In progress",
@@ -99,7 +108,8 @@
     "police": "Police",
     "ems": "EMS",
     "fire": "Fire & Rescue",
-    "mechanic": "Roadside Assistance"
+    "mechanic": "Mechanic",
+    "advice": "Advice"
   },
   "priority": {
     "A": "A – Immediate, life-threatening",
@@ -152,7 +162,8 @@
     "weakness": "General weakness",
     "mental_health": "Mental health crisis",
     "other_illness": "Other illness",
-    "transfer": "Patient transfer"
+    "transfer": "Patient transfer",
+    "phone_advice": "Phone advice"
   },
   "origin": {
     "112": "Emergency call",
@@ -222,7 +233,8 @@
       "safe_place": "Safe place",
       "describe": "Describe",
       "call_back": "Call back"
-    }
+    },
+    "unavailable": "112: Advice is not available right now (case #{id}). If this is an emergency, call 112 again and tell us what has happened."
   },
   "ai_status": {
     "enroute": "En route",
@@ -388,6 +400,10 @@
     "weakness": {
       "1": "My elderly father is very weak today and can't get out of bed.",
       "2": "An old lady at the store seems confused and can barely stand."
+    },
+    "phone_advice": {
+      "1": "I have a high fever and a sore throat – should I go to a doctor or can I manage at home?",
+      "2": "My child swallowed a little dish soap. He seems fine, what should I do?"
     }
   },
   "aicalls": {
@@ -418,5 +434,8 @@
   "priority_mechanic": {
     "C": "C – Disrupting traffic",
     "D": "D – Not affecting other road users"
+  },
+  "callnote": {
+    "waiting": "Moved to waiting after first handling"
   }
 }

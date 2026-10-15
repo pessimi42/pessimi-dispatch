@@ -1,5 +1,61 @@
 # Changelog
 
+## v0.9.0-beta – Saved calls, Advice service, received/waiting calls (2026-10-15)
+
+Calls survive restarts, a new Advice service for calls handled on the phone, and a call flow
+closer to a real emergency centre: new calls are *Received* and wait after first handling.
+Still a beta – please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### New
+
+- **Calls are saved.** Calls a dispatcher makes on the panel are saved to the database
+  (oxmysql, table created automatically) or, without one, the resource's own key-value
+  store. After a restart they come back to the panel and the history, and call numbers
+  continue. Which calls are saved, how long they are kept and the backend are set in
+  `Config.Storage`; other storages can be added in `server/storage.lua`.
+- Dispatcher-made calls remember who made them (`createdBy`).
+- **New service: Advice (Neuvonta / Rådgivning).** Calls that need guidance rather than a
+  unit, with the task class *Phone advice* (Puhelinneuvonta), always D. The dispatcher
+  answers by text or on the phone and closes the call; nobody is sent. AI calls include
+  advice calls too (weight 1), where the caller answers the dispatcher's texts.
+  When no dispatcher is on duty, the caller gets a text that advice is not available right
+  now (call 112 again in an emergency) and the call is closed (`unavailableReply`).
+
+### Changed
+
+- **New calls are "Received".** A new call now starts as *Received* (highlighted on the
+  panel). After the first handling the dispatcher can move it to *Waiting* with **Move to
+  waiting** (logged in the notes), to dispatch later; it can also be dispatched or have units
+  requested straight away. When the last dispatcher goes off duty, received and waiting calls
+  are both auto-dispatched. New export `SetCallWaiting(id)`.
+- **Call list order.** Waiting calls (received, waiting, units requested) are on top – most
+  urgent first, and within the same class the oldest first – under a *Waiting* heading.
+  Calls in progress follow under their own heading, newest first.
+- **Texting on every call.** The panel's text section used to be hidden when a call had no
+  caller number – e.g. alerts from ps-dispatch or scripts, or calls the dispatcher made –
+  so only notes were shown. Now every open call has it: when the number is missing the
+  dispatcher can type it in and then text the caller, and when the server has no supported
+  phone the section says so.
+- The mechanic service is now called **Mechanic** (fi *Mekaanikko*, sv *Mekaniker*) instead
+  of Roadside Assistance / Tiepalvelu / Vägassistans.
+
+### Upgrading from 0.8.1-beta
+
+Replace the resource folder. If you changed config files, carry over:
+
+- `fxmanifest.lua` has a new line `'server/storage.lua',` (after `'server/calls.lua',`).
+- `config/config.lua`: the new `Config.Storage` block – **without it nothing is saved**.
+  Optional (the defaults are built in): `unavailable = true` in `Config.Sms.auto`, and for
+  AI advice calls `advice = 1` in `Config.AiCalls.weights` plus
+  `advice = { { type = 'phone_advice', priority = 'D' } }` in `Config.AiCalls.types`.
+- `config/services.lua`: the new `advice` block (at the end).
+- Locale files: new keys for the Advice service, the *Received* status, the *Move to
+  waiting* button, list headings and the texting section – use the new files or copy the
+  keys over.
+
+With oxmysql running, the table `pessimi42_dispatch_calls` is created on the first start.
+Calls that were open before the update are not affected (they live in memory as before).
+
 ## v0.8.1-beta – Security fixes, fast AI calls, drowning by the water (2026-10-15)
 
 Security fixes, AI calls at a fast pace for testing, and drowning calls by the water.

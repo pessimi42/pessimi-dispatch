@@ -1,14 +1,15 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.8.1-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.9.0-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
 permissions). Players call 112, a dispatcher triages the call and assigns police or EMS
-units. Fire and roadside assistance are included but switched off. When no dispatcher is
-on duty, calls go automatically to the nearest available unit.
+units, mechanics, or handles advice calls on the phone. Fire is included but switched off.
+When no dispatcher is on duty, calls go automatically to the nearest available unit.
 
-No database and no build step: plain Lua + HTML/CSS/JS. `ox_lib` is used for
+No database needed (calls are saved with oxmysql if you have it, otherwise in the
+resource's own store) and no build step: plain Lua + HTML/CSS/JS. `ox_lib` is used for
 notifications if it is running, otherwise the framework's own.
 
 ## Install
@@ -43,7 +44,9 @@ response centre (cardiac arrest, stroke, childbirth, drowning…). Each class ha
 urgency (`typePriority` in `config/services.lua`); A = immediate, life-threatening,
 B = immediate, C = within 30 min, D = within 2 h. NPC units use lights and sirens on A and B.
 
-**Call lifecycle:** `pending` → `broadcast` (units requested) → `active` (unit assigned) → `closed`.
+**Call lifecycle:** `received` (new) → `pending` (waiting: the dispatcher has done the first
+handling and moves it there with *Move to waiting*) → `broadcast` (units requested) → `active`
+(unit assigned) → `closed`. A received call can also be dispatched straight away.
 
 ### No dispatcher on duty (`Config.Fallback`)
 
@@ -155,6 +158,27 @@ Many Qbox/QBCore servers blacklist `s_m_y_cop_01` and `firetruk` (smallresources
 delete them on spawn; the defaults already fall back to allowed models, but if an NPC unit
 never appears, check that its models aren't blacklisted on your server.
 
+## Saving calls
+
+Calls a dispatcher makes on the panel are saved, so they survive a restart and stay as
+history (`Config.Storage`):
+
+- `backend = 'auto'` uses **oxmysql** when it is running – the table
+  `pessimi42_dispatch_calls` is created automatically – and otherwise the resource's own
+  key-value store, which needs no setup. `'oxmysql'`, `'kvp'` or `'none'` (memory only) pick
+  one.
+- After a restart, open saved calls come back to the panel (without units, back in the
+  queue), the newest closed ones to the history, and call numbers continue where they were.
+- `origins` chooses which calls are saved: `dispatcher` by default; add `['112']`, `sms`,
+  `alert`, `api`, or `all = true`. `saveAi = true` saves AI calls too.
+- Closed calls older than `keepDays` (30) are deleted at start.
+- Changes are written in batches every few seconds and when the resource stops.
+
+In the database each call is a row with searchable columns (service, type, priority, status,
+origin, created by, times) and the whole call as JSON in `data`, ready for an MDT or a
+report page. Another storage (an MDT's own database, an HTTP API…) is one small table in
+`server/storage.lua` – see the comment at the top.
+
 ## Testing
 
 Set `Config.TestMode = true` (top of `config/config.lua`) to try everything quickly: an AI
@@ -193,9 +217,16 @@ the job names. For a brand new service, add a block there and add `service.<id>`
 form, blips, fallback) picks it up automatically.
 
 `allowedPriorities` limits which classes a service's calls can have, with labels of its
-own (`priority_<service>.<class>` in the locales). Roadside assistance (mechanic) calls are
+own (`priority_<service>.<class>` in the locales). Mechanic calls are
 **C – disrupting traffic** or **D – not affecting other road users**; anything higher is
 moved to C.
+
+**Advice** (`advice`, *Neuvonta*) is for calls that need guidance, not a unit – task class
+*phone advice*, always D. The dispatcher answers by text or on the phone and closes the call;
+nobody is sent and there is no NPC unit. When no dispatcher is on duty, the caller gets a
+text that advice is not available right now – with an emergency they should call 112 again –
+and the call is closed (`unavailableReply`). To let players take these calls (a nurse line,
+for example), add their job to `jobs` in its block.
 
 ## Integrating with police/EMS dispatch scripts and MDTs
 

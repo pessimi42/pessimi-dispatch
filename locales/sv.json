@@ -63,7 +63,14 @@
     "tracking": "Spårning på",
     "located": "lokaliserad {ago}",
     "system": "System",
-    "fast": "tät"
+    "fast": "tät",
+    "sms_add_number": "Anmälarens telefonnummer saknas. Lägg till ett nummer för att kunna sms:a.",
+    "phone_placeholder": "Telefonnummer",
+    "save": "Spara",
+    "sms_no_phone": "Sms är inte tillgängligt: servern har ingen telefon som stöds.",
+    "move_to_waiting": "Flytta till väntande",
+    "group_waiting": "Väntande",
+    "group_active": "Pågående"
   },
   "caller": {
     "title": "Nödnummer 112",
@@ -74,7 +81,8 @@
     "cooldown": "Vänta {seconds} s innan du ringer igen.",
     "too_short": "Beskriv vad som har hänt.",
     "no_phone": "Du behöver en telefon för att ringa 112.",
-    "units_assigned": "Hjälp är på väg."
+    "units_assigned": "Hjälp är på väg.",
+    "unavailable": "Rådgivningen är inte tillgänglig just nu. Om det är en nödsituation, ring 112 igen och berätta vad som har hänt."
   },
   "toast": {
     "new_call": "Nytt uppdrag #{id}",
@@ -83,6 +91,7 @@
     "respond_hint": "Kvittera: /{cmd} {id}"
   },
   "call_status": {
+    "received": "Mottaget",
     "pending": "Väntar",
     "broadcast": "Enheter begärda",
     "active": "Pågår",
@@ -99,7 +108,8 @@
     "police": "Polis",
     "ems": "Prehospital akutsjukvård",
     "fire": "Räddningsväsendet",
-    "mechanic": "Vägassistans"
+    "mechanic": "Mekaniker",
+    "advice": "Rådgivning"
   },
   "priority": {
     "A": "A – Omedelbar, livshotande",
@@ -152,7 +162,8 @@
     "weakness": "Nedsatt allmäntillstånd",
     "mental_health": "Psykisk kris",
     "other_illness": "Annan sjukdom",
-    "transfer": "Sjuktransport"
+    "transfer": "Sjuktransport",
+    "phone_advice": "Telefonrådgivning"
   },
   "origin": {
     "112": "Nödsamtal",
@@ -222,7 +233,8 @@
       "safe_place": "Säker plats",
       "describe": "Beskriv",
       "call_back": "Ring igen"
-    }
+    },
+    "unavailable": "112: Rådgivningen är inte tillgänglig just nu (ärende #{id}). Om det är en nödsituation, ring 112 igen och berätta vad som har hänt."
   },
   "ai_status": {
     "enroute": "På väg",
@@ -388,6 +400,10 @@
     "weakness": {
       "1": "Min äldre pappa är väldigt svag idag och kommer inte ur sängen.",
       "2": "En äldre dam i butiken verkar förvirrad och kan knappt stå."
+    },
+    "phone_advice": {
+      "1": "Jag har hög feber och ont i halsen – ska jag till läkare eller klarar jag mig hemma?",
+      "2": "Mitt barn svalde lite diskmedel. Han verkar må bra, vad ska jag göra?"
     }
   },
   "aicalls": {
@@ -418,5 +434,8 @@
   "priority_mechanic": {
     "C": "C – Stör trafiken",
     "D": "D – Hindrar inte andra trafikanter"
+  },
+  "callnote": {
+    "waiting": "Flyttat till väntande efter första hanteringen"
   }
 }

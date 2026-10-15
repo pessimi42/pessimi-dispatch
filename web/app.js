@@ -109,13 +109,24 @@ function renderFilters() {
 }
 
 /* ---------- rendering: call list ---------- */
+/** Waiting = nobody assigned yet (received, waiting, units requested). */
+const isWaiting = (c) => c.status === 'received' || c.status === 'pending' || c.status === 'broadcast';
+
+/** Waiting calls first – most urgent, then oldest, on top; then calls in progress, newest
+ *  first. History: most recently closed first. */
+function sortCalls(a, b) {
+  if (S.showClosed) return (b.closedAt || 0) - (a.closedAt || 0);
+  const wa = isWaiting(a), wb = isWaiting(b);
+  if (wa !== wb) return wa ? -1 : 1;
+  if (wa) return prioIndex(a.priority) - prioIndex(b.priority) || a.createdAt - b.createdAt || a.id - b.id;
+  return b.createdAt - a.createdAt || b.id - a.id;
+}
+
 function visibleCalls() {
   return [...S.calls.values()]
     .filter((c) => (S.showClosed ? c.status === 'closed' : c.status !== 'closed'))
     .filter((c) => S.filter === 'all' || (S.filter === 'none' ? !c.service : c.service === S.filter))
-    .sort((a, b) => S.showClosed
-      ? b.closedAt - a.closedAt
-      : prioIndex(a.priority) - prioIndex(b.priority) || b.createdAt - a.createdAt);
+    .sort(sortCalls);
 }
 
 function renderCalls() {
@@ -124,14 +135,24 @@ function renderCalls() {
     $('#callList').innerHTML = `<div class="empty">${esc(t('ui.no_calls'))}</div>`;
     return;
   }
-  $('#callList').innerHTML = list.map((c) => `
+  // Group headings (waiting / in progress) on the open-calls view
+  const nWaiting = list.filter(isWaiting).length;
+  const heading = (c, i) => {
+    if (S.showClosed) return '';
+    if (i === 0 && nWaiting) return `<div class="group">${esc(t('ui.group_waiting'))} · ${nWaiting}</div>`;
+    if (!isWaiting(c) && (i === 0 || isWaiting(list[i - 1]))) {
+      return `<div class="group">${esc(t('ui.group_active'))} · ${list.length - nWaiting}</div>`;
+    }
+    return '';
+  };
+  $('#callList').innerHTML = list.map((c, i) => heading(c, i) + `
     <div class="call ${c.id === S.selected ? 'sel' : ''} ${c.status === 'closed' ? 'closed' : ''}"
          data-call="${c.id}" style="--svc:${svcColor(c.service)}">
       <div class="prio" style="--p:${prio(c.priority)?.color || '#888'}">${esc(c.priority)}</div>
       <div>
         <div class="top">
           <span class="title">#${c.id} ${esc(t(`calltype.${c.type}`))}</span>
-          <span class="tag">${c.aiCall ? `${esc(t('ui.ai_badge'))} · ` : ''}${esc(t(`call_status.${c.status}`))}</span>
+          <span class="tag st-${esc(c.status)}">${c.aiCall ? `${esc(t('ui.ai_badge'))} · ` : ''}${esc(t(`call_status.${c.status}`))}</span>
         </div>
         <div class="sub">${esc(c.street || t('ui.unknown_location'))}</div>
         <div class="sub">${esc(svcName(c.service))} · ${esc(ago(c.createdAt))}${c.units.length ? ' · ' + esc(t('ui.units_count', { n: c.units.length })) : ''}</div>
@@ -168,19 +189,29 @@ function renderDetail() {
     return `<div class="note ${esc(n.kind || '')}">${esc(text)}<small>${esc(label)}${esc(author)} · ${clock(n.at)}</small></div>`;
   }).join('');
 
+  const smsMissing = c.smsState === 'no_number' ? `
+    <label>${esc(t('ui.sms'))}</label>
+    <div class="hint">${esc(t('ui.sms_add_number'))}</div>
+    <div class="note-add">
+      <input id="phoneInput" maxlength="20" inputmode="tel" placeholder="${esc(t('ui.phone_placeholder'))}">
+      <button id="phoneSave">${esc(t('ui.save'))}</button></div>`
+    : c.smsState === 'no_phone' ? `
+    <label>${esc(t('ui.sms'))}</label>
+    <div class="hint">${esc(t('ui.sms_no_phone'))}</div>` : '';
+
   const sms = c.canSms ? `
     <label>${esc(t('ui.sms'))} · ${esc(c.caller.phone)}</label>
     <div class="sms-quick">${S.quickReplies.map((k) =>
       `<button class="chip" data-sms-key="${esc(k)}" title="${esc(t(`sms.quick.${k}`, { id: c.id }))}">${esc(t(`sms.label.${k}`))}</button>`).join('')}</div>
     <div class="note-add">
       <input id="smsInput" maxlength="250" placeholder="${esc(t('ui.sms_placeholder'))}">
-      <button id="smsSend">${esc(t('ui.send'))}</button></div>` : '';
+      <button id="smsSend">${esc(t('ui.send'))}</button></div>` : smsMissing;
 
   el.innerHTML = `
     <div class="d-head">
       <div class="prio" style="--p:${prio(c.priority)?.color || '#888'}">${esc(c.priority)}</div>
       <h1>#${c.id} ${esc(t(`calltype.${c.type}`))}</h1>
-      <span class="tag">${esc(t(`call_status.${c.status}`))}</span>
+      <span class="tag st-${esc(c.status)}">${esc(t(`call_status.${c.status}`))}</span>
       ${c.code ? `<span class="tag">${esc(c.code)}</span>` : ''}
     </div>
 
@@ -221,6 +252,7 @@ function renderDetail() {
       ${c.coords ? `<button data-act="waypoint">${esc(t('ui.waypoint'))}</button>` : ''}
       ${c.canLocate ? `<button data-act="locate">${esc(t('ui.locate'))}</button>` : ''}
       ${canAi ? `<button data-act="sendAi">${esc(t('ui.send_ai'))}</button>` : ''}
+      ${c.status === 'received' ? `<button data-act="wait">${esc(t('ui.move_to_waiting'))}</button>` : ''}
       ${closed ? '' : `<button data-act="broadcast">${esc(t('ui.broadcast'))}</button>
       <button data-act="close" class="${S.closeArmed === c.id ? 'danger' : 'warn'}">
         ${esc(S.closeArmed === c.id ? t('ui.confirm_close') : t('ui.close_call'))}</button>`}
@@ -354,6 +386,7 @@ document.addEventListener('click', (e) => {
     case 'newCallBtn': return openNewCall();
     case 'waypoint': return c && action('waypoint', c.coords);
     case 'broadcast': return c && action('broadcast', { callId: c.id });
+    case 'wait': return c && action('wait', { callId: c.id });
     case 'sendAi': return c && action('sendAi', { callId: c.id });
     case 'locate': return c && action('locate', { callId: c.id });
     case 'close':
@@ -364,6 +397,12 @@ document.addEventListener('click', (e) => {
     case 'smsSend': {
       const v = $('#smsInput').value.trim();
       if (v && c) { action('sms', { callId: c.id, text: v }); $('#smsInput').value = ''; }
+      return;
+    }
+    case 'phoneSave': {
+      const v = $('#phoneInput').value.replace(/[\s-]/g, '');
+      if (c && /^\+?\d{3,20}$/.test(v)) action('update', { callId: c.id, patch: { callerPhone: v } });
+      else $('#phoneInput').focus();
       return;
     }
     case 'noteAdd': {
@@ -409,6 +448,7 @@ document.addEventListener('keydown', (e) => {
   }
   if (e.key === 'Enter' && e.target.id === 'noteInput') $('#noteAdd').click();
   if (e.key === 'Enter' && e.target.id === 'smsInput') $('#smsSend').click();
+  if (e.key === 'Enter' && e.target.id === 'phoneInput') $('#phoneSave').click();
   if (e.key === 'Enter' && e.target.id === 'callerMsg' && !e.shiftKey) { e.preventDefault(); $('#callerSend').click(); }
 });
 
