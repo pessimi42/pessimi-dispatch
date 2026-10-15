@@ -5,6 +5,7 @@ AiCalls = { lastPlayerCall = 0 }
 
 local cfg = Config.AiCalls
 local KVP = 'aicalls:enabled'
+local KVP_FAST = 'aicalls:fast'
 
 function AiCalls.Enabled()
     local v = GetResourceKvpInt(KVP)
@@ -12,8 +13,48 @@ function AiCalls.Enabled()
     return cfg.enabled == true
 end
 
+--- Fast mode (testing): frequent AI calls, no quiet time.
+function AiCalls.Fast()
+    return GetResourceKvpInt(KVP_FAST) == 1
+end
+
+--- Timing in effect: { interval = {min, max} minutes, quietMinutes, maxOpen }
+local FAST_DEFAULTS = { interval = { 0.5, 1 }, quietMinutes = 0, maxOpen = 5 }
+
+local function timing()
+    if AiCalls.Fast() then
+        local f = cfg.fast or FAST_DEFAULTS          -- works without the config line too
+        return {
+            interval = f.interval or FAST_DEFAULTS.interval,
+            quietMinutes = f.quietMinutes or FAST_DEFAULTS.quietMinutes,
+            maxOpen = f.maxOpen or FAST_DEFAULTS.maxOpen,
+        }
+    end
+    return { interval = cfg.interval, quietMinutes = cfg.quietMinutes, maxOpen = cfg.maxOpen }
+end
+
+local nextAt = 0      -- os.time() of the next generation attempt
+
+local function scheduleNext()
+    local t = timing()
+    local minS = math.max(10, math.floor(t.interval[1] * 60))
+    local maxS = math.max(minS, math.floor(t.interval[2] * 60))
+    local wait = math.random(minS, maxS)
+    nextAt = os.time() + wait
+    Utils.Debug(('next AI call check in %d s%s'):format(wait, AiCalls.Fast() and ' (fast mode)' or ''))
+end
+
+--- Seconds until the next generation attempt.
+function AiCalls.SecondsToNext() return math.max(0, nextAt - os.time()) end
+
 local function broadcastState()
-    Dispatch.Send('client:aiCallsState', AiCalls.Enabled())
+    Dispatch.Send('client:aiCallsState', { enabled = AiCalls.Enabled(), fast = AiCalls.Fast() })
+end
+
+function AiCalls.SetFast(state)
+    SetResourceKvpInt(KVP_FAST, state and 1 or 0)
+    scheduleNext()            -- the new pace applies right away, not after the old wait
+    broadcastState()
 end
 
 function AiCalls.Set(state)
@@ -36,6 +77,21 @@ local function openCount()
 end
 
 local function pick(list) return list[math.random(#list)] end
+
+--- Where a call of this type happens: its own places if it has any (drowning by the
+--- water, config/waterside.lua), otherwise anywhere in `locations`. Own places get less
+--- random offset.
+local function locationFor(callType)
+    local own = cfg.typeLocations and cfg.typeLocations[callType]
+    if not own and callType == 'drowning' then own = Config.Waterside end
+    if own and #own > 0 then
+        local l = pick(own)
+        return { x = l.x + math.random(-3, 3), y = l.y + math.random(-3, 3), z = l.z }
+    end
+    local l = pick(cfg.locations)
+    return { x = l.x + math.random(-15, 15), y = l.y + math.random(-15, 15), z = l.z }
+end
+AiCalls.LocationFor = locationFor
 
 --- Weighted random service among enabled services someone can respond to.
 --- Weighted random service for an automatic AI call, or nil and a reason.
@@ -80,7 +136,6 @@ function AiCalls.Generate(service)
         if not service then return nil, why end
     end
     local t = pick(cfg.types[service])
-    local loc = pick(cfg.locations)
     local asSms = math.random() < cfg.smsChance
     local variant = math.random(1, 2)
 
@@ -89,7 +144,7 @@ function AiCalls.Generate(service)
         type = t.type,
         priority = t.priority or Utils.TypePriority(service, t.type),
         message = Locale.T(('aicall.%s.%d'):format(t.type, variant)),
-        coords = { x = loc.x + math.random(-15, 15), y = loc.y + math.random(-15, 15), z = loc.z },
+        coords = locationFor(t.type),
         caller = { name = pick(cfg.names), phone = randomPhone() },
         origin = asSms and 'sms' or '112',
     }, { ai = true })
@@ -112,27 +167,34 @@ end
 ---------------------------------------------------------------------------
 -- Generator loop
 ---------------------------------------------------------------------------
+--- One generation attempt (called by the loop when it's time).
+function AiCalls.Tick()
+    local t = timing()
+    local quietLeft = t.quietMinutes * 60 - (os.time() - AiCalls.lastPlayerCall)
+    if not AiCalls.Enabled() then
+        Utils.Debug('AI call skipped: AI calls are off')
+    elseif quietLeft > 0 then
+        Utils.Debug(('AI call skipped: a player called recently (%d s of quiet left)'):format(quietLeft))
+    elseif openCount() >= t.maxOpen then
+        Utils.Debug(('AI call skipped: %d AI calls already open (maxOpen)'):format(openCount()))
+    else
+        local id, why = AiCalls.Generate()
+        if not id then
+            Utils.Debug('AI call skipped:', why == 'no_dispatcher' and 'no dispatcher on duty'
+                or 'players on duty in a responding service')
+        end
+        return id
+    end
+end
+
 CreateThread(function()
     AiCalls.lastPlayerCall = os.time()
+    scheduleNext()
     while true do
-        local minS = math.max(10, math.floor(cfg.interval[1] * 60))
-        local maxS = math.max(minS, math.floor(cfg.interval[2] * 60))
-        local wait = math.random(minS, maxS)
-        Utils.Debug(('next AI call check in %d s'):format(wait))
-        Wait(wait * 1000)
-        local quietLeft = cfg.quietMinutes * 60 - (os.time() - AiCalls.lastPlayerCall)
-        if not AiCalls.Enabled() then
-            Utils.Debug('AI call skipped: AI calls are off')
-        elseif quietLeft > 0 then
-            Utils.Debug(('AI call skipped: a player called recently (%d s of quiet left)'):format(quietLeft))
-        elseif openCount() >= cfg.maxOpen then
-            Utils.Debug(('AI call skipped: %d AI calls already open (maxOpen)'):format(openCount()))
-        else
-            local id, why = AiCalls.Generate()
-            if not id then
-                Utils.Debug('AI call skipped:', why == 'no_dispatcher' and 'no dispatcher on duty'
-                    or 'players on duty in a responding service')
-            end
+        Wait(5000)
+        if os.time() >= nextAt then
+            AiCalls.Tick()
+            scheduleNext()
         end
     end
 end)
@@ -146,9 +208,69 @@ function AiCalls.CanToggle(src)
     return cfg.allowDispatchers and Dispatch.list[src] ~= nil
 end
 
+--- Why AI calls are (not) being generated right now. Returns a list of lines.
+function AiCalls.Status()
+    local t = timing()
+    local lines = {}
+    local function add(s) lines[#lines + 1] = s end
+    local blocked
+
+    add(('AI calls: %s, %s pace, next attempt in %d s'):format(
+        AiCalls.Enabled() and 'ON' or 'OFF', AiCalls.Fast() and 'fast' or 'normal', AiCalls.SecondsToNext()))
+    if not AiCalls.Enabled() then blocked = blocked or 'AI calls are switched off (/aicalls on)' end
+
+    local names = {}
+    for src, d in pairs(Dispatch.list) do names[#names + 1] = ('%s [%d]'):format(d.name or '?', src) end
+    add('Dispatchers on duty: ' .. (#names > 0 and table.concat(names, ', ') or 'none'))
+    if cfg.requireDispatcher ~= false and #names == 0 then
+        blocked = blocked or 'no dispatcher on duty (job ' .. next(Config.Dispatcher.jobs) .. ', /' .. Config.Dispatcher.dutyCommand .. ')'
+    end
+
+    local units = {}
+    for src, u in pairs(Units.list) do units[#units + 1] = ('%s: %s [%d]'):format(u.service, u.name or '?', src) end
+    add('Responder players on duty: ' .. (#units > 0 and table.concat(units, ', ') or 'none'))
+    if cfg.playersOnDuty == 'any' and #units > 0 then
+        blocked = blocked or 'responder players are on duty (playersOnDuty = any)'
+    end
+
+    local quietLeft = math.max(0, t.quietMinutes * 60 - (os.time() - AiCalls.lastPlayerCall))
+    add(('Quiet time left after the last player call: %d s'):format(quietLeft))
+    if quietLeft > 0 then blocked = blocked or ('a player called recently, %d s of quiet left'):format(quietLeft) end
+
+    add(('Open AI calls: %d / %d'):format(openCount(), t.maxOpen))
+    if openCount() >= t.maxOpen then blocked = blocked or 'too many AI calls open (close some)' end
+
+    add(blocked and ('=> NOT generating: ' .. blocked) or '=> Calls will be generated')
+    return lines, blocked
+end
+
+local function sendStatus(src)
+    local lines = AiCalls.Status()
+    for _, l in ipairs(lines) do
+        if src == 0 then
+            print(('[%s] %s'):format(Utils.Resource, l))
+        else
+            TriggerClientEvent('chat:addMessage', src, { args = { 'AI calls', l } })
+        end
+    end
+end
+
 local function toggle(src, arg)
     if not AiCalls.CanToggle(src) then
         if src ~= 0 then Notify(src, 'error.no_permission', nil, 'error') end
+        return
+    end
+    if arg == 'status' then return sendStatus(src) end
+    -- /aicalls fast | normal: testing pace (fast also switches AI calls on)
+    if arg == 'fast' or arg == 'normal' then
+        local fast = arg == 'fast'
+        if fast and not AiCalls.Enabled() then AiCalls.Set(true) end
+        AiCalls.SetFast(fast)
+        if src ~= 0 then
+            Notify(src, fast and 'aicalls.fast_on' or 'aicalls.fast_off', nil, 'inform')
+        else
+            print(('[%s] AI calls: %s pace'):format(Utils.Resource, fast and 'fast' or 'normal'))
+        end
         return
     end
     local state

@@ -5,6 +5,7 @@
 Scenes = { active = {} }   -- [callId] = scene
 
 local cfg = Config.Scenes
+local waterTypes = cfg.waterTypes or { drowning = true }   -- works without the config line too
 
 local function kindFor(call)
     return call and call._ai and cfg.kinds[call.type] or nil
@@ -66,6 +67,7 @@ local function spawn(scene, call, host)
         vehicle = scene.vehModel,
         handled = scene.handled,
         fireRadius = cfg.fireRadius,
+        atWater = scene.atWater or nil,
     })
 end
 
@@ -80,6 +82,7 @@ function Scenes.Watch()
                 scene = {
                     callId = call.id, kind = kind, netIds = {}, handled = false,
                     pedModel = pick(cfg.peds), vehModel = pick(cfg.vehicles),
+                    atWater = waterTypes[call.type] == true,
                 }
                 local host = nearestPlayer(call.coords, cfg.spawnRange)
                 if host then
@@ -105,9 +108,11 @@ end)
 RegisterNetEvent(Ev('server:sceneSpawned'), function(callId, pedNetId, netIds, at)
     local scene = Scenes.active[tonumber(callId)]
     if not scene or scene.host ~= source or type(netIds) ~= 'table' then return end
-    -- The host moved the NPC to a walkable spot; use where it really is (E-prompt range check)
+    -- The host moved the NPC to a walkable spot (or the shoreline); use where it really is
+    -- (E-prompt range check)
     at = Utils.Coords(at)
-    if at and scene.coords and Utils.Distance2D(at, scene.coords) < 40.0 then scene.coords = at end
+    local maxMove = scene.atWater and 120.0 or 40.0
+    if at and scene.coords and Utils.Distance2D(at, scene.coords) < maxMove then scene.coords = at end
     Utils.Debug(('scene %s spawned for call #%d by player %d'):format(scene.kind, scene.callId, source))
     scene.netIds = {}
     for _, n in ipairs(netIds) do

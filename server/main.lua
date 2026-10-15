@@ -64,9 +64,11 @@ end)
 -- Automatic alerts from client scripts (exports.pessimi42_dispatch:CreateAlert)
 RegisterNetEvent(Ev('server:clientAlert'), function(data)
     local src = source
-    if not Config.ClientAlerts.enabled or type(data) ~= 'table' then return end
+    local cfg = Config.ClientAlerts
+    if not cfg.enabled or type(data) ~= 'table' then return end
     local t = os.time()
-    if alertCooldown[src] and t - alertCooldown[src] < Config.ClientAlerts.cooldown then return end
+    if alertCooldown[src] and t - alertCooldown[src] < cfg.cooldown then return end
+    if not Calls.UnderLimit('alert', cfg.maxPerMinute or 30) then return end
     alertCooldown[src] = t
 
     Calls.Create({
@@ -76,7 +78,8 @@ RegisterNetEvent(Ev('server:clientAlert'), function(data)
         message = data.message,
         information = data.information,
         code = data.code,
-        coords = data.coords or playerCoords(src),
+        -- the player's game may lie: only accept a position near where they really are
+        coords = Calls.TrustedCoords(src, data.coords, cfg.maxDistance),
         street = data.street,
         origin = 'alert',
     })
@@ -116,7 +119,8 @@ local actions = {
         local status = Utils.ResolveStatus(p.status)
         if status then Units.SetStatus(tonumber(p.unit), status) end
     end,
-    createCall = function(_, p)
+    createCall = function(src, p)
+        if not Calls.Cooldown('create:' .. src, Config.Dispatcher.createCooldown or 3) then return end
         Calls.Create({
             service = p.service, type = p.type, priority = p.priority,
             message = p.message, coords = p.coords, street = p.street,

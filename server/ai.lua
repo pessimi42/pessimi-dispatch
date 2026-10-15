@@ -112,7 +112,7 @@ local function startVirtualTravel(a)
     a.travelToken = token
     SetTimeout(cfg.virtualTravelSeconds * 1000, function()
         local cur = Ai.active[a.id]
-        if cur and cur.travelToken == token and not cur.host then Ai.Arrived(a.id) end
+        if cur and cur.travelToken == token and (not cur.host or cur.unverifiedArrival) then Ai.Arrived(a.id) end
     end)
 end
 
@@ -338,9 +338,33 @@ RegisterNetEvent(Ev('server:aiSpawned'), function(id, netIds)
     end
 end)
 
+--- Is the unit's vehicle or crew really at the scene? Checked on the server: the host's
+--- game could otherwise report arrival at once (e.g. an instant NPC revive).
+local function reallyThere(a)
+    local call = Calls.Get(a.callId)
+    if not call or not call.coords then return false end
+    local limit = (cfg.arriveDistance or 30.0) + 40.0
+    for _, netId in ipairs(a.netIds or {}) do
+        local ent = NetworkGetEntityFromNetworkId(netId)
+        if ent and ent ~= 0 and DoesEntityExist(ent)
+            and Utils.Distance2D(GetEntityCoords(ent), call.coords) <= limit then
+            return true
+        end
+    end
+    return false
+end
+
 RegisterNetEvent(Ev('server:aiArrived'), function(id)
     local a = Ai.active[tonumber(id)]
-    if a and a.host == source then Ai.Arrived(a.id) end
+    if not a or a.host ~= source or a.status ~= 'enroute' then return end
+    if reallyThere(a) then return Ai.Arrived(a.id) end
+    -- Not near the scene as far as the server can see: don't trust the report. The unit
+    -- finishes the trip on the server's own timer instead.
+    Utils.Debug(('NPC unit %d: arrival reported by player %d but not on scene, travelling on'):format(a.id, source))
+    if not a.unverifiedArrival then
+        a.unverifiedArrival = true
+        startVirtualTravel(a)
+    end
 end)
 
 --- Host could not spawn (model missing, no road found): continue virtually.

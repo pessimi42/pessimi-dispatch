@@ -1,6 +1,6 @@
 # pessimi42_dispatch – Emergency dispatcher (112)
 
-> **Beta (0.8.0-beta).** Core features work, but it has not been battle-tested on live
+> **Beta (0.8.1-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
 A dispatcher job for FiveM that runs on **Qbox, QBCore and ESX** (or standalone with ACE
@@ -81,7 +81,16 @@ breakdowns and more, at locations around the map, from callers with names and nu
 - About a quarter arrive as texts. When the dispatcher texts an AI caller, the caller
   answers. Nothing is sent to real phones.
 - AI calls are marked **AI** on the panel (`showBadge = false` hides it).
+- Drowning calls come from waterside spots – beaches, the Alamo Sea, rivers, lakes and
+  canals (`config/waterside.lua`) – and the patient is found on the shoreline. Any call type
+  can have its own places with `typeLocations`.
 - **Create one now:** `/aicall [police|ems|fire|mechanic]` (same permission as the switch).
+
+**Testing:** `/aicalls fast` switches to a fast pace – an AI call every 30–60 seconds with
+no quiet time (`Config.AiCalls.fast`) – and `/aicalls normal` switches back. The panel shows
+"AI calls: On (fast)" while it's on, and it's remembered across restarts.
+`/aicalls status` shows in the chat whether calls are being generated, and if not, why
+(AI calls off, no dispatcher on duty, responder players on duty, quiet time, too many open).
 
 Everything is configurable in `Config.AiCalls`: timings, services and their weights, call
 types and priorities, caller names and locations. Caller messages are in the locale files

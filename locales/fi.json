@@ -62,7 +62,8 @@
     "locate": "Paikanna ilmoittaja",
     "tracking": "Seuranta päällä",
     "located": "paikannettu {ago}",
-    "system": "Järjestelmä"
+    "system": "Järjestelmä",
+    "fast": "tiheä"
   },
   "caller": {
     "title": "Hätänumero 112",
@@ -393,7 +394,9 @@
     "on": "AI-ilmoitukset ovat päällä.",
     "off": "AI-ilmoitukset ovat pois päältä.",
     "generated": "Testi-ilmoitus #{id} luotu.",
-    "not_generated": "Ilmoitusta ei voitu luoda: kukaan ei voi vastata siihen."
+    "not_generated": "Ilmoitusta ei voitu luoda: kukaan ei voi vastata siihen.",
+    "fast_on": "AI-ilmoitukset: tiheä tahti testaukseen (30–60 s välein).",
+    "fast_off": "AI-ilmoitukset: normaali tahti."
   },
   "loc": {
     "note_located": "Ilmoittaja paikannettu."

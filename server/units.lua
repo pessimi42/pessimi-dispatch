@@ -195,6 +195,6 @@ function Dispatch.SendState(src)
     for _, c in pairs(Calls.list) do calls[#calls + 1] = Calls.Public(c) end
     TriggerClientEvent(Ev('client:state'), src, {
         calls = calls, units = Units.All(), sms = Sms.Available(),
-        aiCalls = AiCalls.Enabled(), canToggleAiCalls = AiCalls.CanToggle(src),
+        aiCalls = AiCalls.Enabled(), aiCallsFast = AiCalls.Fast(), canToggleAiCalls = AiCalls.CanToggle(src),
     })
 end

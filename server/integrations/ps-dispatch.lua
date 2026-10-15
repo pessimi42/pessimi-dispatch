@@ -36,8 +36,12 @@ if cfg.inbound then
         if type(data) ~= 'table' or data.pessimi42Origin then return end
         if cfg.enabled == 'auto' and not active() then return end
         if data.codeName and Utils.Contains(cfg.ignoreCodeNames, data.codeName) then return end
+        -- Any player can send this event: limit how often, and check the position
+        if src and src > 0 and not Calls.Cooldown('psd:' .. src, cfg.inboundCooldown or 3) then return end
+        if not Calls.UnderLimit('alert', Config.ClientAlerts.maxPerMinute or 30) then return end
 
-        local coords = data.coords or (src and src > 0 and GetEntityCoords(GetPlayerPed(src)))
+        local coords = data.coords
+        if src and src > 0 then coords = Calls.TrustedCoords(src, data.coords, Config.ClientAlerts.maxDistance) end
         Calls.Create({
             service = mapService(data.jobs),
             type = 'general',

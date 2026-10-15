@@ -63,6 +63,52 @@ local function prune()
 end
 
 ---------------------------------------------------------------------------
+-- Guards for what players' games send (they can send anything)
+---------------------------------------------------------------------------
+local lastHit, windows = {}, {}
+
+--- false if `key` was let through less than `seconds` ago (per-player cooldowns).
+function Calls.Cooldown(key, seconds)
+    local t = now()
+    if lastHit[key] and t - lastHit[key] < (seconds or 0) then return false end
+    lastHit[key] = t
+    return true
+end
+
+--- false once `max` events of this kind have been let through in the last minute,
+--- counting every player together (stops a flood from many accounts).
+function Calls.UnderLimit(bucket, max)
+    if not max or max <= 0 then return true end
+    local t, w = now(), windows[bucket] or {}
+    local keep = {}
+    for _, at in ipairs(w) do if t - at < 60 then keep[#keep + 1] = at end end
+    if #keep >= max then windows[bucket] = keep return false end
+    keep[#keep + 1] = t
+    windows[bucket] = keep
+    return true
+end
+
+--- Coordinates a player's game reported, accepted only near where the server sees that
+--- player; otherwise the player's real position.
+function Calls.TrustedCoords(src, claimed, maxDistance)
+    local ped = src and src > 0 and GetPlayerPed(src)
+    local real = ped and ped ~= 0 and Utils.Coords(GetEntityCoords(ped)) or nil
+    claimed = Utils.Coords(claimed)
+    if claimed and real and Utils.Distance2D(real, claimed) <= (maxDistance or 150.0) then return claimed end
+    if claimed and real then
+        Utils.Debug(('player %d reported coords %.0f m away, using their position'):format(src, Utils.Distance2D(real, claimed)))
+    end
+    return real
+end
+
+AddEventHandler('playerDropped', function()
+    local src = source
+    for key in pairs(lastHit) do
+        if type(key) == 'string' and key:match(':' .. src .. '$') then lastHit[key] = nil end
+    end
+end)
+
+---------------------------------------------------------------------------
 -- Create
 ---------------------------------------------------------------------------
 --[[ data:
@@ -210,6 +256,8 @@ function Calls.AddNote(id, text, author, kind)
     local call = Calls.Get(id)
     text = Utils.Sanitize(text, 300)
     if not call or not text then return false end
+    local max = Config.Calls.maxNotes or 100
+    while #call.notes >= max do table.remove(call.notes, 1) end    -- oldest go first
     call.notes[#call.notes + 1] = { text = text, author = Utils.Sanitize(author, 60), at = now(), kind = kind }
     changed(call, 'updated')
     return true

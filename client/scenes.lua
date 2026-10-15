@@ -46,16 +46,89 @@ local function ground(x, y, z)
     return z, false
 end
 
---- A walkable spot near c: on the navmesh (pavement, not inside a building or on a
---- roof), with a real ground height.
+--- Street level near x,y: the closest road node (nil if there is none within 60 m).
+local function streetNode(x, y, z)
+    local found, node = GetClosestVehicleNode(x, y, z, 1, 3.0, 0)
+    if found and #(vector2(node.x, node.y) - vector2(x, y)) < 60.0 then return node end
+    return nil
+end
+
+--- On a roof (or a balcony, a bridge deck…): clearly higher than the nearest street,
+--- allowing for hillsides.
+local function isRooftop(p)
+    local node = streetNode(p.x, p.y, p.z)
+    if not node then return false end
+    local dist = #(vector2(node.x, node.y) - vector2(p.x, p.y))
+    return p.z - node.z > 3.0 + dist * 0.2
+end
+
+--- The pavement next to the nearest road: the fallback when nothing better is found.
+local function roadside(c)
+    local node = streetNode(c.x, c.y, c.z)
+    if not node then return nil end
+    local ok, pos = GetPointOnRoadSide(node.x, node.y, node.z, -1)
+    if ok and pos then return vector3(pos.x, pos.y, ground(pos.x, pos.y, pos.z)) end
+    return vector3(node.x, node.y, node.z)
+end
+
+--- A walkable spot near c at street level: on the navmesh (pavement, not inside a building),
+--- never on a roof, with a real ground height.
 local function spot(c)
     local gz = ground(c.x, c.y, c.z)
-    local found, safe = GetSafeCoordForPed(c.x, c.y, gz, false, 16)
+    local found, safe = GetSafeCoordForPed(c.x, c.y, gz, true, 16)      -- true: ground level only
     if found and #(vector2(safe.x, safe.y) - vector2(c.x, c.y)) < 25.0 then
-        local sz = ground(safe.x, safe.y, safe.z)
-        return vector3(safe.x, safe.y, sz)
+        local p = vector3(safe.x, safe.y, ground(safe.x, safe.y, safe.z))
+        if not isRooftop(p) then return p end
     end
-    return vector3(c.x, c.y, gz)
+    local p = vector3(c.x, c.y, gz)
+    if not isRooftop(p) then return p end
+    debug(('rooftop at %.1f %.1f, using the street instead'):format(c.x, c.y))
+    return roadside(c) or p
+end
+
+--- Top ground height at x,y (collision must already be loaded), or nil.
+local function groundTop(x, y)
+    local ok, gz = GetGroundZFor_3dCoord(x, y, 1000.0, false)
+    return ok and gz or nil
+end
+
+--- Water surface height at x,y near height z: sea and lakes, then rivers. Or nil.
+local function waterAt(x, y, z)
+    local ok, wz = GetWaterHeightNoWaves(x, y, z + 5.0)
+    if ok then return wz end
+    local good, hit, rz = pcall(TestVerticalProbeAgainstAllWater, x, y, z + 5.0, 0)
+    if good and hit and hit ~= 0 and type(rz) == 'number' then return rz end
+    return nil
+end
+
+--- Dry ground right next to water (beach, lake shore, river bank), nearest to c within
+--- 100 m. The config z is not needed. Returns the spot and the heading towards the water,
+--- or nil.
+local function shoreSpot(c)
+    RequestCollisionAtCoord(c.x, c.y, c.z)
+    Wait(500)
+    for r = 0, 100, 4 do
+        local steps = r == 0 and 1 or math.max(8, math.floor(r * 0.8))
+        for i = 0, steps - 1 do
+            local a = i / steps * 2.0 * math.pi
+            local x, y = c.x + math.cos(a) * r, c.y + math.sin(a) * r
+            local gz = groundTop(x, y)
+            local wz = gz and waterAt(x, y, gz)
+            if gz and not (wz and wz > gz - 0.2) then           -- dry here
+                for k = 0, 7 do                                   -- water within 6 m, at about the same height?
+                    local b = k / 8 * 2.0 * math.pi
+                    local nx, ny = x + math.cos(b) * 6.0, y + math.sin(b) * 6.0
+                    local ngz = groundTop(nx, ny)
+                    local nwz = waterAt(nx, ny, ngz or gz)
+                    if nwz and (not ngz or nwz > ngz + 0.3) and math.abs(nwz - gz) < 2.5 then
+                        return vector3(x, y, gz), (math.deg(b) - 90.0) % 360.0
+                    end
+                end
+            end
+        end
+        Wait(0)
+    end
+    return nil
 end
 
 local function makePed(hash, x, y, z, heading)
@@ -98,6 +171,7 @@ end
 local builders = {}
 
 function builders.patient(d, c)
+    if d.atWater then return builders.drowning(d, c) end
     c = spot(c)
     local ped = makePed(d.pedHash, c.x, c.y, c.z, math.random(0, 359) + 0.0)
     if not ped then return nil end
@@ -107,6 +181,31 @@ function builders.patient(d, c)
     if bystander then
         TaskTurnPedToFaceEntity(bystander, ped, 1000)
         TaskStartScenarioInPlace(bystander, 'WORLD_HUMAN_STAND_MOBILE', 0, true)
+    end
+    return ped, nil, { bystander }
+end
+
+--- Drowning: pulled out of the water onto the shore, soaking wet and unconscious, with
+--- the caller kneeling next to them giving first aid.
+function builders.drowning(d, c)
+    local shore, heading = shoreSpot(c)
+    if not shore then debug('no shoreline near the drowning call, using the nearest walkable spot') end
+    c = shore or spot(c)
+    local ped = makePed(d.pedHash, c.x, c.y, c.z, heading or 0.0)
+    if not ped then return nil end
+    SetPedWetnessHeight(ped, 2.0)
+    lieDown(ped, true)
+    local bx, by = c.x + 0.9, c.y + 0.6
+    if heading then                                 -- on the land side of the patient
+        local h = math.rad(heading + 90.0)
+        bx, by = c.x - math.cos(h) * 1.0, c.y - math.sin(h) * 1.0
+    end
+    local bystander = makePed(d.pedHash2, bx, by, c.z, 0.0)
+    if bystander then
+        SetPedWetnessHeight(bystander, 1.0)
+        TaskTurnPedToFaceEntity(bystander, ped, 1000)
+        Wait(1000)
+        TaskStartScenarioInPlace(bystander, 'CODE_HUMAN_MEDIC_KNEEL', 0, true)
     end
     return ped, nil, { bystander }
 end
@@ -168,18 +267,23 @@ function builders.carfire(d, c)
         SetVehicleEngineHealth(veh, 50.0)
         StartEntityFire(veh)
     end
-    local ped = makePed(d.pedHash, c.x + 12.0, c.y + 6.0, c.z, 0.0)
+    local base = veh and GetEntityCoords(veh) or c
+    local at = spot(vector3(base.x + 12.0, base.y + 6.0, base.z))
+    local ped = makePed(d.pedHash, at.x, at.y, at.z, 0.0)
     if not ped then return nil, veh end
     TaskStartScenarioInPlace(ped, 'WORLD_HUMAN_STAND_MOBILE', 0, true)
     return ped, veh, {}
 end
 
 function builders.fire(d, c)
+    c = spot(c)
     for _ = 1, 4 do
         local x, y = c.x + math.random(-8, 8), c.y + math.random(-8, 8)
-        StartScriptFire(x, y, ground(x, y, c.z), 25, false)
+        local f = vector3(x, y, ground(x, y, c.z))
+        if not isRooftop(f) then StartScriptFire(f.x, f.y, f.z, 25, false) end
     end
-    local ped = makePed(d.pedHash, c.x + 18.0, c.y + 10.0, c.z, 0.0)
+    local at = spot(vector3(c.x + 18.0, c.y + 10.0, c.z))
+    local ped = makePed(d.pedHash, at.x, at.y, at.z, 0.0)
     if not ped then return nil, veh end
     TaskStartScenarioInPlace(ped, 'WORLD_HUMAN_STAND_MOBILE', 0, true)
     return ped, nil, {}

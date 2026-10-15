@@ -98,6 +98,7 @@ function Sms.Incoming(number, text)
 
     local open = openCallFor(number, src)
     if open then
+        if not Calls.Cooldown('smsnote:' .. number, Config.Sms.noteCooldown or 3) then return open.id end
         Calls.AddNote(open.id, text, name or number, 'sms_in')
         return open.id
     end

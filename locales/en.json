@@ -62,7 +62,8 @@
     "locate": "Locate caller",
     "tracking": "Tracking caller",
     "located": "located {ago}",
-    "system": "System"
+    "system": "System",
+    "fast": "fast"
   },
   "caller": {
     "title": "Emergency number 112",
@@ -393,7 +394,9 @@
     "on": "AI calls are on.",
     "off": "AI calls are off.",
     "generated": "Test call #{id} created.",
-    "not_generated": "Could not create a call: nobody can respond to it."
+    "not_generated": "Could not create a call: nobody can respond to it.",
+    "fast_on": "AI calls: fast pace for testing (every 30–60 s).",
+    "fast_off": "AI calls: normal pace."
   },
   "loc": {
     "note_located": "Caller located."

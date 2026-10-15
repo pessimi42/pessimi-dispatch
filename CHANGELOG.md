@@ -1,5 +1,66 @@
 # Changelog
 
+## v0.8.1-beta – Security fixes, fast AI calls, drowning by the water (2026-10-15)
+
+Security fixes, AI calls at a fast pace for testing, and drowning calls by the water.
+Still a beta – please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
+
+### New
+
+- **Fast AI calls for testing.** `/aicalls fast` switches AI calls to a fast pace – one
+  every 30–60 seconds, with no quiet time after player calls and up to 5 open at once – and
+  `/aicalls normal` switches back. It takes effect right away, also switches AI calls on,
+  is remembered across restarts and shows as "AI calls: On (fast)" in the panel. The other
+  rules still apply (a dispatcher on duty, no responder players); `Config.TestMode` remains
+  for testing without them. Timings in `Config.AiCalls.fast`.
+- **`/aicalls status`** – shows in the chat (or the server console) whether AI calls are
+  being generated right now and, if not, the reason: switched off, no dispatcher on duty,
+  responder players on duty (with their names), quiet time after a player call, or too
+  many open.
+
+### Fixed
+
+- **Drowning calls happen by the water.** AI drowning calls used to come from random street
+  corners. They now come from 115 waterside spots taken from the map – beaches, the rocky
+  coast, the Alamo Sea, the Zancudo and Raton Canyon rivers, Vinewood Lake, Land Act
+  Reservoir, Mirror Park and the Vespucci canals (`config/waterside.lua`). The scene is built
+  on the nearest dry shoreline within 100 m: the patient lies soaking wet and unconscious,
+  with the caller kneeling next to them giving first aid (`Config.Scenes.waterTypes`).
+  `Config.AiCalls.typeLocations` gives any call type its own places.
+- **No more NPCs on rooftops.** Scene NPCs (patients, witnesses, callers) and fires could
+  end up on a roof next to the call. Every spot is now checked against the street level of
+  the nearest road; a spot clearly above it is moved to the pavement instead.
+
+### Security
+
+- **Alerts from players' games are checked.** Script alerts (`CreateAlert`) and alerts
+  arriving through ps-dispatch could be sent by anyone with a mod menu, with any position
+  and – for ps-dispatch – without any limit. Now a reported position more than 150 m from
+  where the server sees the player is replaced with their real position, ps-dispatch
+  alerts have a per-player cooldown, and all alerts together are limited to 30 a minute
+  (`Config.ClientAlerts.maxDistance`, `maxPerMinute`; `inboundCooldown` in
+  `config/integrations.lua`).
+- **NPC units must really arrive.** The player whose game drives an NPC unit could report
+  it on scene at once, so an NPC medic revived without travelling. The server now checks
+  that the unit's vehicle or crew is at the scene; if not, the unit finishes the trip on
+  the server's own timer.
+- **Limits against spam:** texts to an open call at most every 3 seconds per number
+  (`Config.Sms.noteCooldown`), at most 100 notes per call (oldest go first,
+  `Config.Calls.maxNotes`), and one call every 3 seconds per dispatcher
+  (`Config.Dispatcher.createCooldown`).
+
+### Upgrading from 0.8.0-beta
+
+Replace the resource folder. If you changed `config/config.lua`, add
+`fast = { interval = { 0.5, 1 }, quietMinutes = 0, maxOpen = 5 },` to `Config.AiCalls`
+(optional – these are also the defaults). The same goes for `typeLocations = {}` in
+`Config.AiCalls` and `waterTypes = { drowning = true }` in `Config.Scenes`. The waterside
+spots are in the new file `config/waterside.lua`. The new security settings (`maxPerMinute`
+and `maxDistance` in `Config.ClientAlerts`, `noteCooldown` in `Config.Sms`, `createCooldown`
+in `Config.Dispatcher`, `maxNotes` in `Config.Calls`, `inboundCooldown` for ps-dispatch) have
+the same defaults built in. Locale files have new keys `ui.fast`,
+`aicalls.fast_on` and `aicalls.fast_off`.
+
 ## v0.8.0-beta – EMS task classes, roadside C/D (2026-10-14)
 
 EMS calls use task classes modelled on the Finnish emergency response centre, each with a

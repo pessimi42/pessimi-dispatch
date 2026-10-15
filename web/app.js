@@ -33,6 +33,7 @@ const S = {
   aiServices: [],
   aiOnlyWhenNoneOnDuty: true,
   aiCalls: false,
+  aiCallsFast: false,
   canToggleAiCalls: false,
   fallbackService: 'police',
 };
@@ -100,7 +101,7 @@ function renderFilters() {
   const ai = $('#aiCallsBtn');
   ai.classList.toggle('hidden', !S.canToggleAiCalls);
   ai.classList.toggle('on', S.aiCalls);
-  ai.textContent = `${t('ui.ai_calls')}: ${t(S.aiCalls ? 'ui.on' : 'ui.off')}`;
+  ai.textContent = `${t('ui.ai_calls')}: ${t(S.aiCalls ? 'ui.on' : 'ui.off')}${S.aiCalls && S.aiCallsFast ? ` (${t('ui.fast')})` : ''}`;
 
   const sel = $('#langSelect');
   sel.classList.toggle('hidden', S.languages.length < 2);
@@ -435,14 +436,18 @@ const handlers = {
     S.calls = new Map(st.calls.map((c) => [c.id, c]));
     S.units = new Map(st.units.map((u) => [u.src, u]));
     S.sms = !!st.sms;
-    S.aiCalls = !!st.aiCalls; S.canToggleAiCalls = !!st.canToggleAiCalls;
+    S.aiCalls = !!st.aiCalls; S.aiCallsFast = !!st.aiCallsFast; S.canToggleAiCalls = !!st.canToggleAiCalls;
     if (!S.calls.has(S.selected)) S.selected = null;
     renderPanel();
   },
   callChanged({ call }) { S.calls.set(call.id, call); renderCalls(); renderUnits(); if (call.id === S.selected) renderDetail(); },
   unitChanged(u) { S.units.set(u.src, u); renderUnits(); if (S.selected) renderDetail(); },
   unitRemoved(src) { S.units.delete(src); renderUnits(); },
-  aiCallsState(state) { S.aiCalls = !!state; renderFilters(); },
+  aiCallsState(state) {
+    if (typeof state === 'object' && state) { S.aiCalls = !!state.enabled; S.aiCallsFast = !!state.fast; }
+    else S.aiCalls = !!state;
+    renderFilters();
+  },
   myCall(c) { S.myCall = c; renderHud(); },
   myStatus(d) { S.myStatus = d.status; S.myCallsign = d.callsign; renderHud(); },
   toast,

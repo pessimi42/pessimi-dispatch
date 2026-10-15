@@ -62,7 +62,8 @@
     "locate": "Lokalisera anmälaren",
     "tracking": "Spårning på",
     "located": "lokaliserad {ago}",
-    "system": "System"
+    "system": "System",
+    "fast": "tät"
   },
   "caller": {
     "title": "Nödnummer 112",
@@ -393,7 +394,9 @@
     "on": "AI-samtal är på.",
     "off": "AI-samtal är av.",
     "generated": "Testsamtal #{id} skapat.",
-    "not_generated": "Kunde inte skapa ett samtal: ingen kan svara på det."
+    "not_generated": "Kunde inte skapa ett samtal: ingen kan svara på det.",
+    "fast_on": "AI-samtal: tätt tempo för test (var 30–60 s).",
+    "fast_off": "AI-samtal: normalt tempo."
   },
   "loc": {
     "note_located": "Anmälaren lokaliserad."

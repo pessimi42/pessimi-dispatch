@@ -30,6 +30,7 @@ Config.Dispatcher = {
     command = 'dispatch',        -- opens the panel
     key = 'F6',                  -- default key, players can rebind in GTA settings
     dutyCommand = 'dispatchduty',
+    createCooldown = 3,          -- seconds between calls one dispatcher can create
 }
 
 ---------------------------------------------------------------------------
@@ -62,6 +63,7 @@ Config.Sms = {
     maxLength = 250,
     incoming = true,             -- texts to Config.Phone.number create calls or are added to the caller's open call
     incomingCooldown = 10,       -- seconds between texts that create a NEW call (per number)
+    noteCooldown = 3,            -- seconds between texts added to an open call (per number)
     -- Automatic texts to the caller
     auto = {
         received = true,         -- "Your call has been received"
@@ -176,6 +178,10 @@ Config.AiCalls = {
     quietMinutes = 5,            -- generate only when no player has called or texted 112 for this long
     interval = { 3, 8 },         -- minutes between generated calls (random in range)
     maxOpen = 3,                 -- open AI calls at the same time
+    -- Fast mode for testing: /aicalls fast (back with /aicalls normal). Uses these instead of
+    -- interval / quietMinutes / maxOpen; the other rules (dispatcher on duty, no responder
+    -- players) still apply. Remembered across restarts until switched back.
+    fast = { interval = { 0.5, 1 }, quietMinutes = 0, maxOpen = 5 },
     smsChance = 0.25,            -- share of AI calls that arrive as a text instead of a phone call
     replyToSms = true,           -- the "caller" answers the dispatcher's texts
     showBadge = true,            -- mark AI calls with an "AI" tag on the panel
@@ -235,6 +241,11 @@ Config.AiCalls = {
         vector3(1197.7, 2705.6, 38.2),   vector3(-158.6, 6327.2, 31.6),  vector3(2557.3, 382.1, 108.6),
         vector3(-2072.6, -312.7, 13.3),  vector3(287.8, -585.1, 43.2),   vector3(-622.5, -232.9, 38.1),
     },
+
+    -- Call types that only happen in certain places, used instead of `locations`.
+    -- Drowning calls use the waterside spots in config/waterside.lua unless you list your own:
+    --   typeLocations = { drowning = { vector3(-1462.0, -1395.0, 3.0), ... } },
+    typeLocations = {},
 }
 
 ---------------------------------------------------------------------------
@@ -264,6 +275,9 @@ Config.Scenes = {
         breakdown = 'breakdown', tow = 'breakdown', flat_tyre = 'breakdown',
     },
 
+    -- Call types whose NPC is placed on the shoreline next to water (wet, with a bystander giving first aid)
+    waterTypes = { drowning = true },
+
     -- Which units can interact with each kind (E prompt). Fires are handled by putting them out.
     interact = {
         patient = { 'ems' }, crash = { 'ems' },
@@ -282,6 +296,9 @@ Config.Scenes = {
 Config.ClientAlerts = {
     enabled = true,
     cooldown = 5,                -- seconds per player
+    maxPerMinute = 30,           -- all players together (also ps-dispatch alerts); 0 = no limit
+    maxDistance = 150.0,         -- a reported position further than this from the player is
+                                 -- replaced with where the player really is
 }
 
 -- What happens to new calls when nobody is on duty as a dispatcher
@@ -338,6 +355,7 @@ Config.DefaultPriority = 'C'
 Config.Calls = {
     autoCloseMinutes = 45,       -- close calls nobody has touched for this long (0 = never)
     keepClosed = 25,             -- closed calls kept in memory for the history view
+    maxNotes = 100,              -- notes per call; the oldest go when there are more
 }
 
 Config.Sounds = {
