@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Licence changed from AGPL-3.0 to GPL-3.0.** Releases up to 0.9.0-beta remain AGPL-3.0.
+
 ## v0.9.0-beta – Saved calls, Advice service, received/waiting calls (2026-10-15)
 
 Calls survive restarts, a new Advice service for calls handled on the phone, and a call flow

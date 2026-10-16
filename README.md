@@ -270,6 +270,7 @@ Client exports: `CreateAlert, OpenCallerForm, IsDispatcher, GetService, GetMyCal
 
 ## License
 
-[AGPL-3.0](LICENSE). You may use and modify this resource; if you distribute it or run a
-modified version on a server others play on, you must make your source code available
-under the same licence.
+[GPL-3.0](LICENSE). You may use, modify and share this resource. If you distribute it or a
+modified version, you must make the source code available under the same licence. Running
+it on your own server is not distribution. Releases up to 0.9.0-beta were published under
+AGPL-3.0.
