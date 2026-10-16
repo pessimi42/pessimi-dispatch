@@ -61,7 +61,7 @@ RegisterNetEvent(Ev('server:emergencyCall'), function(data)
     }, { smsReceived = true })
 end)
 
--- Automatic alerts from client scripts (exports.pessimi42_dispatch:CreateAlert)
+-- Automatic alerts from client scripts (exports['pessimi-dispatch']:CreateAlert)
 RegisterNetEvent(Ev('server:clientAlert'), function(data)
     local src = source
     local cfg = Config.ClientAlerts

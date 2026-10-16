@@ -1,22 +1,22 @@
 --[[ Server exports – the integration surface for MDTs, police/EMS dispatch
   scripts and job scripts. Example:
 
-    local id = exports.pessimi42_dispatch:CreateCall({
+    local id = exports['pessimi-dispatch']:CreateCall({
         service = 'ems', type = 'unconscious', priority = 'A',
         message = 'Person collapsed at the gym', coords = coords,
     })
 
   Server events you can listen to (AddEventHandler, same server):
-    pessimi42_dispatch:onCallCreated   (call)
-    pessimi42_dispatch:onCallUpdated   (call)
-    pessimi42_dispatch:onCallClosed    (call)
-    pessimi42_dispatch:onUnitAssigned  (callId, src)
-    pessimi42_dispatch:onUnitUnassigned(callId, src)
-    pessimi42_dispatch:onUnitStatus    (src, status)
-    pessimi42_dispatch:onUnitAdded     (src, service)
-    pessimi42_dispatch:onUnitRemoved   (src)
-    pessimi42_dispatch:onAiSent        (callId, aiId, service)
-    pessimi42_dispatch:onSceneHandled  (callId, kind, by)
+    pessimi-dispatch:onCallCreated   (call)
+    pessimi-dispatch:onCallUpdated   (call)
+    pessimi-dispatch:onCallClosed    (call)
+    pessimi-dispatch:onUnitAssigned  (callId, src)
+    pessimi-dispatch:onUnitUnassigned(callId, src)
+    pessimi-dispatch:onUnitStatus    (src, status)
+    pessimi-dispatch:onUnitAdded     (src, service)
+    pessimi-dispatch:onUnitRemoved   (src)
+    pessimi-dispatch:onAiSent        (callId, aiId, service)
+    pessimi-dispatch:onSceneHandled  (callId, kind, by)
   (the prefix is the resource name)
 ]]
 

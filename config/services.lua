@@ -1,7 +1,7 @@
 -- Every emergency service is just a table here. Adding a new one (coast guard,
 -- security, taxi...) needs a new entry plus `service.<id>` and its call types in
 -- the locale files. Other resources can also add services at runtime with
--- exports.pessimi42_dispatch:RegisterService(id, definition).
+-- exports['pessimi-dispatch']:RegisterService(id, definition).
 --
 -- jobs       [framework job name] = minimum grade that counts as a unit
 -- notify     how units of this service are alerted: 'native' (built-in toast)

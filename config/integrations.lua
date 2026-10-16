@@ -12,7 +12,7 @@ Integrations = {
         enabled = 'auto',
         inbound = true,
         outbound = true,
-        codeName = 'pessimi42_dispatch',             -- add a Config.Blips entry with this name in ps-dispatch for a custom blip
+        codeName = 'pessimi-dispatch',             -- add a Config.Blips entry with this name in ps-dispatch for a custom blip
         ignoreCodeNames = { 'platecheck' },   -- inbound alerts to skip
         inboundCooldown = 3,                  -- seconds per player (anyone can send these)
         -- ps-dispatch `jobs` entries -> our service ids

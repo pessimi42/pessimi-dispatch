@@ -8,7 +8,7 @@ if not cfg or cfg.enabled == false then return end
 
 -- Inbound: listen to the event the other script receives its alerts on and mirror them.
 RegisterNetEvent('my-dispatch:server:newAlert', function(data)
-    if type(data) ~= 'table' or data.pessimi42Origin then return end -- skip our own outbound alerts
+    if type(data) ~= 'table' or data.pessimiOrigin then return end -- skip our own outbound alerts
     Calls.Create({
         service = 'police',
         type = 'general',
@@ -23,7 +23,7 @@ end)
 -- Outbound: let a service use it via notify = { 'my-dispatch' }
 Adapters.Register('my-dispatch', {
     assign = function(call, srcs)
-        -- exports['my-dispatch']:SendTo(srcs, { ... , pessimi42Origin = true })
+        -- exports['my-dispatch']:SendTo(srcs, { ... , pessimiOrigin = true })
     end,
     broadcast = function(call, srcs)
     end,

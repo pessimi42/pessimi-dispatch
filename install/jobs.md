@@ -52,7 +52,7 @@ always on duty while employed.
 ## Standalone (no framework) – `server.cfg`
 
 ```
-add_ace group.dispatch pessimi42_dispatch.dispatcher allow
-add_ace group.police   pessimi42_dispatch.service.police allow
-add_ace group.ems      pessimi42_dispatch.service.ems allow
+add_ace group.dispatch pessimi-dispatch.dispatcher allow
+add_ace group.police   pessimi-dispatch.service.police allow
+add_ace group.ems      pessimi-dispatch.service.ems allow
 ```

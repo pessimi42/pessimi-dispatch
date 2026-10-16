@@ -57,7 +57,7 @@ Replace the resource folder. If you changed config files, carry over:
   waiting* button, list headings and the texting section – use the new files or copy the
   keys over.
 
-With oxmysql running, the table `pessimi42_dispatch_calls` is created on the first start.
+With oxmysql running, the table `pessimi_dispatch_calls` is created on the first start.
 Calls that were open before the update are not affected (they live in memory as before).
 
 ## v0.8.1-beta – Security fixes, fast AI calls, drowning by the water (2026-10-15)
@@ -348,7 +348,7 @@ problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
   (robberies, collapses, car fires, breakdowns…) at locations around the map, so units and
   dispatchers have something to do.
   - Switch on/off in game with `/aicalls` or the **AI calls** button in the panel
-    (admins with ACE `pessimi42_dispatch.admin`, and on-duty dispatchers). Remembered
+    (admins with ACE `pessimi-dispatch.admin`, and on-duty dispatchers). Remembered
     across restarts.
   - Only when it's quiet (no player call or text for 5 minutes), only when someone can
     respond, at most 3 open at once.
@@ -441,7 +441,7 @@ Replace the resource folder. If you changed `config/config.lua`, copy the new
 
 ## v0.1.0-beta – First beta (2026-10-13)
 
-First public beta of **pessimi42_dispatch**, an emergency dispatcher (112) job for FiveM.
+First public beta of **pessimi-dispatch**, an emergency dispatcher (112) job for FiveM.
 Core features work, but the resource has not been tested on live servers yet – please
 report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
 
@@ -481,6 +481,6 @@ report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues
 
 ### Installation
 
-Download `pessimi42_dispatch-v0.1.0-beta.zip` from the release, put the
-`pessimi42_dispatch` folder in your resources and follow the README. Keep the folder
-name `pessimi42_dispatch`.
+Download `pessimi-dispatch-v0.1.0-beta.zip` from the release, put the
+`pessimi-dispatch` folder in your resources and follow the README. Keep the folder
+name `pessimi-dispatch`.

@@ -1,4 +1,4 @@
-# pessimi42_dispatch – Emergency dispatcher (112)
+# pessimi-dispatch – Emergency dispatcher (112)
 
 > **Beta (0.9.0-beta).** Core features work, but it has not been battle-tested on live
 > servers yet. Please report problems in [Issues](https://github.com/pessimi42/pessimi-dispatch/issues).
@@ -14,13 +14,13 @@ notifications if it is running, otherwise the framework's own.
 
 ## Install
 
-1. Download the latest release and put it in your resources folder **as `pessimi42_dispatch`**
+1. Download the latest release and put it in your resources folder **as `pessimi-dispatch`**
    (rename the folder if needed – e.g. GitHub's zip unpacks as `pessimi-dispatch-main`).
 2. Add the dispatcher job to your framework – see [`install/jobs.md`](install/jobs.md).
 3. In `server.cfg`, start it **after** your framework (and after ps-dispatch if you use it):
    ```
    ensure qbx_core        # or qb-core / es_extended
-   ensure pessimi42_dispatch
+   ensure pessimi-dispatch
    ```
 4. Check `config/config.lua` (language, commands, fallback) and the job names in
    `config/services.lua`.
@@ -69,9 +69,9 @@ breakdowns and more, at locations around the map, from callers with names and nu
 
 - **On/off switch:** `/aicalls` toggles, `/aicalls on` / `/aicalls off` sets it. On-duty
   dispatchers can also use the **AI calls** button in the panel header. Admins need the
-  ACE permission `pessimi42_dispatch.admin`:
+  ACE permission `pessimi-dispatch.admin`:
   ```
-  add_ace group.admin pessimi42_dispatch.admin allow
+  add_ace group.admin pessimi-dispatch.admin allow
   ```
   The choice is remembered across restarts.
 - **Only when it's quiet:** a call is generated every 3–8 minutes, and only if no player
@@ -164,7 +164,7 @@ Calls a dispatcher makes on the panel are saved, so they survive a restart and s
 history (`Config.Storage`):
 
 - `backend = 'auto'` uses **oxmysql** when it is running – the table
-  `pessimi42_dispatch_calls` is created automatically – and otherwise the resource's own
+  `pessimi_dispatch_calls` is created automatically – and otherwise the resource's own
   key-value store, which needs no setup. `'oxmysql'`, `'kvp'` or `'none'` (memory only) pick
   one.
 - After a restart, open saved calls come back to the panel (without units, back in the
@@ -196,7 +196,7 @@ show up in the call's notes. Optional 112 app on the phone – see
 [`install/lb-phone.md`](install/lb-phone.md).
 
 Without a supported phone everything works as before with on-screen notifications.
-Other phones can be added with `exports.pessimi42_dispatch:RegisterPhone()` or by copying
+Other phones can be added with `exports['pessimi-dispatch']:RegisterPhone()` or by copying
 `server/phones/_template.lua`.
 
 ## Languages
@@ -240,14 +240,14 @@ for example), add their job to `jobs` in its block.
 
 ```lua
 -- server
-exports.pessimi42_dispatch:RegisterAdapter('my-mdt', {
+exports['pessimi-dispatch']:RegisterAdapter('my-mdt', {
     assign = function(call, unitSrcs) --[[ push into your MDT ]] end,
     broadcast = function(call, unitSrcs) end,
 })
-local id = exports.pessimi42_dispatch:CreateCall({ service = 'ems', type = 'unconscious', priority = 'A', message = '...', coords = coords })
+local id = exports['pessimi-dispatch']:CreateCall({ service = 'ems', type = 'unconscious', priority = 'A', message = '...', coords = coords })
 
 -- client (automatic alerts from robbery scripts etc.)
-exports.pessimi42_dispatch:CreateAlert({ service = 'police', type = 'robbery', priority = 'B', message = 'Store alarm' })
+exports['pessimi-dispatch']:CreateAlert({ service = 'police', type = 'robbery', priority = 'B', message = 'Store alarm' })
 ```
 
 Server exports: `CreateCall, GetCall, GetCalls, UpdateCall, AddNote, AssignUnit, UnassignUnit,
@@ -256,7 +256,7 @@ IsDispatcherOnDuty, IsDispatcher, RegisterAdapter, RegisterService, RegisterPhon
 IncomingSms, SendAiUnit, GetAiUnits, GenerateAiCall, SetAiCalls, AreAiCallsEnabled, LocateCaller,
 ResolveScene`.
 
-Server events (`AddEventHandler`): `pessimi42_dispatch:onCallCreated / onCallUpdated / onCallClosed /
+Server events (`AddEventHandler`): `pessimi-dispatch:onCallCreated / onCallUpdated / onCallClosed /
 onUnitAssigned / onUnitUnassigned / onUnitStatus / onUnitAdded / onUnitRemoved / onAiSent /
 onSceneHandled`.
 

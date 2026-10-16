@@ -1,8 +1,8 @@
 if Bridge.name ~= 'standalone' then return end
 
 -- No framework: roles come from ACE permissions.
---   add_ace group.dispatch pessimi42_dispatch.dispatcher allow
---   add_ace group.police   pessimi42_dispatch.service.police allow
+--   add_ace group.dispatch pessimi-dispatch.dispatcher allow
+--   add_ace group.police   pessimi-dispatch.service.police allow
 
 local ace = Config.StandaloneAce
 

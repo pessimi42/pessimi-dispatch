@@ -1,6 +1,6 @@
 'use strict';
 
-const RES = typeof GetParentResourceName === 'function' ? GetParentResourceName() : 'pessimi42_dispatch';
+const RES = typeof GetParentResourceName === 'function' ? GetParentResourceName() : 'pessimi-dispatch';
 const post = (name, data = {}) =>
   fetch(`https://${RES}/${name}`, {
     method: 'POST',

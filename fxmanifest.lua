@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-name 'pessimi42_dispatch'
+name 'pessimi-dispatch'
 description 'Emergency dispatcher job (112) for Qbox, QBCore and ESX'
 version '0.9.0-beta'
 

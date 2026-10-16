@@ -101,7 +101,7 @@ local function db(method, query, params, noWait)
     return Citizen.Await(p)
 end
 
-local function tbl() return '`' .. (cfg.table or 'pessimi42_dispatch_calls'):gsub('[^%w_]', '') .. '`' end
+local function tbl() return '`' .. (cfg.table or 'pessimi_dispatch_calls'):gsub('[^%w_]', '') .. '`' end
 
 function sql.init()
     if GetResourceState('oxmysql') ~= 'started' then return false end

@@ -1,7 +1,7 @@
 --[[ Client exports
 
   Automatic alert from a client script (robbery, shots fired, ...):
-    exports.pessimi42_dispatch:CreateAlert({
+    exports['pessimi-dispatch']:CreateAlert({
         service = 'police', type = 'robbery', priority = 'B',
         message = 'Store alarm triggered', code = '10-90',
     })

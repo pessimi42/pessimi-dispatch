@@ -1,11 +1,11 @@
 # lb-phone
 
-pessimi42_dispatch detects lb-phone automatically (`Config.Phone.provider = 'auto'`).
+pessimi-dispatch detects lb-phone automatically (`Config.Phone.provider = 'auto'`).
 Start it **after** lb-phone in `server.cfg`:
 
 ```
 ensure lb-phone
-ensure pessimi42_dispatch
+ensure pessimi-dispatch
 ```
 
 With lb-phone running you get:
@@ -30,13 +30,13 @@ file / the [lb-phone custom apps docs](https://docs.lbscripts.com/phone/custom-a
 field names can change between lb-phone versions):
 
 ```lua
-["pessimi42_112"] = {
+["pessimi_112"] = {
     name = "112",
     description = "Emergency number",
-    icon = "https://cfx-nui-pessimi42_dispatch/web/112.svg",
+    icon = "https://cfx-nui-pessimi-dispatch/web/112.svg",
     defaultApp = true,
     onUse = function()
-        exports.pessimi42_dispatch:OpenCallerForm()
+        exports['pessimi-dispatch']:OpenCallerForm()
     end,
 },
 ```

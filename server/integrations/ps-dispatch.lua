@@ -33,7 +33,7 @@ end
 if cfg.inbound then
     RegisterNetEvent('ps-dispatch:server:notify', function(data)
         local src = source
-        if type(data) ~= 'table' or data.pessimi42Origin then return end
+        if type(data) ~= 'table' or data.pessimiOrigin then return end
         if cfg.enabled == 'auto' and not active() then return end
         if data.codeName and Utils.Contains(cfg.ignoreCodeNames, data.codeName) then return end
         -- Any player can send this event: limit how often, and check the position
@@ -64,7 +64,7 @@ if cfg.outbound then
         local c = call.coords
         exports[RES]:SendTargetedAlert(srcs, {
             message = (call.message ~= '' and call.message) or Locale.T('calltype.' .. call.type),
-            codeName = cfg.codeName or 'pessimi42_dispatch',
+            codeName = cfg.codeName or 'pessimi-dispatch',
             code = call.code or ('112-' .. call.id),
             icon = 'fas fa-headset',
             priority = toTheirs[call.priority] or 2,
@@ -74,7 +74,7 @@ if cfg.outbound then
             name = call.caller and call.caller.name or nil,
             number = call.caller and call.caller.phone or nil,
             assigned = assigned,
-            pessimi42Origin = true,
+            pessimiOrigin = true,
         })
     end
 

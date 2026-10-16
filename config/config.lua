@@ -51,7 +51,7 @@ Config.EmergencyCall = {
 ---------------------------------------------------------------------------
 -- 'auto' uses the first supported phone that is running (currently lb-phone),
 -- 'lb-phone' forces it, 'none' disables phone features. Other phones can be
--- added with exports.pessimi42_dispatch:RegisterPhone() – see server/phones/_template.lua.
+-- added with exports['pessimi-dispatch']:RegisterPhone() – see server/phones/_template.lua.
 Config.Phone = {
     provider = 'auto',
     number = '112',              -- number players text, and the sender of our SMS
@@ -173,7 +173,7 @@ Config.AiCalls = {
     enabled = true,              -- default state; the in-game switch overrides it and is remembered
     command = 'aicalls',         -- /aicalls [on|off] – no argument toggles
     testCommand = 'aicall',      -- /aicall [police|ems|fire|mechanic] – create one call right now
-    -- Who may use the switch: ACE 'pessimi42_dispatch.admin' (add_ace group.admin pessimi42_dispatch.admin allow)
+    -- Who may use the switch: ACE 'pessimi-dispatch.admin' (add_ace group.admin pessimi-dispatch.admin allow)
     allowDispatchers = true,     -- on-duty dispatchers may switch it too (also from the panel)
 
     quietMinutes = 5,            -- generate only when no player has called or texted 112 for this long
@@ -297,7 +297,7 @@ Config.Scenes = {
     vehicles = { 'blista', 'asea', 'premier', 'primo', 'ingot', 'emperor' },
 }
 
--- Automatic alerts sent by other client scripts through exports.pessimi42_dispatch:CreateAlert()
+-- Automatic alerts sent by other client scripts through exports['pessimi-dispatch']:CreateAlert()
 Config.ClientAlerts = {
     enabled = true,
     cooldown = 5,                -- seconds per player
@@ -375,7 +375,7 @@ Config.Storage = {
                                  -- (without units) and the newest closed ones to the history
     keepDays = 30,               -- delete saved closed calls older than this (0 = keep forever)
     flushSeconds = 5,            -- changes are written in batches this often
-    table = 'pessimi42_dispatch_calls',
+    table = 'pessimi_dispatch_calls',
 }
 
 Config.Sounds = {
@@ -388,9 +388,9 @@ Config.Sounds = {
 Config.UnknownBlip = { sprite = 280, color = 0 }
 
 -- Standalone mode only: ACE permissions decide roles.
--- add_ace group.dispatch pessimi42_dispatch.dispatcher allow
--- add_ace group.police   pessimi42_dispatch.service.police allow
-Config.StandaloneAce = 'pessimi42_dispatch'
+-- add_ace group.dispatch pessimi-dispatch.dispatcher allow
+-- add_ace group.police   pessimi-dispatch.service.police allow
+Config.StandaloneAce = 'pessimi-dispatch'
 
 ---------------------------------------------------------------------------
 -- Test mode (Config.TestMode = true at the top)
